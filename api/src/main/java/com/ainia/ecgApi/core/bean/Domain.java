@@ -1,4 +1,4 @@
-package com.ainia.ecgApi.domain;
+package com.ainia.ecgApi.core.bean;
 
 import java.io.Serializable;
 
@@ -12,6 +12,8 @@ import java.io.Serializable;
  * @version 0.1
  */
 public interface Domain extends Serializable {
+	
+	public static final String ID = "id";
     
 	/**
 	 * <p>唯一标识设置</p>

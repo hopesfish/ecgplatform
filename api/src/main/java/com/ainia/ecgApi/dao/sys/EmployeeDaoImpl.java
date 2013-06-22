@@ -1,7 +1,7 @@
-package com.ainia.ecgApi.dao;
+package com.ainia.ecgApi.dao.sys;
 
 import com.ainia.ecgApi.core.crud.BaseDaoImpl;
-import com.ainia.ecgApi.domain.Employee;
+import com.ainia.ecgApi.domain.sys.Employee;
 
 /**
  * <p>Employee Default Dao Impl</p>

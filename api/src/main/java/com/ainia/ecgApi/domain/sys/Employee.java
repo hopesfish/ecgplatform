@@ -1,8 +1,9 @@
-package com.ainia.ecgApi.domain;
+package com.ainia.ecgApi.domain.sys;
 
 import java.util.Date;
 
 import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorType;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -13,12 +14,16 @@ import javax.persistence.InheritanceType;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.ainia.ecgApi.core.bean.Domain;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name="type")
+@DiscriminatorColumn(name="type" , discriminatorType = DiscriminatorType.STRING)
 @DiscriminatorValue("employee")
 public class Employee implements Domain {
 	
+	private static final long serialVersionUID = 1L;
 	private Long id;
 	private String name;
 	private String username;
@@ -33,6 +38,7 @@ public class Employee implements Domain {
 	private String  mobile;
 	private Date    createdDate;
 	private Date    lastUpdated;
+	private String  roles;
 
 	public void setId(Long id) {
 		this.id = id;
@@ -57,7 +63,7 @@ public class Employee implements Domain {
 	public void setUsername(String username) {
 		this.username = username;
 	}
-
+	@JsonIgnore
 	public String getPassword() {
 		return password;
 	}
@@ -146,6 +152,12 @@ public class Employee implements Domain {
 		this.lastUpdated = lastUpdated;
 	}
 
+	public String getRoles() {
+		return roles;
+	}
+	public void setRoles(String roles) {
+		this.roles = roles;
+	}
 	@Override
 	public int hashCode() {
 		final int prime = 31;

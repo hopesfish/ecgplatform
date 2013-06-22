@@ -24,6 +24,7 @@
     <joda-time.version>2.2</joda-time.version>
     <dozer.version>5.4.0</dozer.version>
     <slf4j.version>1.7.5</slf4j.version>
+    <log4j.version>1.2.17</log4j.version>
             
     <source.encoding>UTF-8</source.encoding>
     <jdk.version>1.6</jdk.version>
@@ -91,6 +92,30 @@
         <version>${hibernate-validator.version}</version>
     </dependency>
     <!-- hibernate end -->  
+    <!-- AOP begin -->
+    <dependency>
+        <groupId>org.aspectj</groupId>
+        <artifactId>aspectjrt</artifactId>
+        <version>1.7.0</version>
+    </dependency>
+    <dependency>
+        <groupId>org.aspectj</groupId>
+        <artifactId>aspectjweaver</artifactId>
+        <version>1.7.0</version>
+    </dependency>       
+    <dependency>
+        <groupId>cglib</groupId>
+        <artifactId>cglib</artifactId>
+        <version>2.2.2</version>
+        <scope>runtime</scope>
+    </dependency>
+    <dependency>
+        <groupId>asm</groupId>
+        <artifactId>asm</artifactId>
+        <version>3.3.1</version>
+        <scope>runtime</scope>
+    </dependency>
+    <!-- AOP end -->
     <!-- JSON begin -->
     <dependency>
         <groupId>com.fasterxml.jackson.core</groupId>
@@ -152,7 +177,12 @@
         <artifactId>slf4j-api</artifactId>
         <version>${slf4j.version}</version>
     </dependency>
-    
+    <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-log4j12</artifactId>
+        <version>${slf4j.version}</version>
+        <scope>runtime</scope>
+    </dependency>
     <!-- logback -->
     <!-- dependency>
         <groupId>ch.qos.logback</groupId>
@@ -160,10 +190,9 @@
         <version>${logback.version}</version>
     </dependency-->
     <dependency>
-        <groupId>org.slf4j</groupId>
-        <artifactId>log4j-over-slf4j</artifactId>
-        <version>${slf4j.version}</version>
-        <scope>runtime</scope>
+        <groupId>log4j</groupId>
+        <artifactId>log4j</artifactId>
+        <version>${log4j.version}</version>
     </dependency>
     <!-- common start -->
     <dependency>
@@ -242,7 +271,7 @@
 
   
   <build>
-    <finalName>framework</finalName>
+    <finalName>ecgApi</finalName>
     <pluginManagement>
         <plugins>
             <plugin>
@@ -253,6 +282,7 @@
                     <source>${jdk.version}</source>
                     <target>${jdk.version}</target>
                     <showWarnings>true</showWarnings>
+                    <encoding>${source.encoding}</encoding>  
                 </configuration>
             </plugin>
             <plugin>

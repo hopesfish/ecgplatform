@@ -8,9 +8,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import com.ainia.ecgApi.core.bean.Domain;
 import com.ainia.ecgApi.core.exception.ServiceException;
 import com.ainia.ecgApi.core.utils.PropertyUtil;
-import com.ainia.ecgApi.domain.Domain;
 
 /**
  * <p>the default baseService impl</p>
@@ -27,7 +27,7 @@ public abstract class BaseServiceImpl<T extends Domain, ID extends Serializable>
 	
 	public abstract BaseDao<T , ID> getBaseDao();
 	
-	public List<T> findAll(Query query) {
+	public List<T> findAll(Query<T> query) {
 		return this.getBaseDao().findAll(query);
 	}
 
@@ -37,7 +37,7 @@ public abstract class BaseServiceImpl<T extends Domain, ID extends Serializable>
 	}
 
 	@SuppressWarnings("unchecked")
-	public long count(Query query) {
+	public long count(Query<T> query) {
 		return ((JpaRepository<T , ID>)getBaseDao()).count();
 	}
 
@@ -108,7 +108,7 @@ public abstract class BaseServiceImpl<T extends Domain, ID extends Serializable>
 		return ((JpaRepository<T , ID>)getBaseDao()).findOne(id);
 	}
 
-	public T get(Query query) {
+	public T get(Query<T> query) {
 		List<T> list = this.findAll(query);
 		return (list != null && !list.isEmpty())?list.get(0):null;
 	}

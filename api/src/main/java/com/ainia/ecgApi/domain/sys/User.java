@@ -1,4 +1,4 @@
-package com.ainia.ecgApi.domain;
+package com.ainia.ecgApi.domain.sys;
 
 import java.util.Date;
 
@@ -12,6 +12,8 @@ import javax.persistence.Version;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.ainia.ecgApi.core.bean.Domain;
+
 /**
  * <p>User Domain Object</p>
  * User.java
@@ -22,6 +24,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 @Entity
 @Table(name = "user")
 public class User implements Domain {
+
+	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long    id;

@@ -12,6 +12,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import com.ainia.ecgApi.core.bean.Domain;
 import com.ainia.ecgApi.core.utils.ExceptionUtils;
 
 /**
@@ -23,17 +24,18 @@ import com.ainia.ecgApi.core.utils.ExceptionUtils;
  * @createdDate 2013-6-21
  * @version 0.5
  */
-public class BaseDaoImpl<T , ID extends Serializable> implements BaseDao<T, ID> {
+public abstract class BaseDaoImpl<T extends Domain , ID extends Serializable> implements BaseDao<T, ID> {
 
 	@PersistenceContext
 	private EntityManager em;
-	private Class clazz;
+	private Class<T> clazz;
 	
+	@SuppressWarnings("unchecked")
 	public BaseDaoImpl() {
 		this.clazz      = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
 	}
 	
-	public long count(Query query) {
+	public long count(Query<T> query) {
 		CriteriaBuilder builder = em.getCriteriaBuilder();
 		CriteriaQuery   criteria = builder.createQuery();
 		Root<T> root = criteria.from(clazz);
@@ -54,7 +56,7 @@ public class BaseDaoImpl<T , ID extends Serializable> implements BaseDao<T, ID> 
 	    return counts;
 	}
 
-	public List<T> findAll(Query query) {
+	public List<T> findAll(Query<T> query) {
 		if (query.getClazz() == null) {
 			query.setClazz(clazz);
 		}

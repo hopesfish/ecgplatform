@@ -15,24 +15,27 @@
 	
 	<mvc:annotation-driven>
 		<mvc:message-converters register-defaults="true">
-			<!-- 将StringHttpMessageCOnverter的默认编码设为UTF-8 -->
 			<bean class="org.springframework.http.converter.StringHttpMessageConverter">
 		    	<constructor-arg value="UTF-8" />
 			</bean>
   		</mvc:message-converters>
 	</mvc:annotation-driven>
 	
-	<!-- 定义JSP文件的位置 --> 
-	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-		<property name="prefix" value="/WEB-INF/views/"/>
-		<property name="suffix" value=".jsp"/>
-	</bean>
-	
 			
-	<!-- 容器默认的DefaultServletHandler处理 所有静态内容与无RequestMapping处理的URL-->	
 	<mvc:default-servlet-handler/>
 	
-	<!-- 定义无需Controller的url<->view直接映射 -->
-	<mvc:view-controller path="/" view-name="redirect:/task"/>
-	
+    <mvc:interceptors>  
+	  <mvc:interceptor>  
+	    <mvc:mapping path="/**" />  
+	    <bean class="com.ainia.ecgApi.core.security.RestTokenInterceptor">  
+	      <property name="excludes">  
+	        <list>  
+	          <value>/login</value>  
+	        </list>  
+	      </property>  
+	    </bean>  
+	  </mvc:interceptor>  
+	</mvc:interceptors>  
+	<!-- 异常处理  -->
+	<bean class="com.ainia.ecgApi.core.web.ControllerExceptionResolver"/>	
 </beans>

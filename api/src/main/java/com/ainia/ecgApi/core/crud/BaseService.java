@@ -3,7 +3,7 @@ package com.ainia.ecgApi.core.crud;
 import java.io.Serializable;
 import java.util.List;
 
-import com.ainia.ecgApi.domain.Domain;
+import com.ainia.ecgApi.core.bean.Domain;
 
 /**
  * <p>BaseService interface</p>
@@ -22,7 +22,7 @@ public interface BaseService<T extends Domain, ID extends Serializable> {
 	 * @param query
 	 * @return List<T>
 	 */
-	public List<T> findAll(Query query);
+	public List<T> findAll(Query<T> query);
 	/**
 	 * <p>find domain list by ids</p>
 	 * Iterable<T>
@@ -37,7 +37,7 @@ public interface BaseService<T extends Domain, ID extends Serializable> {
 	 * @param query
 	 * @return
 	 */
-	public long count(Query query);
+	public long count(Query<T> query);
 	/**
 	 * <p>save Domain Object</p>
 	 * S
@@ -96,7 +96,7 @@ public interface BaseService<T extends Domain, ID extends Serializable> {
 	 * @param query
 	 * @return
 	 */
-	public T get(Query query);
+	public T get(Query<T> query);
 	/**
 	 * <p>check Domain is exists by id</p>
 	 * boolean

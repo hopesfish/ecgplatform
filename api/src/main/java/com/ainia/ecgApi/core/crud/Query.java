@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.ainia.ecgApi.core.bean.Domain;
+
 /**
  * <p>CRUD Query Object</p>
  * Copyright: Copyright (c) 2013
@@ -14,23 +16,23 @@ import java.util.Map;
  * @createdDate 2013-6-21
  * @version 0.3
  */
-public class Query {
+public class Query<T extends Domain> {
 
 	public static final String CONDITION_SPLIT = ":";
 	/**
 	 * The Query Domain class
 	 */
-	private Class clazz;
-	private List<Condition> conds = new ArrayList();
-	private Page page = new Page();
-	private Map<String , OrderType> orders = new HashMap(3);
+	private Class<T> clazz;
+	private List<Condition> conds = new ArrayList<Condition>();
+	private Page<T> page = new Page<T>();
+	private Map<String , OrderType> orders = new HashMap<String , OrderType>(3);
 	
-	public Query addCondition(Condition condition) {
+	public Query<T> addCondition(Condition condition) {
 		this.conds.add(condition);
 		return this;
 	}
 	
-	public Query addOrder(String field , OrderType order) {
+	public Query<T> addOrder(String field , OrderType order) {
 		this.orders.put(field, order);
 		return this;
 	}
@@ -42,11 +44,11 @@ public class Query {
 	}
 
 
-	public Class getClazz() {
+	public Class<T> getClazz() {
 		return clazz;
 	}
 
-	public void setClazz(Class clazz) {
+	public void setClazz(Class<T> clazz) {
 		this.clazz = clazz;
 	}
 
@@ -58,11 +60,11 @@ public class Query {
 		this.conds = conds;
 	}
 
-	public Page getPage() {
+	public Page<T> getPage() {
 		return page;
 	}
 
-	public void setPage(Page page) {
+	public void setPage(Page<T> page) {
 		this.page = page;
 	}
 
