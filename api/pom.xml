@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.ainia</groupId>
   <artifactId>api</artifactId>
-  <packaging>war</packaging>
+  <packaging>jar</packaging>
   <version>0.0.1-SNAPSHOT</version>
   <name>api Maven Webapp</name>
   <url>http://maven.apache.org</url>
@@ -258,7 +258,6 @@
         <groupId>com.h2database</groupId>
         <artifactId>h2</artifactId>
         <version>${h2.version}</version>
-        <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
@@ -377,6 +376,11 @@
 		              </configuration> 
 		          </execution>
 		        </executions>
+		      </plugin>
+		      <plugin>
+		          <groupId>com.pp</groupId>
+		          <artifactId>codeGenerator</artifactId>
+		          <version>0.0.2</version>
 		      </plugin>
         </plugins>
     </pluginManagement>
