@@ -7,15 +7,348 @@
   <version>0.0.1-SNAPSHOT</version>
   <name>api Maven Webapp</name>
   <url>http://maven.apache.org</url>
-  <dependencies>
+  
+ <properties>
+    <spring.version>3.2.2.RELEASE</spring.version>
+    <hibernate.version>4.2.1.Final</hibernate.version>
+    <spring-data-jpa.version>1.3.0.RELEASE</spring-data-jpa.version>
+    <springSecurity.version>3.2.2.RELEASE</springSecurity.version>
+    <hibernate-validator.version>4.3.1.Final</hibernate-validator.version>
+    <jackson.version>2.2.0</jackson.version>
+    <logback.version>1.0.12</logback.version>
+    <jetty.version>7.6.10.v20130312</jetty.version>
+    <h2.version>1.3.171</h2.version>
+    <commons-dbcp.version>1.4</commons-dbcp.version>
+    <commons-lang3.version>3.1</commons-lang3.version>
+    <commons-io.version>2.4</commons-io.version>
+    <joda-time.version>2.2</joda-time.version>
+    <dozer.version>5.4.0</dozer.version>
+    <slf4j.version>1.7.5</slf4j.version>
+            
+    <source.encoding>UTF-8</source.encoding>
+    <jdk.version>1.6</jdk.version>
+  </properties>
+  
+   <dependencies>
+       <!-- spring start -->
+    <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-core</artifactId>
+        <version>${spring.version}</version>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-beans</artifactId>
+        <version>${spring.version}</version>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-context</artifactId>
+        <version>${spring.version}</version>
+        <exclusions>
+            <exclusion>
+                <groupId>commons-logging</groupId>
+                <artifactId>commons-logging</artifactId>
+            </exclusion>
+        </exclusions>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-aop</artifactId>
+        <version>${spring.version}</version>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-tx</artifactId>
+        <version>${spring.version}</version>
+    </dependency>
+    <!-- email/scheduler/freemarker -->
+    <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-context-support</artifactId>
+        <version>${spring.version}</version>
+    </dependency>
+    <!-- spring end -->
+    <!-- hibernate start -->
+    <dependency>
+        <groupId>org.hibernate</groupId>
+        <artifactId>hibernate-core</artifactId>
+        <version>${hibernate.version}</version>
+    </dependency>
+    <dependency>
+        <groupId>org.hibernate</groupId>
+        <artifactId>hibernate-entitymanager</artifactId>
+        <version>${hibernate.version}</version>
+    </dependency>
+    <dependency>
+        <groupId>org.hibernate</groupId>
+        <artifactId>hibernate-ehcache</artifactId>
+        <version>${hibernate.version}</version>
+    </dependency>   
+    <dependency>
+        <groupId>org.hibernate</groupId>
+        <artifactId>hibernate-validator</artifactId>
+        <version>${hibernate-validator.version}</version>
+    </dependency>
+    <!-- hibernate end -->  
+    <!-- JSON begin -->
+    <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-core</artifactId>
+        <version>${jackson.version}</version>
+    </dependency>           
+    <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-databind</artifactId>
+        <version>${jackson.version}</version>
+    </dependency>
+    <dependency>
+        <groupId>com.fasterxml.jackson.module</groupId>
+        <artifactId>jackson-module-jaxb-annotations</artifactId>
+        <version>${jackson.version}</version>
+    </dependency>
+    <!-- JSON end -->
+    <!-- spring data jpa  start-->
+    <dependency>
+        <groupId>org.springframework.data</groupId>
+        <artifactId>spring-data-jpa</artifactId>
+        <version>${spring-data-jpa.version}</version>
+        <exclusions>
+            <exclusion>
+                <groupId>junit</groupId>
+                <artifactId>junit-dep</artifactId>
+            </exclusion>
+        </exclusions>
+        </dependency>
+        <!-- spring data jpa end -->
+    <!-- spring mvc start-->
+    <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-web</artifactId>
+        <version>${spring.version}</version>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-webmvc</artifactId>
+        <version>${spring.version}</version>
+    </dependency>
+    <!-- spring mvc end -->
+    <!-- java web start -->
+    <dependency>
+        <groupId>javax.servlet</groupId>
+        <artifactId>servlet-api</artifactId>
+        <version>2.5</version>
+        <scope>provided</scope>
+    </dependency>
+    <dependency>
+        <groupId>javax.servlet</groupId>
+        <artifactId>jstl</artifactId>
+        <version>1.2</version>
+    </dependency>
+    <!-- java web end -->
+    <!-- slf4j -->
+    <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <version>${slf4j.version}</version>
+    </dependency>
+    
+    <!-- logback -->
+    <!-- dependency>
+        <groupId>ch.qos.logback</groupId>
+        <artifactId>logback-classic</artifactId>
+        <version>${logback.version}</version>
+    </dependency-->
+    <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>log4j-over-slf4j</artifactId>
+        <version>${slf4j.version}</version>
+        <scope>runtime</scope>
+    </dependency>
+    <!-- common start -->
+    <dependency>
+        <groupId>commons-dbcp</groupId>
+        <artifactId>commons-dbcp</artifactId>
+        <version>${commons-dbcp.version}</version>
+        <scope>runtime</scope>
+    </dependency>
+    <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-lang3</artifactId>
+        <version>${commons-lang3.version}</version>
+    </dependency>
+    <dependency>
+        <groupId>commons-io</groupId>
+        <artifactId>commons-io</artifactId>
+        <version>${commons-io.version}</version>
+    </dependency>
+    <dependency>
+        <groupId>commons-codec</groupId>
+        <artifactId>commons-codec</artifactId>
+        <version>1.8</version>
+    </dependency>
+    <dependency>
+        <groupId>commons-beanutils</groupId>
+        <artifactId>commons-beanutils</artifactId>
+        <version>1.8.3</version>
+        <exclusions>
+            <exclusion>
+                <groupId>commons-logging</groupId>
+                <artifactId>commons-logging</artifactId>
+            </exclusion>
+        </exclusions>
+    </dependency>       
+    <!-- common end -->
+    <!-- joda -->
+    <dependency>
+        <groupId>joda-time</groupId>
+        <artifactId>joda-time</artifactId>
+        <version>${joda-time.version}</version>
+    </dependency>
+    <dependency>
+        <groupId>joda-time</groupId>
+        <artifactId>joda-time-jsptags</artifactId>
+        <version>1.1.1</version>
+    </dependency>
+    <!-- joda for jackson -->
+    <!-- pojo copy start -->
+    <dependency>
+        <groupId>net.sf.dozer</groupId>
+        <artifactId>dozer</artifactId>
+        <version>${dozer.version}</version>
+        <exclusions>
+            <exclusion>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-log4j12</artifactId>
+            </exclusion>
+        </exclusions>
+    </dependency>
+    <!-- pojo copy end -->
+    <!-- h2 -->
+    <dependency>
+        <groupId>com.h2database</groupId>
+        <artifactId>h2</artifactId>
+        <version>${h2.version}</version>
+        <scope>test</scope>
+    </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>3.8.1</version>
       <scope>test</scope>
     </dependency>
-  </dependencies>
+    </dependencies>
+
+
+  
   <build>
-    <finalName>api</finalName>
+    <finalName>framework</finalName>
+    <pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.0</version>
+                <configuration>
+                    <source>${jdk.version}</source>
+                    <target>${jdk.version}</target>
+                    <showWarnings>true</showWarnings>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.6</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>2.2</version>
+            </plugin>
+            <plugin>
+                <groupId>org.mortbay.jetty</groupId>
+                <artifactId>jetty-maven-plugin</artifactId>
+                <version>${jetty.version}</version>
+                <configuration>
+                  <systemProperties>
+                    <systemProperty>
+                      <name>spring.profiles.active</name>
+                      <value>development</value>
+                    </systemProperty>       
+                    <systemProperty>
+                       <name>log4j.debug.level</name>
+                       <value>debug</value>
+                    </systemProperty>        
+                  </systemProperties>
+                  <useTestClasspath>true</useTestClasspath>
+                  <webAppConfig>
+                    <contextPath>/</contextPath>
+                   <defaultsDescriptor>
+                    webdefault.xml
+                  </defaultsDescriptor>
+                  </webAppConfig>
+                </configuration>
+              </plugin>
+              <!-- data init -->
+		      <plugin>
+		        <groupId>org.codehaus.mojo</groupId>
+		        <artifactId>sql-maven-plugin</artifactId>
+		        <version>1.5</version>
+		
+		        <dependencies>
+		            <!-- specify the dependent jdbc driver here -->
+				    <dependency>
+				        <groupId>com.h2database</groupId>
+				        <artifactId>h2</artifactId>
+				        <version>${h2.version}</version>
+				    </dependency>
+		        </dependencies>
+		
+		        <!-- common configuration shared by all executions -->
+		        <configuration>
+		          <driver>org.h2.Driver</driver>
+		          <url>jdbc:h2:mem:ecg</url>
+		          <username>sa</username>
+		          <encoding>utf-8</encoding>
+		          <!-- You can comment out username/password configurations and
+		               have maven to look them up in your settings.xml using ${settingsKey}
+		          -->
+		          <!-- settingsKey>sensibleKey</settingsKey-->
+		          <!--all executions are ignored if -Dmaven.test.skip=true-->
+		          <skip>${maven.test.skip}</skip>
+		        </configuration>
+		
+		        <executions>
+		          <!-- drop db after test -->
+		          <execution>
+		            <id>initialize db</id>
+		            <phase>process-test-resources</phase>
+		            <goals>
+		              <goal>execute</goal>
+		            </goals>
+		            <configuration>  
+		                <autocommit>true</autocommit>  
+		                <srcFiles>  
+		                  <srcFile>src/main/resources/sql/h2/schema.sql</srcFile> 
+		                  <srcFile>src/main/resources/sql/h2/data.sql</srcFile>  
+		                </srcFiles>  
+		              </configuration> 
+		          </execution>
+		        </executions>
+		      </plugin>
+        </plugins>
+    </pluginManagement>
   </build>
 </project>
