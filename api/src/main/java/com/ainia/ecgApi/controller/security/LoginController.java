@@ -25,7 +25,7 @@ import com.ainia.ecgApi.service.sys.EmployeeService;
  * @version
  */
 @Controller
-@RequestMapping("login")
+@RequestMapping("api/login")
 public class LoginController {
 	
 	@Autowired
