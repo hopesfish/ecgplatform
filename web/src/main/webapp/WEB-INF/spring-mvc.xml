@@ -19,6 +19,9 @@
 		    	<constructor-arg value="UTF-8" />
 			</bean>
   		</mvc:message-converters>
+  		<mvc:argument-resolvers>
+  		    <bean class="com.ainia.ecgApi.core.web.QueryArgumentResolver"/>
+  		</mvc:argument-resolvers>
 	</mvc:annotation-driven>
 	
 			
@@ -32,10 +35,9 @@
 	        <list>  
 	          <value>/login</value>  
 	        </list>  
-	      </property>  
+	      </property> 
+	      <property name="enable" value="false"></property> 
 	    </bean>  
 	  </mvc:interceptor>  
 	</mvc:interceptors>  
-	<!-- 异常处理  -->
-	<bean class="com.ainia.ecgApi.core.web.ControllerExceptionResolver"/>	
 </beans>
