@@ -1,7 +1,9 @@
 package com.ainia.ecgApi.controller.security;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +27,7 @@ import com.ainia.ecgApi.service.sys.EmployeeService;
  * @version
  */
 @Controller
-@RequestMapping("api/login")
+@RequestMapping("api")
 public class LoginController {
 	
 	@Autowired
@@ -35,13 +37,13 @@ public class LoginController {
 	 * <p>check the user login</p>
 	 * void
 	 */
-	@RequestMapping(method = RequestMethod.POST , produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "auth" , method = RequestMethod.POST , produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public ResponseEntity<AjaxResult> login(@RequestParam("username") String username , 
+	public ResponseEntity<Map<String , String>> login(@RequestParam("username") String username , 
 					  @RequestParam("password") String password) {
 		Employee employee = employeeService.findByUsername(username);
 		AjaxResult ajaxResult = new AjaxResult();
-		HttpHeaders headers = new HttpHeaders();
+		Map<String , String> result = new HashMap(1);
 		if (employee == null) {
 			ajaxResult.setStatus(HttpStatus.NOT_FOUND.value());
 		}
@@ -50,9 +52,9 @@ public class LoginController {
 		}
 		else {
 			ajaxResult.setStatus(HttpStatus.OK.value());
-			headers.add(AjaxResult.AUTH_HEADER , employeeService.generateToken(employee.getUsername()));
+			result.put(AjaxResult.AUTH_TOKEN , employeeService.generateToken(username));
 		}
-		return new ResponseEntity<AjaxResult>(ajaxResult , headers , HttpStatus.valueOf(ajaxResult.getStatus()));
+		return new ResponseEntity<Map<String , String>>(result, HttpStatus.valueOf(ajaxResult.getStatus()));
 	}
 
 	public void setEmployeeService(EmployeeService employeeService) {

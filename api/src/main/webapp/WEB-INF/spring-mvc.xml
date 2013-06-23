@@ -32,10 +32,9 @@
 	        <list>  
 	          <value>/login</value>  
 	        </list>  
-	      </property>  
+	      </property> 
+	      <property name="enable" value="false"></property> 
 	    </bean>  
 	  </mvc:interceptor>  
 	</mvc:interceptors>  
-	<!-- 异常处理  -->
-	<bean class="com.ainia.ecgApi.core.web.ControllerExceptionResolver"/>	
 </beans>

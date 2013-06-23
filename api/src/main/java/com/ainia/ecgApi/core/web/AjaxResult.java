@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  * @File Name     : AjaxResult.java
  * @Author        ： pp
@@ -16,6 +18,7 @@ import java.util.Map;
 public class AjaxResult implements Serializable {
 
 	public static final String AUTH_HEADER = "Authorization";
+	public static final String AUTH_TOKEN  = "token";
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -26,6 +29,7 @@ public class AjaxResult implements Serializable {
 	private String confirmMsg;
     private Map<String , Object> params = new HashMap<String , Object>();
     private Map<String , String> headers = new HashMap<String , String>(6);
+    private String token;
 	
 
     public AjaxResult() {
@@ -96,7 +100,7 @@ public class AjaxResult implements Serializable {
 	public void addHeader(String name , String value) {
 		this.headers.put(name , value);
 	}
-
+	@JsonIgnore
 	public Map<String, String> getHeaders() {
 		return headers;
 	}
@@ -104,7 +108,13 @@ public class AjaxResult implements Serializable {
 	public void setHeaders(Map<String, String> header) {
 		this.headers = header;
 	}
-	
-	
+
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
+	}
 	
 }

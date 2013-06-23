@@ -11,8 +11,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.hibernate.validator.constraints.NotBlank;
 
 import com.ainia.ecgApi.core.bean.Domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -25,21 +28,37 @@ public class Employee implements Domain {
 	
 	private static final long serialVersionUID = 1L;
 	private Long id;
+	@NotBlank
 	private String name;
+	@NotBlank
 	private String username;
+	@NotBlank
 	private String password;
+	@NotBlank
 	private String status;
 	private boolean enable;
 	private boolean dismissed;
 	private Boolean sex;
 	private Date    expire;
 	private Date    birthday;
+	@NotBlank
 	private String  idCard;
 	private String  mobile;
 	private Date    createdDate;
 	private Date    lastUpdated;
 	private String  roles;
 
+	@PrePersist
+	public void onCreate() {
+		this.createdDate = new Date();
+		this.lastUpdated = new Date();
+	}
+	
+	@PreUpdate
+	public void onUpdate() {
+		this.lastUpdated = new Date();
+	}
+	
 	public void setId(Long id) {
 		this.id = id;
 	}

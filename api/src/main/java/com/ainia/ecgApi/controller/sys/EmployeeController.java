@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.ainia.ecgApi.core.crud.BaseController;
 import com.ainia.ecgApi.core.crud.BaseService;
+import com.ainia.ecgApi.core.exception.ServiceException;
 import com.ainia.ecgApi.domain.sys.Employee;
 import com.ainia.ecgApi.service.sys.EmployeeService;
 
@@ -44,6 +45,9 @@ public class EmployeeController extends BaseController<Employee , Long> {
 	 */
 	@RequestMapping("byName/{username}")
 	public ResponseEntity<Employee> getByUsername(String username) {
+		if (true) {
+			throw new ServiceException("test");
+		}
 		Employee employee = employeeService.findByUsername(username);
 		if (employee == null) {
 			return new ResponseEntity<Employee>(HttpStatus.NOT_FOUND);

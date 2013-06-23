@@ -23,6 +23,7 @@ import com.ainia.ecgApi.core.web.AjaxResult;
 public class RestTokenInterceptor implements HandlerInterceptor {
 	
 	private List<String> excludes;
+	private boolean enable;
 
 	public void afterCompletion(HttpServletRequest request,
 			HttpServletResponse response , Object handler, Exception e)
@@ -39,6 +40,9 @@ public class RestTokenInterceptor implements HandlerInterceptor {
 	 */
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
 			Object handler) throws Exception {
+		if (!enable) {
+			return true;
+		}
 	    String requestUri = request.getRequestURI();
 
 	    for (String url : excludes) {  
@@ -46,16 +50,20 @@ public class RestTokenInterceptor implements HandlerInterceptor {
 	        return true;  
 	      }  
 	    }  
-//	    String token = request.getHeader(AjaxResult.AUTH_HEADER);
-//	    if (token == null) {
-//	    	response.setStatus(HttpStatus.UNAUTHORIZED.value());
-//	    	return false;
-//	    }
+	    String token = request.getHeader(AjaxResult.AUTH_HEADER);
+	    if (token == null) {
+	    	response.setStatus(HttpStatus.UNAUTHORIZED.value());
+	    	return false;
+	    }
 		return true;
 	}
 
 	public void setExcludes(List<String> excludes) {
 		this.excludes = excludes;
+	}
+
+	public void setEnable(boolean enable) {
+		this.enable = enable;
 	}
 	
 }
