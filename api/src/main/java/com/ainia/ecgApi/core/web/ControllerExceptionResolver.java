@@ -3,8 +3,8 @@ package com.ainia.ecgApi.core.web;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
 
 /**
  * <p>controler exception handler</p>
@@ -15,14 +15,16 @@ import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
  * @createdDate 2013-6-22
  * @version
  */
-public class ControllerExceptionResolver extends SimpleMappingExceptionResolver {
+public class ControllerExceptionResolver implements HandlerExceptionResolver {
 
-	@Override
-	protected ModelAndView doResolveException(HttpServletRequest request,
+	public static final String EXCPRTION_KEY = "_exception_";
+
+	
+	public ModelAndView resolveException(HttpServletRequest request,
 			HttpServletResponse response, Object handler, Exception ex) {
+		System.out.println("-----------------------------");
+		request.setAttribute(EXCPRTION_KEY , ex);
 		return new ModelAndView("forward:/exception/");
 	}
-	
-	
 
 }

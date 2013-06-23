@@ -28,6 +28,7 @@ public class AjaxResult implements Serializable {
 	private String forwardUrl;
 	private String confirmMsg;
     private Map<String , Object> params = new HashMap<String , Object>();
+    private Map<String , String> fieldErrors = new HashMap<String , String>();
     private Map<String , String> headers = new HashMap<String , String>(6);
     private String token;
 	
@@ -108,7 +109,6 @@ public class AjaxResult implements Serializable {
 	public void setHeaders(Map<String, String> header) {
 		this.headers = header;
 	}
-
 	public String getToken() {
 		return token;
 	}
@@ -116,5 +116,16 @@ public class AjaxResult implements Serializable {
 	public void setToken(String token) {
 		this.token = token;
 	}
-	
+
+	public void addFieldError(String field , String message) {
+		this.fieldErrors.put(field , message);
+	}
+
+	public Map<String, String> getFieldErrors() {
+		return fieldErrors;
+	}
+
+	public void setFieldErrors(Map<String, String> fieldErrors) {
+		this.fieldErrors = fieldErrors;
+	}
 }

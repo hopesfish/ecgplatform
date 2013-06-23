@@ -28,20 +28,15 @@ public class Employee implements Domain {
 	
 	private static final long serialVersionUID = 1L;
 	private Long id;
-	@NotBlank
 	private String name;
-	@NotBlank
 	private String username;
-	@NotBlank
 	private String password;
-	@NotBlank
 	private String status;
 	private boolean enabled;
 	private boolean dismissed;
 	private int gender;
 	private Date    expire;
 	private Date    birthday;
-	@NotBlank
 	private String  idCard;
 	private String  mobile;
 	private Date    createdDate;
@@ -65,8 +60,9 @@ public class Employee implements Domain {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public Long getId() {
-		return null;
+		return id;
 	}
+	@NotBlank
 	public String getName() {
 		return name;
 	}

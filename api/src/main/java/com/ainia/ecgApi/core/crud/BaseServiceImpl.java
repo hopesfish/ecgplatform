@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.ConstraintViolationException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -45,7 +47,11 @@ public abstract class BaseServiceImpl<T extends Domain, ID extends Serializable>
 	public <S extends T> S save(S domain) {
 		try {
 			return ((JpaRepository<T , ID>)getBaseDao()).save(domain);
-		}catch(Exception e) {
+		}
+		catch(ConstraintViolationException ce){
+			throw ce;
+		}
+		catch(Exception e) {
 			throw new ServiceException(e);
 		}
 	}
@@ -64,7 +70,11 @@ public abstract class BaseServiceImpl<T extends Domain, ID extends Serializable>
 		try {
 			JpaRepository<T , ID> dao = ((JpaRepository<T , ID>)getBaseDao());
 			return dao.save(domain);
-		} catch (Exception e) {
+		}
+		catch(ConstraintViolationException ce){
+			throw ce;
+		}
+		catch (Exception e) {
 			throw new ServiceException(e);
 		}
 	}
@@ -73,7 +83,11 @@ public abstract class BaseServiceImpl<T extends Domain, ID extends Serializable>
 	public <S extends T> List<S> update(Iterable<S> domains) {
 		try {
 			return ((JpaRepository<T , ID>)getBaseDao()).save(domains);
-		} catch (Exception e) {
+		} 
+		catch(ConstraintViolationException ce){
+			throw ce;
+		}
+		catch (Exception e) {
 			throw new ServiceException(e);
 		}
 	}
@@ -85,7 +99,11 @@ public abstract class BaseServiceImpl<T extends Domain, ID extends Serializable>
 			S old = (S) dao.findOne((ID)domain.getId());
 			PropertyUtil.copyProperties(old , domain);
 			return dao.save(old);
-		} catch (Exception e) {
+		} 
+		catch(ConstraintViolationException ce){
+			throw ce;
+		}
+		catch (Exception e) {
 			throw new ServiceException(e);
 		}
 	}
@@ -98,7 +116,11 @@ public abstract class BaseServiceImpl<T extends Domain, ID extends Serializable>
 				list.add(domain);
 			}
 			return list;
-		}catch(Exception e) {
+		}
+		catch(ConstraintViolationException ce){
+			throw ce;
+		}
+		catch(Exception e) {
 			throw new ServiceException(e);
 		}
 	}

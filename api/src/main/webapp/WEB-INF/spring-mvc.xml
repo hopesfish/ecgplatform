@@ -40,4 +40,6 @@
 	    </bean>  
 	  </mvc:interceptor>  
 	</mvc:interceptors>  
+	<!-- exception Handler -->
+	<!--  bean class="com.ainia.ecgApi.core.web.ControllerExceptionResolver" lazy-init="false"/-->
 </beans>

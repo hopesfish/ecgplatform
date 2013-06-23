@@ -29,18 +29,21 @@ import com.ainia.ecgApi.core.exception.ServiceException;
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
 	    @ExceptionHandler(value = { ServiceException.class })
-	    public final ResponseEntity<?> handleException(ServiceException ex, WebRequest request) {
-	    	return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+	    public final ResponseEntity<AjaxResult> handleException(ServiceException ex, WebRequest request) {
+	    	AjaxResult ajaxResult = new AjaxResult(HttpStatus.INTERNAL_SERVER_ERROR.value());
+	    	ajaxResult.setMessage(ex.getErrorMessage());
+	    	return new ResponseEntity<AjaxResult>(ajaxResult , HttpStatus.INTERNAL_SERVER_ERROR);
 	   } 
 	    
 	    @ExceptionHandler(value = { ConstraintViolationException.class })
-	    public final ResponseEntity<Map<String , String>> handleException(ConstraintViolationException ex, WebRequest request) {
+	    public final ResponseEntity<AjaxResult> handleException(ConstraintViolationException ex, WebRequest request) {
 	    	Set<ConstraintViolation<?>> violations = ex.getConstraintViolations();
 	    	Map<String , String> errors = new HashMap<String , String>(violations.size());
 	    	for (ConstraintViolation<?> violation  : violations) {
 	    		errors.put(violation.getPropertyPath().toString() ,  violation.getMessage());
 	    	}
-	    	System.out.println("============  "+ errors);
-	        return new ResponseEntity<Map<String , String>>(errors , HttpStatus.BAD_REQUEST);
+	    	AjaxResult ajaxResult = new AjaxResult(HttpStatus.BAD_REQUEST.value());
+	    	ajaxResult.setFieldErrors(errors);
+	        return new ResponseEntity<AjaxResult>(ajaxResult , HttpStatus.BAD_REQUEST);
 	    } 
 }

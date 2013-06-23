@@ -3,8 +3,6 @@ package com.ainia.ecgApi.core.crud;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 
-import javax.validation.Valid;
-
 import org.apache.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -16,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ainia.ecgApi.core.bean.Domain;
+import com.ainia.ecgApi.core.exception.ServiceException;
 import com.ainia.ecgApi.core.web.AjaxResult;
 
 /**
@@ -62,14 +61,16 @@ public abstract class BaseController<T extends Domain , ID extends Serializable>
 	 * @param domain
 	 * @return
 	 */
-	@RequestMapping(value = "create" , method = RequestMethod.POST ,
-									   produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(method = RequestMethod.POST ,produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public ResponseEntity<AjaxResult> create(@Valid T domain) {
+	public ResponseEntity<AjaxResult> create(T domain) {
+		if (true) {
+			throw new ServiceException("test");
+		}
 		T newDomain = this.getBaseService().save(domain);
 		AjaxResult ajaxResult = new AjaxResult();
 		ajaxResult.addParam(Domain.ID , newDomain.getId().toString());
-		return new ResponseEntity<AjaxResult>(HttpStatus.OK);
+		return new ResponseEntity<AjaxResult>(HttpStatus.CREATED);
 	}
 	/**
 	 * <p>get Domain Object by id</p>
@@ -101,10 +102,10 @@ public abstract class BaseController<T extends Domain , ID extends Serializable>
 	 * @param domain
 	 * @return
 	 */
-	@RequestMapping(value = "update/{id}" , method = RequestMethod.PUT , 
+	@RequestMapping(value = "/{id}" , method = RequestMethod.PUT , 
 											produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public ResponseEntity<AjaxResult> update(@PathVariable("id") ID id , @Valid T domain) {
+	public ResponseEntity<AjaxResult> update(@PathVariable("id") ID id , T domain) {
 		T t = this.getBaseService().get(id);
 		if (t == null) {
 			return new ResponseEntity<AjaxResult>(HttpStatus.NOT_FOUND);
@@ -119,10 +120,10 @@ public abstract class BaseController<T extends Domain , ID extends Serializable>
 	 * @param domain
 	 * @return
 	 */
-	@RequestMapping(value = "update/{id}" , method = RequestMethod.PATCH , 
+	@RequestMapping(value = "/{id}" , method = RequestMethod.PATCH , 
 										produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public ResponseEntity<AjaxResult> patch(@PathVariable("id") ID id , @Valid T domain) {
+	public ResponseEntity<AjaxResult> patch(@PathVariable("id") ID id , T domain) {
 		T t = this.getBaseService().get(id);
 		if (t == null) {
 			return new ResponseEntity<AjaxResult>(HttpStatus.NOT_FOUND);
@@ -136,7 +137,7 @@ public abstract class BaseController<T extends Domain , ID extends Serializable>
 	 * @param id
 	 * @return
 	 */
-	@RequestMapping(value = "delete/{id}" , method = RequestMethod.DELETE , 
+	@RequestMapping(value = "/{id}" , method = RequestMethod.DELETE , 
 										produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public ResponseEntity<AjaxResult> delete(@PathVariable("id") ID id) {

@@ -184,11 +184,11 @@
         <scope>runtime</scope>
     </dependency>
     <!-- logback -->
-    <!-- dependency>
+    <dependency>
         <groupId>ch.qos.logback</groupId>
         <artifactId>logback-classic</artifactId>
         <version>${logback.version}</version>
-    </dependency-->
+    </dependency>
     <dependency>
         <groupId>log4j</groupId>
         <artifactId>log4j</artifactId>
