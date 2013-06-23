@@ -12,8 +12,10 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.ainia.ecgApi.core.bean.Domain;
-import com.ainia.ecgApi.core.utils.ExceptionUtils;
 
 /**
  * <p>add custome jpaRepository method</p>
@@ -26,6 +28,8 @@ import com.ainia.ecgApi.core.utils.ExceptionUtils;
  */
 public abstract class BaseDaoImpl<T extends Domain , ID extends Serializable> implements BaseDao<T, ID> {
 
+	protected final Logger log = LoggerFactory.getLogger(this.getClass());
+	
 	@PersistenceContext
 	private EntityManager em;
 	private Class<T> clazz;
@@ -45,11 +49,7 @@ public abstract class BaseDaoImpl<T extends Domain , ID extends Serializable> im
 		Predicate[] predicates = new Predicate[query.getConds().size()];
 		int i =0;
 		for (Condition condition : query.getConds()) {
-			try {
-				predicates[i++] = JPAUtils.resolverCondition(root , builder, condition);
-			} catch (Exception e) {
-				throw ExceptionUtils.unchecked(e);
-			}
+			predicates[i++] = JPAUtils.resolverCondition(root , builder, condition);
 		}		
 		criteria.where(builder.and(predicates));
 	    Long counts =  (Long)em.createQuery(criteria).getSingleResult();	
@@ -67,7 +67,7 @@ public abstract class BaseDaoImpl<T extends Domain , ID extends Serializable> im
 		Predicate[] predicates = new Predicate[query.getConds().size()];
 		int i =0;
 		for (Condition condition : query.getConds()) {
-			predicates[i++] = JPAUtils.resolverCondition(root , builder , condition);
+			predicates[i++] = JPAUtils.resolverCondition(root , builder, condition);
 		}
 		criteria.select(root);
 		criteria.where(predicates);

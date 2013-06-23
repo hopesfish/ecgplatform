@@ -38,7 +38,7 @@ public abstract class BaseServiceImpl<T extends Domain, ID extends Serializable>
 
 	@SuppressWarnings("unchecked")
 	public long count(Query<T> query) {
-		return ((JpaRepository<T , ID>)getBaseDao()).count();
+		return getBaseDao().count(query);
 	}
 
 	@SuppressWarnings("unchecked")

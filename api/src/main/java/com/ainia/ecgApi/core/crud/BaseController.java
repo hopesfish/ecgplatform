@@ -77,10 +77,22 @@ public abstract class BaseController<T extends Domain , ID extends Serializable>
 	 * @return
 	 */
 	@RequestMapping(value = "/{id}" , method = RequestMethod.GET , 
-			produces = MediaType.APPLICATION_JSON_VALUE)
+									  produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public T get(@PathVariable("id") ID id) {
 		return this.getBaseService().get(id);
+	}
+	
+	/**
+	 * <p>get Domain Object by query</p>
+	 * AjaxResult
+	 * @return
+	 */
+	@RequestMapping(value = "/get" , method = RequestMethod.GET , 
+									 produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public T get(Query<T> query) {
+		return this.getBaseService().get(query);
 	}
 	/**
 	 * <p>update Domain Object</p>
@@ -90,7 +102,7 @@ public abstract class BaseController<T extends Domain , ID extends Serializable>
 	 * @return
 	 */
 	@RequestMapping(value = "update/{id}" , method = RequestMethod.PUT , 
-										produces = MediaType.APPLICATION_JSON_VALUE)
+											produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public ResponseEntity<AjaxResult> update(@PathVariable("id") ID id , @Valid T domain) {
 		T t = this.getBaseService().get(id);

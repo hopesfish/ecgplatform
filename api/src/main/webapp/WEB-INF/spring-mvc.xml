@@ -19,6 +19,9 @@
 		    	<constructor-arg value="UTF-8" />
 			</bean>
   		</mvc:message-converters>
+  		<mvc:argument-resolvers>
+  		    <bean class="com.ainia.ecgApi.core.web.QueryArgumentResolver"/>
+  		</mvc:argument-resolvers>
 	</mvc:annotation-driven>
 	
 			
