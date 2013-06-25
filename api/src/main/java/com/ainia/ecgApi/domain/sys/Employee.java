@@ -36,7 +36,7 @@ public class Employee implements Domain {
 	private boolean dismissed;
 	private int gender;
 	private Date    expire;
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date    birthday;
 	private String  idCard;
 	private String  mobile;
