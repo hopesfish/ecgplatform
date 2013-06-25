@@ -16,6 +16,4 @@ import javax.persistence.Entity;
 @DiscriminatorValue("chief")
 public class Chief extends Employee {
 	
-	private static final long serialVersionUID = 1L;
-
 }

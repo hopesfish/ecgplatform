@@ -32,11 +32,13 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 	    public final ResponseEntity<AjaxResult> handleException(ServiceException ex, WebRequest request) {
 	    	AjaxResult ajaxResult = new AjaxResult(HttpStatus.INTERNAL_SERVER_ERROR.value());
 	    	ajaxResult.setMessage(ex.getErrorMessage());
+	    	ex.printStackTrace();
 	    	return new ResponseEntity<AjaxResult>(ajaxResult , HttpStatus.INTERNAL_SERVER_ERROR);
 	   } 
 	    
 	    @ExceptionHandler(value = { ConstraintViolationException.class })
 	    public final ResponseEntity<AjaxResult> handleException(ConstraintViolationException ex, WebRequest request) {
+	    	ex.printStackTrace();
 	    	Set<ConstraintViolation<?>> violations = ex.getConstraintViolations();
 	    	Map<String , String> errors = new HashMap<String , String>(violations.size());
 	    	for (ConstraintViolation<?> violation  : violations) {

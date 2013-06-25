@@ -545,7 +545,7 @@
 <XPD:OBJ name="OwnedViews[13]" type="UMLClassView" guid="/u3qThOe80eIqrrZbqQfKQAA">
 <XPD:ATTR name="LineColor" type="string">clMaroon</XPD:ATTR>
 <XPD:ATTR name="FillColor" type="string">$00B9FFFF</XPD:ATTR>
-<XPD:ATTR name="Left" type="integer">280</XPD:ATTR>
+<XPD:ATTR name="Left" type="integer">36</XPD:ATTR>
 <XPD:ATTR name="Top" type="integer">384</XPD:ATTR>
 <XPD:ATTR name="Width" type="integer">201</XPD:ATTR>
 <XPD:ATTR name="Height" type="integer">238</XPD:ATTR>
@@ -711,7 +711,6 @@
 </XPD:OBJ>
 <XPD:OBJ name="Attributes[6]" type="UMLAttribute" guid="KLt9jd/1/k+SVIQSL+bFUAAA">
 <XPD:ATTR name="Name" type="string">type(客户类别 普通客户 vip客户)</XPD:ATTR>
-<XPD:ATTR name="Visibility" type="UMLVisibilityKind">vkPrivate</XPD:ATTR>
 <XPD:REF name="Owner">nRHEjNSl+U+2MUGlLJMEAQAA</XPD:REF>
 </XPD:OBJ>
 <XPD:OBJ name="Attributes[7]" type="UMLAttribute" guid="KMHtMZ02qE6gCfDlBLvSIQAA">
@@ -1161,8 +1160,8 @@
 <XPD:REF name="Participant">uR52ec4pQUi3yo6cCR8jBAAA</XPD:REF>
 <XPD:ATTR name="#Views" type="integer">4</XPD:ATTR>
 <XPD:REF name="Views[0]">LqJLqFDjoU2aZz/GVRdwdQAA</XPD:REF>
-<XPD:REF name="Views[1]">eAXozAdi2Uqd7kSQhvnQ3gAA</XPD:REF>
-<XPD:REF name="Views[2]">8QDLtNOtikmemXh6D3MpswAA</XPD:REF>
+<XPD:REF name="Views[1]">8QDLtNOtikmemXh6D3MpswAA</XPD:REF>
+<XPD:REF name="Views[2]">eAXozAdi2Uqd7kSQhvnQ3gAA</XPD:REF>
 <XPD:REF name="Views[3]">kPRNpMJUpUy3Z8z7FQVGTwAA</XPD:REF>
 </XPD:OBJ>
 <XPD:OBJ name="Connections[1]" type="UMLAssociationEnd" guid="6WOSYlF9R0Cg4MeOPxbezQAA">
@@ -1170,8 +1169,8 @@
 <XPD:REF name="Participant">IyTE+nN3D0CiaBkTg5i3fQAA</XPD:REF>
 <XPD:ATTR name="#Views" type="integer">4</XPD:ATTR>
 <XPD:REF name="Views[0]">Y62I9c6eQUCqDNXK12zilQAA</XPD:REF>
-<XPD:REF name="Views[1]">l9D27qEe5US6Dr+ycz64gAAA</XPD:REF>
-<XPD:REF name="Views[2]">kMcpYr/W0EmHz3EowNAMlQAA</XPD:REF>
+<XPD:REF name="Views[1]">kMcpYr/W0EmHz3EowNAMlQAA</XPD:REF>
+<XPD:REF name="Views[2]">l9D27qEe5US6Dr+ycz64gAAA</XPD:REF>
 <XPD:REF name="Views[3]">hWdqD5q2okmkRuNDlFDHFgAA</XPD:REF>
 </XPD:OBJ>
 </XPD:OBJ>

@@ -9,12 +9,12 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ainia.ecgApi.core.bean.Domain;
-import com.ainia.ecgApi.core.exception.ServiceException;
 import com.ainia.ecgApi.core.web.AjaxResult;
 
 /**
@@ -35,6 +35,7 @@ public abstract class BaseController<T extends Domain , ID extends Serializable>
 	
 	public abstract BaseService<T , ID> getBaseService();
 	
+
 	@SuppressWarnings("unchecked")
 	public BaseController() {
 		this.clazz = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
@@ -46,7 +47,7 @@ public abstract class BaseController<T extends Domain , ID extends Serializable>
 	 * @param query
 	 * @return
 	 */
-	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(method = RequestMethod.GET ,produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public Page<T> index(Query<T> query) {
 		long total = this.getBaseService().count(query);
@@ -61,12 +62,9 @@ public abstract class BaseController<T extends Domain , ID extends Serializable>
 	 * @param domain
 	 * @return
 	 */
-	@RequestMapping(method = RequestMethod.POST ,produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<AjaxResult> create(T domain) {
-		if (true) {
-			throw new ServiceException("test");
-		}
+	public ResponseEntity<AjaxResult> create(@RequestBody T domain) {
 		T newDomain = this.getBaseService().save(domain);
 		AjaxResult ajaxResult = new AjaxResult();
 		ajaxResult.addParam(Domain.ID , newDomain.getId().toString());

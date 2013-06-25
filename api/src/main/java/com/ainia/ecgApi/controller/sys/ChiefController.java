@@ -24,6 +24,5 @@ public class ChiefController extends BaseController<Chief , Long> {
 	public void setChiefService(ChiefService chiefService) {
 		this.chiefService = chiefService;
 	}
-	
 
 }

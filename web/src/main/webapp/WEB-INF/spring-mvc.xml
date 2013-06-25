@@ -13,7 +13,7 @@
 		<context:include-filter type="annotation" expression="org.springframework.web.bind.annotation.ControllerAdvice"/>
 	</context:component-scan>
 	
-	<mvc:annotation-driven>
+	<mvc:annotation-driven conversion-service="conversionService">
 		<mvc:message-converters register-defaults="true">
 			<bean class="org.springframework.http.converter.StringHttpMessageConverter">
 		    	<constructor-arg value="UTF-8" />
@@ -23,9 +23,26 @@
   		    <bean class="com.ainia.ecgApi.core.web.QueryArgumentResolver"/>
   		</mvc:argument-resolvers>
 	</mvc:annotation-driven>
+		
+    <mvc:default-servlet-handler/>
+
+    <bean id="conversionService"
+          class="org.springframework.context.support.ConversionServiceFactoryBean">
+        <property name="converters">
+            <list>
+                <bean class="com.ainia.ecgApi.core.bean.converter.StringToDateConverter"/>
+                <bean class="com.ainia.ecgApi.core.bean.converter.StringToBooleanConverter"/>
+            </list>
+        </property>
+    </bean>
 	
-			
-	<mvc:default-servlet-handler/>
+	<bean id="propertyEditorRegistrar" class="org.springframework.beans.factory.config.CustomEditorConfigurer">
+	  <property name="customEditors">
+	    <map>
+	      <entry key="java.util.Date" value="com.ainia.ecgApi.core.bean.editor.DatePropertyEditor"/>
+	    </map>
+	  </property>
+	</bean>	
 	
     <mvc:interceptors>  
 	  <mvc:interceptor>  
@@ -40,4 +57,6 @@
 	    </bean>  
 	  </mvc:interceptor>  
 	</mvc:interceptors>  
+	<!-- exception Handler -->
+	<!--  bean class="com.ainia.ecgApi.core.web.ControllerExceptionResolver" lazy-init="false"/-->
 </beans>

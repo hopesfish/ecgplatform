@@ -18,6 +18,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.ainia.ecgApi.core.bean.Domain;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
@@ -26,7 +27,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @DiscriminatorValue("employee")
 public class Employee implements Domain {
 	
-	private static final long serialVersionUID = 1L;
 	private Long id;
 	private String name;
 	private String username;
@@ -36,6 +36,7 @@ public class Employee implements Domain {
 	private boolean dismissed;
 	private int gender;
 	private Date    expire;
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private Date    birthday;
 	private String  idCard;
 	private String  mobile;
