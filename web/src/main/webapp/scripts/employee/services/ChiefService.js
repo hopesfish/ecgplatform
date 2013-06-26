@@ -50,7 +50,8 @@ angular.module('ecgChiefService', [])
             create: function(chief) {
                 return $http({
                     method: 'POST',
-                    data: JSON.stringify(chief),
+                    headers:{'Content-Type':'application/x-www-form-urlencoded'},
+                    data: $.param(chief),
                     url: uri
                 }).then(function(res) {
                     if (res.status === 201) {

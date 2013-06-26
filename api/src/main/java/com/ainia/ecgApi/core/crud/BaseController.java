@@ -64,7 +64,7 @@ public abstract class BaseController<T extends Domain , ID extends Serializable>
 	 */
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<AjaxResult> create(@RequestBody T domain) {
+	public ResponseEntity<AjaxResult> create( T domain) {
 		T newDomain = this.getBaseService().save(domain);
 		AjaxResult ajaxResult = new AjaxResult();
 		ajaxResult.addParam(Domain.ID , newDomain.getId().toString());
