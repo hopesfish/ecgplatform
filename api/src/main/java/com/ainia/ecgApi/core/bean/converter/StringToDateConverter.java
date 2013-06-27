@@ -22,7 +22,7 @@ public class StringToDateConverter implements Converter<String, Date> {
 	
 	
 	public Date convert(String text) {
-		if (text == null) return null;
+		if (text == null || "".equals(text)) return null;
 		try {
 			return timestampFormat.parse(text);
 		}catch(Exception e){

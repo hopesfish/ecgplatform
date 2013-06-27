@@ -48,4 +48,12 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 	    	ajaxResult.setFieldErrors(errors);
 	        return new ResponseEntity<AjaxResult>(ajaxResult , HttpStatus.BAD_REQUEST);
 	    } 
+	    
+	    @ExceptionHandler(value = { RuntimeException.class })
+	    public final ResponseEntity<AjaxResult> handleException(RuntimeException ex, WebRequest request) {
+	    	ex.printStackTrace();
+	    	AjaxResult ajaxResult = new AjaxResult(HttpStatus.INTERNAL_SERVER_ERROR.value());
+	    	ajaxResult.setMessage("UNKONW");
+	    	return new ResponseEntity<AjaxResult>(ajaxResult , HttpStatus.INTERNAL_SERVER_ERROR);
+	    } 
 }

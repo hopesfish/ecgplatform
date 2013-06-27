@@ -93,13 +93,11 @@
         <!--<jee:jndi-lookup id="dataSource" jndi-name="java:comp/env/jdbc/ExampleDB" />-->
     </beans>
     
-    <!-- local development环境 -->
     <beans profile="development">
         <context:property-placeholder ignore-resource-not-found="true"
             location="classpath*:/application.properties,
                       classpath*:/application.development.properties" />    
 
-        <!-- DBCP连接池 -->
         <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
             <property name="driverClassName" value="${jdbc.driver}" />
             <property name="url" value="${jdbc.url}" />
@@ -120,18 +118,18 @@
             location="classpath*:/application.properties,
                       classpath*:/application.test.properties" />   
         
-        <!-- Simple连接池 -->
-        <bean id="dataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
-            <property name="driverClass" value="${jdbc.driver}" />
+        <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+            <property name="driverClassName" value="${jdbc.driver}" />
             <property name="url" value="${jdbc.url}" />
             <property name="username" value="${jdbc.username}" />
             <property name="password" value="${jdbc.password}" />
+            <property name="defaultAutoCommit" value="false" />
         </bean>
 
         <!-- 初始化数据表结构 与默认数据-->
-        <jdbc:initialize-database data-source="dataSource" enabled="true" ignore-failures="NONE">
+        <jdbc:initialize-database data-source="dataSource" ignore-failures="NONE">
             <jdbc:script location="classpath:sql/h2/schema.sql" />
-            <jdbc:script location="classpath:data/h2/import-data.sql" encoding="UTF-8"/>
+            <jdbc:script location="classpath:sql/h2/data.sql" encoding="UTF-8"/>
         </jdbc:initialize-database>
     </beans>
 

@@ -50,6 +50,7 @@ create table employee (
     id_card varchar(20),
     mobile varchar(11),
     title varchar(20),
+    hospital varchar(100),
     created_date timestamp,
     last_updated timestamp,
     version int,
