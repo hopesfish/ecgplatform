@@ -4,7 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ainia.ecgApi.core.crud.BaseController;
 import com.ainia.ecgApi.core.crud.BaseService;
@@ -53,6 +56,20 @@ public class EmployeeController extends BaseController<Employee , Long> {
 			return new ResponseEntity<Employee>(HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<Employee>(employee , HttpStatus.OK);
+	}
+	
+	/**
+	 * <p>修改密码</p>
+	 * @param oldPassword
+	 * @param newPassword
+	 * @return
+	 * ResponseEntity
+	 */
+	@RequestMapping(value = "{id}/changePassword" ,method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity changePassword(@PathVariable("id") Long id , String oldPassword , String newPassword) {
+		employeeService.changePassword(id, oldPassword, newPassword);
+		return new ResponseEntity(HttpStatus.OK);
 	}
 	
 }

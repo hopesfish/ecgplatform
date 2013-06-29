@@ -53,6 +53,14 @@ create table employee (
     hospital varchar(100),
     created_date timestamp,
     last_updated timestamp,
+    email varchar(64),
     version int,
     primary key(id)
+);
+
+drop table if exists expert_operator;
+
+create table expert_operator (
+    expert_id bigint not null ,
+    operator_id bigint not null
 );

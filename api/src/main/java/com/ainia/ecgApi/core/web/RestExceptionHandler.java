@@ -49,6 +49,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 	        return new ResponseEntity<AjaxResult>(ajaxResult , HttpStatus.BAD_REQUEST);
 	    } 
 	    
+	    
 	    @ExceptionHandler(value = { RuntimeException.class })
 	    public final ResponseEntity<AjaxResult> handleException(RuntimeException ex, WebRequest request) {
 	    	ex.printStackTrace();

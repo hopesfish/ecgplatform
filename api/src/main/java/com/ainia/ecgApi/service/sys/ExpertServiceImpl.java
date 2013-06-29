@@ -31,5 +31,5 @@ public class ExpertServiceImpl extends BaseServiceImpl<Expert , Long> implements
 	public void setExpertDao(ExpertDao expertDao) {
 		this.expertDao = expertDao;
 	}
-
+	
 }

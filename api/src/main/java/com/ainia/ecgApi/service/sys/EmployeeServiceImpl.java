@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 
 import com.ainia.ecgApi.core.crud.BaseDao;
 import com.ainia.ecgApi.core.crud.BaseServiceImpl;
+import com.ainia.ecgApi.core.exception.ServiceException;
+import com.ainia.ecgApi.core.security.AuthenticateService;
 import com.ainia.ecgApi.dao.sys.EmployeeDao;
 import com.ainia.ecgApi.domain.sys.Employee;
 
@@ -22,6 +24,8 @@ public class EmployeeServiceImpl extends BaseServiceImpl<Employee , Long> implem
 	
 	@Autowired
 	private EmployeeDao employeeDao;
+	@Autowired
+	private AuthenticateService authenticateService;
 	
 	@Override
 	public BaseDao<Employee, Long> getBaseDao() {
@@ -35,15 +39,32 @@ public class EmployeeServiceImpl extends BaseServiceImpl<Employee , Long> implem
 	public Employee findByUsername(String username) {
 		return employeeDao.findByUsername(username);
 	}
-
-	public boolean checkPassword(String target, String source) {
-		return target.equals(source);
+	
+	@Override
+	public Employee save(Employee employee) {
+		employee.setPassword(authenticateService.encodePassword(employee.getPassword() , null));
+		return super.save(employee);
 	}
 
-	public String generateToken(String username) {
-		return username;
+	public void changePassword(Long id, String oldPassword,
+			String newPassword) {
+		Employee employee = this.get(id);
+		if (employee == null) {
+			throw new ServiceException("exception.notFound");
+		}
+		if (!employee.getUsername().equals(authenticateService.getCurrentUser().getUsername())) {
+			throw new ServiceException("exception.password.changeByOwner");
+		}
+		
+		if (!authenticateService.checkPassword(oldPassword , employee.getPassword() , null)) {
+			throw new ServiceException("exception.oldPassword.notEquals");
+		}
+		employee.setPassword(newPassword);
+		this.employeeDao.save(employee);
 	}
 
-	
-	
+	public void setAuthenticateService(AuthenticateService authenticateService) {
+		this.authenticateService = authenticateService;
+	}
+
 }

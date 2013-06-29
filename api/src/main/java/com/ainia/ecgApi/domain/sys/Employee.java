@@ -13,7 +13,9 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
+import javax.persistence.Transient;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -58,6 +60,15 @@ public class Employee implements Domain {
 	public void setId(Long id) {
 		this.id = id;
 	}
+	@Transient
+	public String[] getRolesArray() {
+		if (roles == null) {
+			return null;
+		}
+		//TODO the sign , to be into Role Class
+		return StringUtils.split(roles , ",");
+	}
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public Long getId() {
@@ -71,7 +82,7 @@ public class Employee implements Domain {
 	public void setName(String name) {
 		this.name = name;
 	}
-
+	@NotBlank
 	public String getUsername() {
 		return username;
 	}
@@ -80,6 +91,7 @@ public class Employee implements Domain {
 		this.username = username;
 	}
 	@JsonIgnore
+	@NotBlank
 	public String getPassword() {
 		return password;
 	}

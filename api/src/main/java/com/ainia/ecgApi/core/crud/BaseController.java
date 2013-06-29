@@ -57,20 +57,6 @@ public abstract class BaseController<T extends Domain , ID extends Serializable>
 		return query.getPage();
 	}
 	/**
-	 * <p>create new Domain Object</p>
-	 * AjaxResult
-	 * @param domain
-	 * @return
-	 */
-	@RequestMapping(method = RequestMethod.POST)
-	@ResponseBody
-	public ResponseEntity<AjaxResult> create( T domain) {
-		T newDomain = this.getBaseService().save(domain);
-		AjaxResult ajaxResult = new AjaxResult();
-		ajaxResult.addParam(Domain.ID , newDomain.getId().toString());
-		return new ResponseEntity<AjaxResult>(HttpStatus.CREATED);
-	}
-	/**
 	 * <p>get Domain Object by id</p>
 	 * AjaxResult
 	 * @return
@@ -92,6 +78,20 @@ public abstract class BaseController<T extends Domain , ID extends Serializable>
 	@ResponseBody
 	public T get(Query<T> query) {
 		return this.getBaseService().get(query);
+	}
+	/**
+	 * <p>create new Domain Object</p>
+	 * AjaxResult
+	 * @param domain
+	 * @return
+	 */
+	@RequestMapping(method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<AjaxResult> create( T domain) {
+		T newDomain = this.getBaseService().save(domain);
+		AjaxResult ajaxResult = new AjaxResult();
+		ajaxResult.addParam(Domain.ID , newDomain.getId().toString());
+		return new ResponseEntity<AjaxResult>(HttpStatus.CREATED);
 	}
 	/**
 	 * <p>update Domain Object</p>

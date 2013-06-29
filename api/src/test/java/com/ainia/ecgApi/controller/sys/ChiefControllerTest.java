@@ -1,6 +1,8 @@
 package com.ainia.ecgApi.controller.sys;
 
 
+import java.io.Serializable;
+
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,7 +15,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.Assert;
 import org.springframework.web.method.HandlerMethod;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 
 import com.ainia.ecgApi.core.bean.Domain;
@@ -76,13 +77,12 @@ public class ChiefControllerTest {
         Assert.isTrue(201 == response.getStatus());
     }
     
-    @Test
     public void testUpdate() throws NoSuchMethodException, Exception {
         request.setRequestURI("/api/chief/1");
-        request.setMethod(HttpMethod.POST.name());
+        request.setMethod(HttpMethod.PUT.name());
         request.addParameter("status" , "ONLINE");
         
-        handlerAdapter.handle(request, response, new HandlerMethod(chiefController, "update" , Domain.class));
+        handlerAdapter.handle(request, response, new HandlerMethod(chiefController, "update" , Serializable.class , Domain.class));
 
         Assert.isTrue(201 == response.getStatus());
     }

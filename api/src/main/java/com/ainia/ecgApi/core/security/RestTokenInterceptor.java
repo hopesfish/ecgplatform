@@ -5,6 +5,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -24,6 +25,8 @@ public class RestTokenInterceptor implements HandlerInterceptor {
 	
 	private List<String> excludes;
 	private boolean enable;
+	@Autowired
+	private AuthenticateService authenticateService;
 
 	public void afterCompletion(HttpServletRequest request,
 			HttpServletResponse response , Object handler, Exception e)
@@ -55,6 +58,8 @@ public class RestTokenInterceptor implements HandlerInterceptor {
 	    	response.setStatus(HttpStatus.UNAUTHORIZED.value());
 	    	return false;
 	    }
+	    //TODO 此处获取用户信息 只针对employee 用户
+	    authenticateService.setCurrentUser(authenticateService.loadUserByToken(token));
 		return true;
 	}
 
@@ -64,6 +69,10 @@ public class RestTokenInterceptor implements HandlerInterceptor {
 
 	public void setEnable(boolean enable) {
 		this.enable = enable;
+	}
+
+	public void setAuthenticateService(AuthenticateService authenticateService) {
+		this.authenticateService = authenticateService;
 	}
 	
 }

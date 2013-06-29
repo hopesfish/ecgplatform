@@ -21,11 +21,13 @@
     <commons-dbcp.version>1.4</commons-dbcp.version>
     <commons-lang3.version>3.1</commons-lang3.version>
     <commons-io.version>2.4</commons-io.version>
-    <joda-time.version>2.2</joda-time.version>
     <dozer.version>5.4.0</dozer.version>
     <slf4j.version>1.7.5</slf4j.version>
     <log4j.version>1.2.17</log4j.version>
+    <mockito.version>1.9.5</mockito.version>
     <junit.version>4.11</junit.version>
+    <joda-time.version>2.2</joda-time.version>
+    <dozer.version>5.4.0</dozer.version>
                     
     <source.encoding>UTF-8</source.encoding>
     <jdk.version>1.6</jdk.version>
@@ -227,7 +229,12 @@
                 <artifactId>commons-logging</artifactId>
             </exclusion>
         </exclusions>
-    </dependency>       
+    </dependency>    
+    <dependency>
+        <groupId>joda-time</groupId>
+        <artifactId>joda-time</artifactId>
+        <version>${joda.version}</version>
+    </dependency>   
     <!-- common end -->
     <!-- joda -->
     <dependency>
