@@ -29,4 +29,5 @@ public class ChiefServiceImpl extends BaseServiceImpl<Chief , Long> implements C
 	} 
 
 
+	
 }

@@ -9,13 +9,13 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ainia.ecgApi.core.bean.Domain;
 import com.ainia.ecgApi.core.web.AjaxResult;
+import com.ainia.ecgApi.domain.sys.Chief;
 
 /**
  * <p>CRUD BaseController with rest</p>
@@ -126,6 +126,7 @@ public abstract class BaseController<T extends Domain , ID extends Serializable>
 		if (t == null) {
 			return new ResponseEntity<AjaxResult>(HttpStatus.NOT_FOUND);
 		}
+		Chief chief = (Chief)domain;
 		this.getBaseService().patch(domain);
 		return new ResponseEntity<AjaxResult>(HttpStatus.OK);
 	}

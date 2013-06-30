@@ -32,6 +32,7 @@ public class Employee implements Domain {
 	private Long id;
 	private String name;
 	private String username;
+	@JsonIgnore
 	private String password;
 	private String status;
 	private boolean enabled;
@@ -61,11 +62,12 @@ public class Employee implements Domain {
 		this.id = id;
 	}
 	@Transient
+	@JsonIgnore
 	public String[] getRolesArray() {
 		if (roles == null) {
 			return null;
 		}
-		//TODO the sign , to be into Role Class
+		//TODO the sign ',' to be into Role Class
 		return StringUtils.split(roles , ",");
 	}
 	
@@ -163,7 +165,7 @@ public class Employee implements Domain {
 	public void setMobile(String mobile) {
 		this.mobile = mobile;
 	}
-
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	public Date getCreatedDate() {
 		return createdDate;
 	}
@@ -171,7 +173,7 @@ public class Employee implements Domain {
 	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
 	}
-
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	public Date getLastUpdated() {
 		return lastUpdated;
 	}

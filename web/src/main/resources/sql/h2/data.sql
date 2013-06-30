@@ -10,4 +10,7 @@ insert into employee (id ,type, name , username , password , roles , status,enab
 insert into employee (id ,type, name , username , password , roles , status,enabled,dismissed,gender,expire,birthday,id_card , mobile ,created_date,last_updated,version) values 
 (4,'operator' ,'接线员','operator','2e8ec7d18a6e108fce3af34044c661ffa56b084f', 'operator' ,'INLINE',1,0,1,null,'1983-06-04 01:00:00','430203198602031218','13028339212','2012-06-04 01:00:00','2012-06-04 01:00:00',1);
 --employee end
+--insert into expert_operator(expert_id , operator_id) values (3 , 4);
+
+
 commit;

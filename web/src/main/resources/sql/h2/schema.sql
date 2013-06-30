@@ -25,8 +25,8 @@ create table user (
 	created_date timestamp,
 	last_updated timestamp,
 	remark varchar(255),
+	title varchar(20),
 	mobile_num varchar(30),
-	HOSPITAL varchar(100),
 	is_free int,
 	version int,
 	primary key (id)
@@ -39,7 +39,7 @@ create table employee (
     type varchar(20),
     name varchar(20) not null ,
     username varchar(20) not null unique,
-    password varchar(100),
+    password varchar(100) not null,
     roles varchar(100),
     status varchar(10) not null,
     enabled int not null,
@@ -50,9 +50,17 @@ create table employee (
     id_card varchar(20),
     mobile varchar(11),
     title varchar(20),
-    HOSPITAL varchar(100),
+    hospital varchar(100),
     created_date timestamp,
     last_updated timestamp,
+    email varchar(64),
     version int,
     primary key(id)
+);
+
+drop table if exists expert_operator;
+
+create table expert_operator (
+    expert_id bigint not null ,
+    operator_id bigint not null
 );
