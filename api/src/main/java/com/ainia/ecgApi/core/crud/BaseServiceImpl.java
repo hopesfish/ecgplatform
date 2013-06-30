@@ -69,7 +69,9 @@ public abstract class BaseServiceImpl<T extends Domain, ID extends Serializable>
 	public <S extends T> S update(S domain) {
 		try {
 			JpaRepository<T , ID> dao = ((JpaRepository<T , ID>)getBaseDao());
-			return dao.save(domain);
+			S old = (S) dao.findOne((ID)domain.getId());
+			PropertyUtil.copyProperties(old , domain);
+			return dao.save(old);
 		}
 		catch(ConstraintViolationException ce){
 			throw ce;
@@ -82,12 +84,17 @@ public abstract class BaseServiceImpl<T extends Domain, ID extends Serializable>
 	@SuppressWarnings("unchecked")
 	public <S extends T> List<S> update(Iterable<S> domains) {
 		try {
-			return ((JpaRepository<T , ID>)getBaseDao()).save(domains);
-		} 
+			List<S> list = new ArrayList<S>();
+			for (S domain : domains) {
+				this.update(domain);
+				list.add(domain);
+			}
+			return list;
+		}
 		catch(ConstraintViolationException ce){
 			throw ce;
 		}
-		catch (Exception e) {
+		catch(Exception e) {
 			throw new ServiceException(e);
 		}
 	}
@@ -96,9 +103,7 @@ public abstract class BaseServiceImpl<T extends Domain, ID extends Serializable>
 	public <S extends T> S patch(S domain) {
 		try {
 			JpaRepository<T , ID> dao = (JpaRepository<T , ID>)getBaseDao();
-			S old = (S) dao.findOne((ID)domain.getId());
-			PropertyUtil.copyProperties(old , domain);
-			return dao.save(old);
+			return dao.save(domain);
 		} 
 		catch(ConstraintViolationException ce){
 			throw ce;

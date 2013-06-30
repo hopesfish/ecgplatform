@@ -133,7 +133,7 @@ public class Employee implements Domain {
 	public void setGender(int gender) {
 		this.gender = gender;
 	}
-
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	public Date getExpire() {
 		return expire;
 	}
