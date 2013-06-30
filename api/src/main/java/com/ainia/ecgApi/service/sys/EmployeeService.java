@@ -29,5 +29,11 @@ public interface EmployeeService  extends BaseService<Employee , Long> {
 	 * @return
 	 */
 	public void changePassword(Long id , String oldPassword , String newPassword);
+	/**
+	 * <p>重置用户密码 为当前用户用户名</p>
+	 * @param id
+	 * void
+	 */
+	public void resetPassword(Long id);
 	
 }

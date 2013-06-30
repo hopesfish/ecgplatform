@@ -37,4 +37,10 @@ public interface AuthUser {
 	 * String[]
 	 */
 	public String[] getRoles();
+	/**
+	 * <p>the user is super admin</p>
+	 * @return
+	 * boolean
+	 */
+	public boolean isSuperAdmin();
 }

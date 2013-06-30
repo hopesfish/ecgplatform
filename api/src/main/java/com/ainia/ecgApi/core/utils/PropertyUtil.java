@@ -35,6 +35,10 @@ public class PropertyUtil {
 		public static void copyProperties(Object target , Object source , boolean nullable) {
 			copyProperties(target, source , nullable , true , null);
 		}
+		
+		public static void copyProperties(Object target , Object source , Collection<String> excludes) {
+			copyProperties(target, source , false , true , excludes);
+		}
 		/**
 		 * 
 		 * @param 目标

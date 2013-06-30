@@ -5,6 +5,8 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -22,6 +24,8 @@ import com.ainia.ecgApi.core.web.AjaxResult;
  * @version
  */
 public class RestTokenInterceptor implements HandlerInterceptor {
+	
+	protected final Logger log = LoggerFactory.getLogger(this.getClass());
 	
 	private List<String> excludes;
 	private boolean enable;
@@ -47,7 +51,9 @@ public class RestTokenInterceptor implements HandlerInterceptor {
 			return true;
 		}
 	    String requestUri = request.getRequestURI();
-
+	    if (log.isDebugEnabled()) {
+	    	log.debug(" interceptor the url " + requestUri);
+	    }
 	    for (String url : excludes) {  
 	      if (requestUri.endsWith(url)) {  
 	        return true;  

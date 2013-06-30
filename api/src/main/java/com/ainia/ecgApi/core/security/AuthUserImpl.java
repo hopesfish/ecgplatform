@@ -28,11 +28,11 @@ public class AuthUserImpl implements AuthUser {
 	}
 
 	public Long getId() {
-		return null;
+		return id;
 	}
 
 	public String getUsername() {
-		return null;
+		return usernmame;
 	}
 
 	public String getUsernmame() {
@@ -45,6 +45,10 @@ public class AuthUserImpl implements AuthUser {
 
 	public String[] getRoles() {
 		return roles;
+	}
+
+	public boolean isSuperAdmin() {
+		return new Long(1).equals(this.getId());
 	}
 
 }

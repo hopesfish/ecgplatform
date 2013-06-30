@@ -29,6 +29,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @DiscriminatorValue("employee")
 public class Employee implements Domain {
 	
+	public static final String PASSWORD = "password";
+	
 	private Long id;
 	private String name;
 	private String username;
@@ -56,6 +58,10 @@ public class Employee implements Domain {
 	@PreUpdate
 	public void onUpdate() {
 		this.lastUpdated = new Date();
+	}
+	@Transient
+	public boolean isSuperAdmin() {
+		return new Long(1).equals(this.getId());
 	}
 	
 	public void setId(Long id) {
