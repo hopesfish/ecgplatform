@@ -18,7 +18,7 @@ import com.ainia.ecgApi.service.sys.UserService;
  * @version 0.1
  */
 @Controller
-@RequestMapping("/user")
+@RequestMapping("/api/user")
 public class UserController extends BaseController<User , Long> {
 
     @Autowired

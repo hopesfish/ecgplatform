@@ -50,7 +50,7 @@ public class LoginController {
 					  @RequestParam("password") String password) {
 		Employee employee = employeeService.findByUsername(username);
 		AjaxResult ajaxResult = new AjaxResult();
-		Map<String , String> result = new HashMap(1);
+		Map<String , String> result = new HashMap<String , String>(1);
 		if (employee == null) {
 			ajaxResult.setStatus(HttpStatus.NOT_FOUND.value());
 		}

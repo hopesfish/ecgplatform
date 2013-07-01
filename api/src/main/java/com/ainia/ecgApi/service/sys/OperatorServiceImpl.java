@@ -38,13 +38,13 @@ public class OperatorServiceImpl extends BaseServiceImpl<Operator, Long>
 
 	
 	@Override
-	public Operator save(Operator domain) {
-		return employeeService.save(domain);
+	public Operator create(Operator domain) {
+		return employeeService.create(domain);
 	}
 
 	@Override
-	public List<Operator> save(Iterable domains) {
-		return employeeService.save(domains);
+	public List<Operator> create(Iterable domains) {
+		return employeeService.create(domains);
 	} 
 	
 	@Override

@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
@@ -56,6 +58,16 @@ public class User implements Domain {
 	private String mobileNum;
 	private Boolean isFree;
 	private Integer version;
+	
+	@PrePersist
+	public void onCreate() {
+		this.createdDate = new Date();
+		this.lastUpdated = new Date();
+	}
+	@PreUpdate
+	public void onUpdate() {
+		this.lastUpdated = new Date();
+	}
 
 
 	public Long getId() {

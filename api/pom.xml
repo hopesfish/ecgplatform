@@ -29,7 +29,7 @@
     <joda-time.version>2.2</joda-time.version>
     <dozer.version>5.4.0</dozer.version>
                     
-    <source.encoding>UTF-8</source.encoding>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <jdk.version>1.6</jdk.version>
   </properties>
   
@@ -230,11 +230,6 @@
             </exclusion>
         </exclusions>
     </dependency>    
-    <dependency>
-        <groupId>joda-time</groupId>
-        <artifactId>joda-time</artifactId>
-        <version>${joda.version}</version>
-    </dependency>   
     <!-- common end -->
     <!-- joda -->
     <dependency>
@@ -304,7 +299,7 @@
                     <source>${jdk.version}</source>
                     <target>${jdk.version}</target>
                     <showWarnings>true</showWarnings>
-                    <encoding>${source.encoding}</encoding>  
+                    <encoding>${project.build.sourceEncoding}</encoding>  
                 </configuration>
             </plugin>
             <plugin>
@@ -408,7 +403,7 @@
 		          <driver>org.h2.Driver</driver>
 		          <url>jdbc:h2:mem:ecg</url>
 		          <username>sa</username>
-		          <encoding>utf-8</encoding>
+		          <encoding>${project.build.sourceEncoding}</encoding>
 		          <!-- You can comment out username/password configurations and
 		               have maven to look them up in your settings.xml using ${settingsKey}
 		          -->

@@ -34,13 +34,13 @@ public class ChiefServiceImpl extends BaseServiceImpl<Chief , Long> implements C
 	}
 
 	@Override
-	public Chief save(Chief domain) {
-		return employeeService.save(domain);
+	public Chief create(Chief domain) {
+		return employeeService.create(domain);
 	}
 
 	@Override
-	public List<Chief> save(Iterable domains) {
-		return employeeService.save(domains);
+	public List<Chief> create(Iterable domains) {
+		return employeeService.create(domains);
 	}
 
 	@Override

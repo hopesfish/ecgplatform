@@ -44,6 +44,7 @@ public class ChiefServiceTest {
 	public void setUp() {
 		chief = new Chief();
 		chief.setName("chief1");
+		chief.setUsername("test");
 		chief.setPassword("test");
 		chief.setBirthday( new DateTime(1983, 2, 1, 0, 0, 0, 0).toDate());
 		chief.setExpire(new DateTime(2099, 2, 1, 0, 0, 0, 0).toDate());
@@ -66,6 +67,9 @@ public class ChiefServiceTest {
 	@Test
 	public void testCreate() {
 		
+		chiefService.create(chief);
+		
+		Assert.assertTrue(chief.getId() != null);
 	}
 	
 	@Test

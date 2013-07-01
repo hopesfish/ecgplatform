@@ -44,7 +44,7 @@ public abstract class BaseServiceImpl<T extends Domain, ID extends Serializable>
 	}
 
 	@SuppressWarnings("unchecked")
-	public <S extends T> S save(S domain) {
+	public <S extends T> S create(S domain) {
 		try {
 			return ((JpaRepository<T , ID>)getBaseDao()).save(domain);
 		}
@@ -57,7 +57,7 @@ public abstract class BaseServiceImpl<T extends Domain, ID extends Serializable>
 	}
 
 	@SuppressWarnings("unchecked")
-	public <S extends T> List<S> save(Iterable<S> domains) {
+	public <S extends T> List<S> create(Iterable<S> domains) {
 		try {
 			return ((JpaRepository<T , ID>)getBaseDao()).save(domains);
 		}catch(Exception e) {

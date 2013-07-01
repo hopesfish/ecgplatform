@@ -44,14 +44,14 @@ public interface BaseService<T extends Domain, ID extends Serializable> {
 	 * @param domain
 	 * @return
 	 */
-	public <S extends T> S save(S domain);
+	public <S extends T> S create(S domain);
 	/**
 	 * <p>save Domain Object</p>
 	 * Iterable<S>
 	 * @param domains
 	 * @return
 	 */
-	public <S extends T> List<S> save(Iterable<S> domains);
+	public <S extends T> List<S> create(Iterable<S> domains);
 	/**
 	 * <p>Update Domain Object</p>
 	 * <pre>

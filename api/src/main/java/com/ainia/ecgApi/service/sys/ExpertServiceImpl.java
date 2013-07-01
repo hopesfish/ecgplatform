@@ -38,13 +38,13 @@ public class ExpertServiceImpl extends BaseServiceImpl<Expert , Long> implements
 	}
 
 	@Override
-	public Expert save(Expert domain) {
-		return employeeService.save(domain);
+	public Expert create(Expert domain) {
+		return employeeService.create(domain);
 	}
 
 	@Override
-	public List<Expert> save(Iterable domains) {
-		return employeeService.save(domains);
+	public List<Expert> create(Iterable domains) {
+		return employeeService.create(domains);
 	} 
 	
 	@Override

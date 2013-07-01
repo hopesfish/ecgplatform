@@ -3,7 +3,6 @@ package com.ainia.ecgApi.service.sys;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -47,9 +46,9 @@ public class EmployeeServiceImpl extends BaseServiceImpl<Employee , Long> implem
 	}
 	
 	@Override
-	public Employee save(Employee employee) {
+	public Employee create(Employee employee) {
 		employee.setPassword(authenticateService.encodePassword(employee.getPassword() , null));
-		return super.save(employee);
+		return super.create(employee);
 	}
 	
 
@@ -98,7 +97,6 @@ public class EmployeeServiceImpl extends BaseServiceImpl<Employee , Long> implem
 		if (!currentUser.isSuperAdmin() && !employee.getUsername().equals(currentUser.getUsername())) {
 			throw new ServiceException("exception.password.cannotChange");
 		}
-		System.out.println("=========== reset the password to " + employee.getUsername());
 		employee.setPassword(authenticateService.encodePassword(employee.getUsername() , null));
 		this.employeeDao.save(employee);
 	}
