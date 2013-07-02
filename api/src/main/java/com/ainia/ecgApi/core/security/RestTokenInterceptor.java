@@ -5,6 +5,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,8 @@ import com.ainia.ecgApi.core.web.AjaxResult;
  * @version
  */
 public class RestTokenInterceptor implements HandlerInterceptor {
+	
+	public static final String SECURE_KEY = "secure";
 	
 	protected final Logger log = LoggerFactory.getLogger(this.getClass());
 	
@@ -60,12 +63,16 @@ public class RestTokenInterceptor implements HandlerInterceptor {
 	      }  
 	    }  
 	    String token = request.getHeader(AjaxResult.AUTH_HEADER);
-	    if (token == null) {
-	    	response.setStatus(HttpStatus.UNAUTHORIZED.value());
-	    	return false;
-	    }
+        if (requestUri.startsWith(SECURE_KEY)) {
+    	    if (StringUtils.isBlank(token)) {
+    	    	response.setStatus(HttpStatus.UNAUTHORIZED.value());
+    	    	return false;
+    	    }        	
+        }
 	    //TODO 此处获取用户信息 只针对employee 用户
-	    authenticateService.setCurrentUser(authenticateService.loadUserByToken(token));
+	    if (StringUtils.isNotBlank(token)) {
+	    	authenticateService.setCurrentUser(authenticateService.loadUserByToken(token));
+	    }
 		return true;
 	}
 

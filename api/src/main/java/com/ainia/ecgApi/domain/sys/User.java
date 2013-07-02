@@ -13,8 +13,11 @@ import javax.persistence.Table;
 import javax.persistence.Version;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.hibernate.validator.constraints.NotBlank;
 
 import com.ainia.ecgApi.core.bean.Domain;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * <p>User Domain Object</p>
@@ -31,7 +34,7 @@ public class User implements Domain {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long    id;
-	private String  code;
+	private String  mobile;
 	private String  name;
 	private String  username;
 	private String  password;
@@ -63,6 +66,9 @@ public class User implements Domain {
 	public void onCreate() {
 		this.createdDate = new Date();
 		this.lastUpdated = new Date();
+		if (username == null || "".equals(username)) {
+			username = mobile;
+		}
 	}
 	@PreUpdate
 	public void onUpdate() {
@@ -77,13 +83,13 @@ public class User implements Domain {
 	public void setId(Long id) {
 		this.id = id;
 	}
-
-	public String getCode() {
-		return code;
+	@NotBlank
+	public String getMobile() {
+		return mobile;
 	}
 
-	public void setCode(String code) {
-		this.code = code;
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
 	}
 
 	public String getName() {
@@ -93,7 +99,6 @@ public class User implements Domain {
 	public void setName(String name) {
 		this.name = name;
 	}
-
 	public String getUsername() {
 		return username;
 	}
@@ -101,7 +106,8 @@ public class User implements Domain {
 	public void setUsername(String username) {
 		this.username = username;
 	}
-
+	@NotBlank
+	@JsonIgnore
 	public String getPassword() {
 		return password;
 	}
@@ -125,7 +131,7 @@ public class User implements Domain {
 	public void setType(String type) {
 		this.type = type;
 	}
-
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	public Date getBirthday() {
 		return birthday;
 	}
@@ -229,7 +235,7 @@ public class User implements Domain {
 	public void setAnamnesis(String anamnesis) {
 		this.anamnesis = anamnesis;
 	}
-
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	public Date getCreatedDate() {
 		return createdDate;
 	}
@@ -237,7 +243,7 @@ public class User implements Domain {
 	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
 	}
-
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	public Date getLastUpdated() {
 		return lastUpdated;
 	}

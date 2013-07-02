@@ -3,6 +3,7 @@ package com.ainia.ecgApi.service.sys;
 import java.util.List;
 
 import org.joda.time.DateTime;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -50,10 +51,14 @@ public class ChiefServiceTest {
 		chief.setExpire(new DateTime(2099, 2, 1, 0, 0, 0, 0).toDate());
 		chief.setGender(1);
 		chief.setDismissed(false);
-		chief.setHospital("健康中心");
+		chief.setCompany("健康中心");
 		chief.setEnabled(true);
 		chief.setStatus("ONLINE");
 		chief.setIdCard("430203198302011518");
+	}
+	@After
+	public void tearDown() {
+		chiefService.delete(chief);
 	}
 	
 	@Test
@@ -66,25 +71,36 @@ public class ChiefServiceTest {
 
 	@Test
 	public void testCreate() {
-		
 		chiefService.create(chief);
 		
 		Assert.assertTrue(chief.getId() != null);
+		
+
 	}
 	
 	@Test
 	public void testUpdate() {
-		
+//		chiefService.create(chief);
+//		
+//		chief.setEnabled(false);
+//		chief.setCompany("test");
+//		chief.setPassword(null);
+//		Chief _chief = chiefService.update(chief);
+//		
+//		Assert.assertNotNull(_chief.getPassword());
 	}
 	
 	@Test
 	public void testPatch() {
+		chiefService.create(chief);
 		
+		chief.setCompany(null);
+		chief.setPassword(null);
+		
+		Chief _chief = chiefService.update(chief);
+		
+		Assert.assertNotNull(_chief.getCompany());
 	}
 	
-	@Test
-	public void testDelete() {
-		
-	}
 	
 }

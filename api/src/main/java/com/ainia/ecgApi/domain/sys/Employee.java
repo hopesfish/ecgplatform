@@ -14,6 +14,7 @@ import javax.persistence.InheritanceType;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Transient;
+import javax.persistence.Version;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -48,6 +49,9 @@ public class Employee implements Domain {
 	private Date    createdDate;
 	private Date    lastUpdated;
 	private String  roles;
+	private String company;
+	private String title;
+	private Integer version;
 
 	@PrePersist
 	public void onCreate() {
@@ -194,6 +198,30 @@ public class Employee implements Domain {
 	public void setRoles(String roles) {
 		this.roles = roles;
 	}
+	public String getCompany() {
+		return company;
+	}
+
+	public void setCompany(String company) {
+		this.company = company;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+	@Version
+	public Integer getVersion() {
+		return version;
+	}
+
+	public void setVersion(Integer version) {
+		this.version = version;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
