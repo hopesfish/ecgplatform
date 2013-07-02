@@ -7,9 +7,9 @@ create table user (
 	name varchar(20) not null,
 	password varchar(100) not null,
 	roles varchar(100),
-    gender int not null,
-	type varchar(10) not null,
-	birthday timestamp not null,
+    gender int,
+	type varchar(10),
+	birthday timestamp,
 	address varchar(255),
 	stature double,
 	weight  double,
@@ -48,13 +48,13 @@ create table employee (
     expire timestamp,
     birthday timestamp,
     id_card varchar(20),
-    mobile varchar(11),
+    mobile varchar(20),
     title varchar(20),
     company varchar(100),
     created_date timestamp,
     last_updated timestamp,
     email varchar(64),
-    version int,
+    version int, 
     primary key(id)
 );
 
