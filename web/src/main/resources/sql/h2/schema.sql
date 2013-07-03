@@ -5,6 +5,7 @@ create table user (
 	mobile varchar(20) not null unique,
 	username varchar(20),
 	name varchar(20) not null,
+	id_card varchar(20),
 	password varchar(100) not null,
 	roles varchar(100),
     gender int,

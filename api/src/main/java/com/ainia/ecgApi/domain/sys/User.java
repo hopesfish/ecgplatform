@@ -121,7 +121,7 @@ public class User implements Domain {
 		this.password = password;
 	}
 
-	public int isGender() {
+	public int getGender() {
 		return gender;
 	}
 
