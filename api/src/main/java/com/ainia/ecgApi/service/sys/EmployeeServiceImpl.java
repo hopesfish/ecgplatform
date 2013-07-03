@@ -3,6 +3,7 @@ package com.ainia.ecgApi.service.sys;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -47,7 +48,9 @@ public class EmployeeServiceImpl extends BaseServiceImpl<Employee , Long> implem
 	
 	@Override
 	public Employee create(Employee employee) {
-		employee.setPassword(authenticateService.encodePassword(employee.getPassword() , null));
+		if (StringUtils.isNotBlank(employee.getPassword())) {
+			employee.setPassword(authenticateService.encodePassword(employee.getPassword() , null));
+		}
 		return super.create(employee);
 	}
 	

@@ -53,7 +53,7 @@
 	          <value>/api/auth</value>  
 	        </list>  
 	      </property> 
-	      <property name="enable" value="false"></property> 
+	      <property name="enable" value="true"></property> 
 	    </bean>  
 	  </mvc:interceptor>  
 	</mvc:interceptors>  

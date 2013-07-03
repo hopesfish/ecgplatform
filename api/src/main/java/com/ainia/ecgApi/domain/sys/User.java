@@ -38,12 +38,13 @@ public class User implements Domain {
 	private String  name;
 	private String  username;
 	private String  password;
-	private int gender;
 	private String  type;
 	private Date birthday;
 	private String address;
 	private Float  stature;
 	private Float  weight;
+	private String idCard;
+	private int gender;
 	private String fnPlace;
 	private String city;
 	private String tel;
@@ -74,8 +75,12 @@ public class User implements Domain {
 	public void onUpdate() {
 		this.lastUpdated = new Date();
 	}
+	
 
-
+	public String getMobilePrefix () {
+		return mobile == null?null : mobile.substring(7);
+	}
+	
 	public Long getId() {
 		return id;
 	}
@@ -283,7 +288,12 @@ public class User implements Domain {
 	public void setVersion(Integer version) {
 		this.version = version;
 	}
-
+	public String getIdCard() {
+		return idCard;
+	}
+	public void setIdCard(String idCard) {
+		this.idCard = idCard;
+	}
 	@Override
 	public int hashCode() {
 		final int prime = 31;
