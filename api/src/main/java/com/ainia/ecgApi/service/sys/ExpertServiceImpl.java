@@ -21,6 +21,7 @@ import com.ainia.ecgApi.domain.sys.Expert;
  * @version
  */
 @Service
+@SuppressWarnings("unchecked")
 public class ExpertServiceImpl extends BaseServiceImpl<Expert , Long> implements
 		ExpertService {
 	@Autowired

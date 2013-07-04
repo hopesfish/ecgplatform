@@ -62,7 +62,7 @@ public class EmployeeServiceImpl extends BaseServiceImpl<Employee , Long> implem
 		List<String> excludes = new ArrayList<String>(1);
 		excludes.add(Employee.PASSWORD);
 		PropertyUtil.copyProperties(old , employee , excludes);
-		return super.update(employee);
+		return super.update(old);
 	}
 
 	@Override

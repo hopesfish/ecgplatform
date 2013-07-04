@@ -21,4 +21,5 @@ public interface Domain extends Serializable {
 	 * @return void
 	 */
 	public Serializable getId();
+	
 }

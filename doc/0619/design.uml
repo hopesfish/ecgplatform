@@ -1269,7 +1269,7 @@
 <XPD:REF name="Views[3]">Y32BUTJTO0+T/4MWGO2HAQAA</XPD:REF>
 <XPD:ATTR name="#Specializations" type="integer">1</XPD:ATTR>
 <XPD:REF name="Specializations[0]">PsFtIO/SP0SrwAsjLTA1OQAA</XPD:REF>
-<XPD:ATTR name="#Attributes" type="integer">16</XPD:ATTR>
+<XPD:ATTR name="#Attributes" type="integer">15</XPD:ATTR>
 <XPD:OBJ name="Attributes[0]" type="UMLAttribute" guid="TwydzRppoUeUCr8h6whc9wAA">
 <XPD:ATTR name="Name" type="string">id</XPD:ATTR>
 <XPD:ATTR name="Visibility" type="UMLVisibilityKind">vkPrivate</XPD:ATTR>
@@ -1297,6 +1297,7 @@
 </XPD:OBJ>
 <XPD:OBJ name="Attributes[5]" type="UMLAttribute" guid="sjYoGptoRkOkvAVvYHJogwAA">
 <XPD:ATTR name="Name" type="string">userId(关联客户 特殊规则用)</XPD:ATTR>
+<XPD:ATTR name="Visibility" type="UMLVisibilityKind">vkPrivate</XPD:ATTR>
 <XPD:REF name="Owner">lbhIbwqIjkWxLARVEu9GVwAA</XPD:REF>
 </XPD:OBJ>
 <XPD:OBJ name="Attributes[6]" type="UMLAttribute" guid="5P9xT++nikOBfYpNH3m+KQAA">
@@ -1318,30 +1319,27 @@
 <XPD:ATTR name="Name" type="string">isWaring(是否正常)</XPD:ATTR>
 <XPD:REF name="Owner">lbhIbwqIjkWxLARVEu9GVwAA</XPD:REF>
 </XPD:OBJ>
-<XPD:OBJ name="Attributes[10]" type="UMLAttribute" guid="S8IgH2lt1U2Lv3cRDUf3JQAA">
-<XPD:ATTR name="Name" type="string">Attribute3</XPD:ATTR>
-<XPD:REF name="Owner">lbhIbwqIjkWxLARVEu9GVwAA</XPD:REF>
-</XPD:OBJ>
-<XPD:OBJ name="Attributes[11]" type="UMLAttribute" guid="VRXl45WVtUStGq/7im37aQAA">
+<XPD:OBJ name="Attributes[10]" type="UMLAttribute" guid="VRXl45WVtUStGq/7im37aQAA">
 <XPD:ATTR name="Name" type="string">version</XPD:ATTR>
 <XPD:ATTR name="Visibility" type="UMLVisibilityKind">vkPrivate</XPD:ATTR>
 <XPD:REF name="Owner">lbhIbwqIjkWxLARVEu9GVwAA</XPD:REF>
 </XPD:OBJ>
-<XPD:OBJ name="Attributes[12]" type="UMLAttribute" guid="BfB5Zn7KLUCdvqebk63gKAAA">
+<XPD:OBJ name="Attributes[11]" type="UMLAttribute" guid="BfB5Zn7KLUCdvqebk63gKAAA">
 <XPD:ATTR name="Name" type="string">remark 说明</XPD:ATTR>
+<XPD:ATTR name="Visibility" type="UMLVisibilityKind">vkPrivate</XPD:ATTR>
 <XPD:REF name="Owner">lbhIbwqIjkWxLARVEu9GVwAA</XPD:REF>
 </XPD:OBJ>
-<XPD:OBJ name="Attributes[13]" type="UMLAttribute" guid="eivOOUH+M0uPFiR0laTsGAAA">
+<XPD:OBJ name="Attributes[12]" type="UMLAttribute" guid="eivOOUH+M0uPFiR0laTsGAAA">
 <XPD:ATTR name="Name" type="string">min(下限)</XPD:ATTR>
 <XPD:ATTR name="Visibility" type="UMLVisibilityKind">vkPrivate</XPD:ATTR>
 <XPD:REF name="Owner">lbhIbwqIjkWxLARVEu9GVwAA</XPD:REF>
 </XPD:OBJ>
-<XPD:OBJ name="Attributes[14]" type="UMLAttribute" guid="HOs2k+V0y0eNsbEyZ5q1+gAA">
+<XPD:OBJ name="Attributes[13]" type="UMLAttribute" guid="HOs2k+V0y0eNsbEyZ5q1+gAA">
 <XPD:ATTR name="Name" type="string">max(上限)</XPD:ATTR>
 <XPD:ATTR name="Visibility" type="UMLVisibilityKind">vkPrivate</XPD:ATTR>
 <XPD:REF name="Owner">lbhIbwqIjkWxLARVEu9GVwAA</XPD:REF>
 </XPD:OBJ>
-<XPD:OBJ name="Attributes[15]" type="UMLAttribute" guid="beMJAhRdTUaASxAK6N6Y3gAA">
+<XPD:OBJ name="Attributes[14]" type="UMLAttribute" guid="beMJAhRdTUaASxAK6N6Y3gAA">
 <XPD:ATTR name="Name" type="string">version</XPD:ATTR>
 <XPD:ATTR name="Visibility" type="UMLVisibilityKind">vkPrivate</XPD:ATTR>
 <XPD:REF name="Owner">lbhIbwqIjkWxLARVEu9GVwAA</XPD:REF>

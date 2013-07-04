@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.persistence.Version;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -45,9 +46,7 @@ public class User implements Domain {
 	private Float  weight;
 	private String idCard;
 	private int gender;
-	private String fnPlace;
 	private String city;
-	private String tel;
 	private String emContact1;
 	@Column(name="em_contact1_tel")
 	private String emContact1Tel;
@@ -76,7 +75,7 @@ public class User implements Domain {
 		this.lastUpdated = new Date();
 	}
 	
-
+	@Transient
 	public String getMobilePrefix () {
 		return mobile == null?null : mobile.substring(7);
 	}
@@ -136,7 +135,7 @@ public class User implements Domain {
 	public void setType(String type) {
 		this.type = type;
 	}
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(pattern = "yyyy-MM-dd")
 	public Date getBirthday() {
 		return birthday;
 	}
@@ -169,28 +168,12 @@ public class User implements Domain {
 		this.weight = weight;
 	}
 
-	public String getFnPlace() {
-		return fnPlace;
-	}
-
-	public void setFnPlace(String fnPlace) {
-		this.fnPlace = fnPlace;
-	}
-
 	public String getCity() {
 		return city;
 	}
 
 	public void setCity(String city) {
 		this.city = city;
-	}
-
-	public String getTel() {
-		return tel;
-	}
-
-	public void setTel(String tel) {
-		this.tel = tel;
 	}
 
 	public String getEmContact1() {

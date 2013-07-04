@@ -42,7 +42,6 @@ public class Employee implements Domain {
 	private boolean dismissed;
 	private int gender;
 	private Date    expire;
-	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date    birthday;
 	private String  idCard;
 	private String  mobile;
@@ -86,7 +85,6 @@ public class Employee implements Domain {
 	public Long getId() {
 		return id;
 	}
-	@NotBlank
 	public String getName() {
 		return name;
 	}
@@ -151,7 +149,7 @@ public class Employee implements Domain {
 	public void setExpire(Date expire) {
 		this.expire = expire;
 	}
-
+	@JsonFormat(pattern = "yyyy-MM-dd")
 	public Date getBirthday() {
 		return birthday;
 	}
