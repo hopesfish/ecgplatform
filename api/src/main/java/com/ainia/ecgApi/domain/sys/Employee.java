@@ -1,5 +1,6 @@
 package com.ainia.ecgApi.domain.sys;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.persistence.DiscriminatorColumn;
@@ -149,7 +150,7 @@ public class Employee implements Domain {
 	public void setExpire(Date expire) {
 		this.expire = expire;
 	}
-	@JsonFormat(pattern = "yyyy-MM-dd")
+	@JsonFormat(pattern = "yyyy-MM-dd" , timezone = "GMT+08:00")
 	public Date getBirthday() {
 		return birthday;
 	}
@@ -173,7 +174,7 @@ public class Employee implements Domain {
 	public void setMobile(String mobile) {
 		this.mobile = mobile;
 	}
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" ,  timezone = "GMT+08:00")
 	public Date getCreatedDate() {
 		return createdDate;
 	}
@@ -181,7 +182,7 @@ public class Employee implements Domain {
 	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
 	}
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" ,  timezone = "GMT+08:00")
 	public Date getLastUpdated() {
 		return lastUpdated;
 	}

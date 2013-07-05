@@ -38,6 +38,7 @@ public class HealthRule implements Domain {
 	private Long id;
 	private String name;
 	private String code;
+	private String type;
 	private String usage;
 	private Long  userId;
 	private String unit;
@@ -48,6 +49,7 @@ public class HealthRule implements Domain {
 	private Date   lastUpdated;
 	private String remark;
 	private Integer version;
+	private boolean canReply;
 	private List<HealthRuleReply> replys;
  	
 	
@@ -58,9 +60,9 @@ public class HealthRule implements Domain {
 	}
 	
 	public enum Level {
-		SIMPLE,
-		SERIOUS,
-		WARNING
+		danger,
+		warn,
+		info
 	}
 	@PrePersist
 	public void onCreate() {
@@ -112,6 +114,12 @@ public class HealthRule implements Domain {
 		this.userId = userId;
 	}
 
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
+	}
 	public String getUnit() {
 		return unit;
 	}
@@ -143,7 +151,7 @@ public class HealthRule implements Domain {
 	public void setMax(Float max) {
 		this.max = max;
 	}
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" ,  timezone = "GMT+08:00")
 	public Date getCreatedDate() {
 		return createdDate;
 	}
@@ -151,7 +159,7 @@ public class HealthRule implements Domain {
 	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
 	}
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" ,  timezone = "GMT+08:00")
 	public Date getLastUpdated() {
 		return lastUpdated;
 	}
@@ -168,6 +176,12 @@ public class HealthRule implements Domain {
 		this.remark = remark;
 	}
 	
+	public boolean isCanReply() {
+		return canReply;
+	}
+	public void setCanReply(boolean canReply) {
+		this.canReply = canReply;
+	}
 	@Version
 	public Integer getVersion() {
 		return version;

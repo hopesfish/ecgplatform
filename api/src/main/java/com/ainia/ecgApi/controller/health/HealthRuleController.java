@@ -65,7 +65,7 @@ public class HealthRuleController extends BaseController<HealthRule , Long> {
      * @return
      * ResponseEntity<List<HealthRuleReply>>
      */
-    @RequestMapping(value = "{id}/replyconfig/{replyId}" , method = RequestMethod.POST)
+    @RequestMapping(value = "{id}/replyconfig" , method = RequestMethod.POST)
     public ResponseEntity<HealthRuleReply> createReply(@PathVariable("id") Long id ,  HealthRuleReply reply) {
     	HealthRule healthRule = healthRuleService.get(id);
     	if (healthRule == null) {
@@ -81,7 +81,7 @@ public class HealthRuleController extends BaseController<HealthRule , Long> {
      * @return
      * ResponseEntity<List<HealthRuleReply>>
      */
-    @RequestMapping(value = "{id}/replyconfig" , method = RequestMethod.PUT)
+    @RequestMapping(value = "{id}/replyconfig/{replyId}" , method = RequestMethod.PUT)
     public ResponseEntity<HealthRuleReply> updateReply(@PathVariable("id") Long id ,
     												   @PathVariable("replyId") Long replyId , 
     												   HealthRuleReply reply) {

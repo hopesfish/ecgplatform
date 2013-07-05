@@ -49,7 +49,7 @@ define(function(require, exports) {
             rule.type = '11';
             rule.code = '1';
             rule.name = '测试';
-            rule.mix = 0;
+            rule.min = 0;
             rule.max = 100;
             rule.remark = "说明";
  
@@ -86,7 +86,7 @@ define(function(require, exports) {
                     RuleService.get(rule.id).then(function(pesistedRule) {
                         if (pesistedRule) {
                         	expect(pesistedRule.id).to.be(rule.id);
-                            expect(pesistedRule.min).to.be(rule.mix);
+                            expect(pesistedRule.min).to.be(rule.min);
                             expect(pesistedRule.max).to.be(rule.max);
                             done();
                         } else {

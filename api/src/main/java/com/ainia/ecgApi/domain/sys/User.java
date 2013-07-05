@@ -58,7 +58,6 @@ public class User implements Domain {
 	private Date   createdDate;
 	private Date   lastUpdated;
 	private String remark;
-	private String mobileNum;
 	private Boolean isFree;
 	private Integer version;
 	
@@ -135,7 +134,7 @@ public class User implements Domain {
 	public void setType(String type) {
 		this.type = type;
 	}
-	@JsonFormat(pattern = "yyyy-MM-dd")
+	@JsonFormat(pattern = "yyyy-MM-dd" ,  timezone = "GMT+08:00")
 	public Date getBirthday() {
 		return birthday;
 	}
@@ -223,7 +222,7 @@ public class User implements Domain {
 	public void setAnamnesis(String anamnesis) {
 		this.anamnesis = anamnesis;
 	}
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss"  , timezone = "GMT+08:00")
 	public Date getCreatedDate() {
 		return createdDate;
 	}
@@ -231,7 +230,7 @@ public class User implements Domain {
 	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
 	}
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" ,  timezone = "GMT+08:00")
 	public Date getLastUpdated() {
 		return lastUpdated;
 	}
@@ -247,15 +246,6 @@ public class User implements Domain {
 	public void setRemark(String remark) {
 		this.remark = remark;
 	}
-
-	public String getMobileNum() {
-		return mobileNum;
-	}
-
-	public void setMobileNum(String mobileNum) {
-		this.mobileNum = mobileNum;
-	}
-
 	public Boolean getIsFree() {
 		return isFree;
 	}
