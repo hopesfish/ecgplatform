@@ -49,7 +49,14 @@ public abstract class BaseDaoImpl<T extends Domain , ID extends Serializable> im
 		Predicate[] predicates = new Predicate[query.getConds().size()];
 		int i =0;
 		for (Condition condition : query.getConds()) {
-			predicates[i++] = JPAUtils.resolverCondition(root , builder, condition);
+			try {
+				predicates[i++] = JPAUtils.resolverCondition(root , builder, condition);
+			}catch(Throwable t){
+				t.printStackTrace();
+				if (log.isWarnEnabled()) {
+					log.warn("can not resolver field " + condition.getField() + " for " + query.getClazz());
+				}
+			}
 		}		
 		criteria.where(builder.and(predicates));
 	    Long counts =  (Long)em.createQuery(criteria).getSingleResult();	
@@ -67,7 +74,14 @@ public abstract class BaseDaoImpl<T extends Domain , ID extends Serializable> im
 		Predicate[] predicates = new Predicate[query.getConds().size()];
 		int i =0;
 		for (Condition condition : query.getConds()) {
-			predicates[i++] = JPAUtils.resolverCondition(root , builder, condition);
+			try {
+				predicates[i++] = JPAUtils.resolverCondition(root , builder, condition);
+			}catch(Throwable t){
+				t.printStackTrace();
+				if (log.isWarnEnabled()) {
+					log.warn("can not resolver field " + condition.getField() + " for " + query.getClazz());
+				}
+			}
 		}
 		criteria.select(root);
 		criteria.where(predicates);

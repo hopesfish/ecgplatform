@@ -27,7 +27,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 @Entity
 public class HealthRuleReply implements Domain {
 	
-	public static final String RULE_ID = "roleId";
+	public static final String RULE_ID = "ruleId";
 
 	private Long id;
 	private String title;

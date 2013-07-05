@@ -31,8 +31,8 @@ angular.module('ecgReplyConfigService', [])
                     method: 'GET',
                     url: PATH + "/api/rule/" + rule.id + "/replyconfig"
                 }).then(function(res) {
-                    if (res.data.datas && res.data.datas.length > 0) {
-                        return res.data.datas;
+                    if (res.data && res.data.length > 0) {
+                        return res.data;
                     } else {
                         return [];    
                     }
