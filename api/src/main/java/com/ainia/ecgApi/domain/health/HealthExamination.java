@@ -33,6 +33,7 @@ public class HealthExamination implements Domain {
 
 	private Long id;
 	private Long userId;
+	private String userName;
 	private String testItem;
 	private String userType;
 	private Level  level;
@@ -303,10 +304,19 @@ public class HealthExamination implements Domain {
 		return createdDate;
 	}
 
-
 	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
 	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
 
 	public void setId(Long id) {
 		this.id = id;

@@ -46,7 +46,7 @@ public class TaskServiceTest {
     public void setUp() {
         task = new Task();
         task.setStatus(Status.pending);
-        task.setOperatorId(1L);
+        task.setOperatorId(4L);
         task.setAuto(false);
     }
     

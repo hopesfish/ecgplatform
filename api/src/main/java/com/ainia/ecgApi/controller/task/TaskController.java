@@ -18,7 +18,7 @@ import com.ainia.ecgApi.service.task.TaskService;
  * @version 0.1
  */
 @Controller
-@RequestMapping("/task")
+@RequestMapping("/api/task")
 public class TaskController extends BaseController<Task , Long> {
 
     @Autowired

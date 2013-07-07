@@ -1,6 +1,5 @@
-package com.ainia.ecgApi.core.crud;
+package com.ainia.ecgApi.core.utils;
 
-import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -15,10 +14,10 @@ import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 
 import org.springframework.core.convert.ConversionService;
-import org.springframework.util.ReflectionUtils;
 
+import com.ainia.ecgApi.core.crud.Condition;
+import com.ainia.ecgApi.core.crud.Query;
 import com.ainia.ecgApi.core.crud.Query.OrderType;
-import com.ainia.ecgApi.core.utils.ExceptionUtils;
 
 /**
  * <p>jpa query utils</p>

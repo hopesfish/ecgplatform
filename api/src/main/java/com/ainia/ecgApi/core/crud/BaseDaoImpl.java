@@ -2,6 +2,7 @@ package com.ainia.ecgApi.core.crud;
 
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
+import java.util.Collection;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -14,8 +15,12 @@ import javax.persistence.criteria.Root;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.ConversionService;
+import org.springframework.util.ReflectionUtils;
 
 import com.ainia.ecgApi.core.bean.Domain;
+import com.ainia.ecgApi.core.utils.JPAUtils;
 
 /**
  * <p>add custome jpaRepository method</p>
@@ -33,6 +38,8 @@ public abstract class BaseDaoImpl<T extends Domain , ID extends Serializable> im
 	@PersistenceContext
 	private EntityManager em;
 	private Class<T> clazz;
+	@Autowired
+	private ConversionService conversionService;
 	
 	@SuppressWarnings("unchecked")
 	public BaseDaoImpl() {
@@ -45,20 +52,8 @@ public abstract class BaseDaoImpl<T extends Domain , ID extends Serializable> im
 		Root<T> root = criteria.from(clazz);
 		
 		criteria.select(builder.count(root));
+		generateCondition(query , builder , criteria , root);
 		//构造查询条件
-		Predicate[] predicates = new Predicate[query.getConds().size()];
-		int i =0;
-		for (Condition condition : query.getConds()) {
-			try {
-				predicates[i++] = JPAUtils.resolverCondition(root , builder, condition);
-			}catch(Throwable t){
-				t.printStackTrace();
-				if (log.isWarnEnabled()) {
-					log.warn("can not resolver field " + condition.getField() + " for " + query.getClazz());
-				}
-			}
-		}		
-		criteria.where(builder.and(predicates));
 	    Long counts =  (Long)em.createQuery(criteria).getSingleResult();	
 	    return counts;
 	}
@@ -70,21 +65,8 @@ public abstract class BaseDaoImpl<T extends Domain , ID extends Serializable> im
 		CriteriaBuilder builder = em.getCriteriaBuilder();
 		CriteriaQuery criteria  = builder.createQuery();
 		Root<T> root = criteria.from(query.getClazz());
-		
-		Predicate[] predicates = new Predicate[query.getConds().size()];
-		int i =0;
-		for (Condition condition : query.getConds()) {
-			try {
-				predicates[i++] = JPAUtils.resolverCondition(root , builder, condition);
-			}catch(Throwable t){
-				t.printStackTrace();
-				if (log.isWarnEnabled()) {
-					log.warn("can not resolver field " + condition.getField() + " for " + query.getClazz());
-				}
-			}
-		}
 		criteria.select(root);
-		criteria.where(predicates);
+		generateCondition(query , builder , criteria , root);
         TypedQuery typedQuery = em.createQuery(criteria);
         //检查是否分页
         Page page = query.getPage();
@@ -93,6 +75,29 @@ public abstract class BaseDaoImpl<T extends Domain , ID extends Serializable> im
         	typedQuery.setFirstResult(page.getOffset());
         }
 	    return typedQuery.getResultList();
+	}
+	
+	protected  void generateCondition(Query<T> query , CriteriaBuilder builder , CriteriaQuery criteria , Root root) {
+		Predicate[] predicates = new Predicate[query.getConds().size()];
+		int i =0;
+		for (Condition condition : query.getConds()) {
+			try {
+				if (condition.getValue() != null && !(condition.getValue() instanceof Collection)) {
+					Class targetClass = ReflectionUtils.findField(clazz , condition.getField()).getType();
+					Class sourceClass = condition.getValue().getClass();
+					if (targetClass != sourceClass && conversionService.canConvert(sourceClass, targetClass)) {
+						condition.setValue(conversionService.convert(condition.getValue(), targetClass));
+					}
+				}
+				predicates[i++] = JPAUtils.resolverCondition(root , builder, condition);
+			}catch(Throwable t){
+				t.printStackTrace();
+				if (log.isWarnEnabled()) {
+					log.warn("can not resolver field " + condition.getField() + " for " + query.getClazz());
+				}
+			}
+		}		
+		criteria.where(builder.and(predicates));
 	}
 
 	public void setEm(EntityManager em) {

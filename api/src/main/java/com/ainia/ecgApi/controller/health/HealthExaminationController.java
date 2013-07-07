@@ -30,7 +30,7 @@ import com.ainia.ecgApi.service.health.HealthReplyService;
  * @version 0.1
  */
 @Controller
-@RequestMapping("/healthExamination")
+@RequestMapping("/api/examination")
 public class HealthExaminationController extends BaseController<HealthExamination , Long> {
 
     @Autowired

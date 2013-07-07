@@ -1,5 +1,5 @@
 insert into user (id, mobile , username, name, password, gender, id_card , type ,birthday,address,stature,weight,city,em_contact1,em_contact1_tel,em_contact2,em_contact2_tel , bad_habits , anamnesis , created_date , last_updated , remark ,is_free , version)
-values (1,'13910230012' ,'admin','Admin','691b14d79bf0fa2215f155235df5e670b64394cc',1 ,'430203198502011218', 'SIMPLE','1983-06-04 01:00:00','����',1.72,72,'','','','','','','','2012-06-04 01:00:00','2012-06-04 01:00:00','',1,1);
+values (1,'13910230012' ,'测试用户','测试用户','691b14d79bf0fa2215f155235df5e670b64394cc',1 ,'430203198502011218', 'SIMPLE','1983-06-04 01:00:00','����',1.72,72,'','','','','','','','2012-06-04 01:00:00','2012-06-04 01:00:00','',1,1);
 
 --employee start
 insert into employee (id ,type, name , username , password , roles , status,enabled,dismissed,gender,expire,birthday,id_card , mobile ,created_date,last_updated,version) values 
@@ -26,8 +26,11 @@ values (5 , '心跳规则的回复区间' , '1' , 'filter' , 1, '11' , null , '�
 insert into health_rule (id , name , code , usage , can_reply, type , user_id , unit , level ,min , max,created_date,remark , version)
 values (6 , '心跳规则的回复区间' , '1' , 'filter' , 1, '11' , null , '次' , 'danger' , 101 , 200 , '2012-06-04 01:00:00' , '心跳规则的说明' , 1);
 -- health_examination start
-insert into health_examination (id , user_id , test_item , user_type , level , blood_pressure_low,blood_pressure_high,heart_rhythm , breath,body_temp,pulserate,heart_data,latitude,altitude,temp,humidity,pressure,charge_type,heart_features,algorithm_version,created_date,version) 
-values (1,null,'PHONE','VIP','danger',80,120,60,60,37.5,60,'',0.0,200,37.6,null,null,'YEAR',null,null,'2013-07-04 01:00:00',1);
+insert into health_examination (id , user_id , test_item , user_name , user_type , level , blood_pressure_low,blood_pressure_high,heart_rhythm , breath,body_temp,pulserate,heart_data,latitude,altitude,temp,humidity,pressure,charge_type,heart_features,algorithm_version,created_date,version) 
+values (1,1,'PHONE', '测试用户','VIP','danger',80,120,60,60,37.5,60,'',0.0,200,37.6,null,null,'YEAR',null,null,'2013-07-04 01:00:00',1);
+insert into health_examination (id , user_id , test_item , user_name , user_type , level , blood_pressure_low,blood_pressure_high,heart_rhythm , breath,body_temp,pulserate,heart_data,latitude,altitude,temp,humidity,pressure,charge_type,heart_features,algorithm_version,created_date,version) 
+values (2,1,'PHONE', '测试用户2','VIP','danger',80,120,60,60,37.5,60,'',0.0,200,37.6,null,null,'YEAR',null,null,'2013-07-04 01:00:00',1);
+
 -- health_examination end
 -- task start
 insert into task (id , type ,examination_id , status,expert_id,operator_id,auto , created_date , completed_date,version)

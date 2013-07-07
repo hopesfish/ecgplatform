@@ -18,7 +18,7 @@ import com.ainia.ecgApi.service.health.HealthReplyService;
  * @version 0.1
  */
 @Controller
-@RequestMapping("/healthReply")
+@RequestMapping("/api/healthReply")
 public class HealthReplyController extends BaseController<HealthReply , Long> {
 
     @Autowired

@@ -67,6 +67,16 @@
     
     <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
 
+    <bean id="conversionService"
+          class="org.springframework.context.support.ConversionServiceFactoryBean">
+        <property name="converters">
+            <list>
+                <bean class="com.ainia.ecgApi.core.bean.converter.StringToDateConverter"/>
+                <bean class="com.ainia.ecgApi.core.bean.converter.StringToBooleanConverter"/>
+            </list>
+        </property>
+    </bean>
+
     <!-- production环境 -->
     <beans profile="production">
         <context:property-placeholder ignore-unresolvable="true"
