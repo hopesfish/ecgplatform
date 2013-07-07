@@ -3,7 +3,6 @@ package com.ainia.ecgApi.service.sys;
 import java.util.List;
 
 import org.joda.time.DateTime;
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.transaction.TransactionConfiguration;
 
 import com.ainia.ecgApi.core.crud.Query;
 import com.ainia.ecgApi.domain.sys.Chief;
@@ -28,12 +28,13 @@ import com.ainia.ecgApi.domain.sys.Chief;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:applicationContext.xml"})
 @ActiveProfiles("test")
+@TransactionConfiguration(defaultRollback = true)
 public class ChiefServiceTest {
 
 	@Autowired
 	private ChiefService chiefService;
 
-	private Chief chief;
+	private static Chief chief;
 	
 	public void setChiefService(ChiefService chiefService) {
 		this.chiefService = chiefService;
@@ -55,10 +56,7 @@ public class ChiefServiceTest {
 		chief.setEnabled(true);
 		chief.setStatus("ONLINE");
 		chief.setIdCard("430203198302011518");
-	}
-	@After
-	public void tearDown() {
-		chiefService.delete(chief);
+		
 	}
 	
 	@Test
@@ -75,31 +73,32 @@ public class ChiefServiceTest {
 		
 		Assert.assertTrue(chief.getId() != null);
 		
-
+		chiefService.delete(chief);
 	}
 	
 	@Test
 	public void testUpdate() {
-//		chiefService.create(chief);
-//		
-//		chief.setEnabled(false);
-//		chief.setCompany("test");
-//		chief.setPassword(null);
-//		Chief _chief = chiefService.update(chief);
-//		
-//		Assert.assertNotNull(_chief.getPassword());
+		chiefService.create(chief);
+		chief.setEnabled(false);
+		chief.setCompany("test");
+		chief.setPassword(null);
+		Chief _chief = chiefService.update(chief);
+		
+		Assert.assertNotNull(_chief.getPassword());
+		
+		chiefService.delete(_chief);
 	}
 	
 	@Test
 	public void testPatch() {
 		chiefService.create(chief);
-		
 		chief.setCompany(null);
 		chief.setPassword(null);
 		
 		Chief _chief = chiefService.update(chief);
-		
 		Assert.assertNotNull(_chief.getCompany());
+		
+		chiefService.delete(_chief);
 	}
 	
 	

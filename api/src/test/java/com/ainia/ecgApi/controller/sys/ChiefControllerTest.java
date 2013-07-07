@@ -92,18 +92,20 @@ public class ChiefControllerTest {
 
         Assert.isTrue(201 == response.getStatus());
     }
+    @Test
     public void testUpdate() throws NoSuchMethodException, Exception {
-//        request.setRequestURI("/api/chief/1");
-//        request.setMethod(HttpMethod.PUT.name());
-//        request.addParameter("status" , "ONLINE");
-//        
-//        handlerAdapter.handle(request, response, new HandlerMethod(chiefController, "update" , Serializable.class , Domain.class));
-//
-//        Assert.isTrue(201 == response.getStatus());
-        mockMvc.perform(put("/api/chief/{id}").contentType(MediaType.APPLICATION_FORM_URLENCODED)
-        	   .param("status" , "ONLINE")
-         	   .accept(MediaType.APPLICATION_JSON))
-         	   .andExpect(status().isOk());
+        request.setRequestURI("/api/chief/1");
+        request.setMethod(HttpMethod.PUT.name());
+        request.addParameter("status" , "ONLINE");
+        request.addParameter("id" , "1");
+        
+        handlerAdapter.handle(request, response, new HandlerMethod(chiefController, "update" , Serializable.class , Domain.class));
+
+        Assert.isTrue(201 == response.getStatus());
+//        mockMvc.perform(put("/api/chief/{id}").contentType(MediaType.APPLICATION_FORM_URLENCODED)
+//        	   .param("status" , "ONLINE")
+//         	   .accept(MediaType.APPLICATION_JSON))
+//         	   .andExpect(status().isOk());
     }
 
 	public void setChiefController(ChiefController chiefController) {
