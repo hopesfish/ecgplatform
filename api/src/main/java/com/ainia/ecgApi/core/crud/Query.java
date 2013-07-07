@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.ainia.ecgApi.core.bean.Domain;
+import com.ainia.ecgApi.core.crud.Condition.Type;
 
 /**
  * <p>CRUD Query Object</p>
@@ -43,6 +44,70 @@ public class Query<T extends Domain> {
 		desc
 	}
 
+	public Query<T> eq(String field , Object value) {
+		this.addCondition(Condition.eq(field , value));
+		return this;
+	}
+	
+	public Query<T> ne(String field , Object value) {
+		this.addCondition(Condition.ne(field , value));
+		return this;
+	}
+	
+	public Query<T> ge(String field , Object value) {
+		this.addCondition(Condition.ge(field , value));
+		return this;
+	}
+	
+	public Query<T> gt(String field , Object value) {
+		this.addCondition(Condition.gt(field , value));
+		return this;
+	}
+	
+	public Query<T> le(String field , Object value) {
+		this.addCondition(Condition.le(field , value));
+		return this;
+	}
+	
+	public Query<T> lt(String field , Object value) {
+		this.addCondition(Condition.lt(field , value));
+		return this;
+	}
+	
+	public Query<T> like(String field , Object value) {
+		this.addCondition(Condition.like(field , value));
+		return this;
+	}
+	
+	public Query<T> llike(String field , Object value) {
+		this.addCondition(Condition.llike(field , value));
+		return this;
+	}
+	
+	public Query<T> rlike(String field , Object value) {
+		this.addCondition(Condition.rlike(field , value));
+		return this;
+	}
+	
+	public Query<T> in(String field , Object value) {
+		this.addCondition(Condition.in(field , value));
+		return this;
+	}
+	
+	public Query<T> noIn(String field , Object... value) {
+		this.addCondition(Condition.noIn(field , value));
+		return this;
+	}
+	
+	public Query<T> isNull(String field) {
+		this.addCondition(Condition.isNull(field));
+		return this;
+	}
+	
+	public Query<T> isNotNull(String field) {
+		this.addCondition(Condition.isNotNull(field));
+		return this;
+	}
 
 	public Class<T> getClazz() {
 		return clazz;

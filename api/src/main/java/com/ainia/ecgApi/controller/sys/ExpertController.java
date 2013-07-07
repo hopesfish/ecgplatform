@@ -14,10 +14,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ainia.ecgApi.core.crud.BaseController;
 import com.ainia.ecgApi.core.crud.BaseService;
+import com.ainia.ecgApi.core.crud.Page;
+import com.ainia.ecgApi.core.crud.Query;
 import com.ainia.ecgApi.domain.sys.Expert;
 import com.ainia.ecgApi.domain.sys.Operator;
+import com.ainia.ecgApi.domain.task.Task;
 import com.ainia.ecgApi.service.sys.ExpertService;
 import com.ainia.ecgApi.service.sys.OperatorService;
+import com.ainia.ecgApi.service.task.TaskService;
 
 /**
  * <p>Expert Controller</p>
@@ -36,6 +40,8 @@ public class ExpertController extends BaseController<Expert, Long> {
 	private ExpertService expertService;
 	@Autowired
 	private OperatorService operatorService;
+	@Autowired
+	private TaskService taskService;
 	
 	@Override
 	public BaseService<Expert, Long> getBaseService() {
@@ -85,6 +91,22 @@ public class ExpertController extends BaseController<Expert, Long> {
 		expert.getOperators().remove(operator);
 		expertService.update(expert);
 		return new ResponseEntity(HttpStatus.OK);
+	}
+	/**
+	 * <p>获取专家所属任务</p>
+	 * @param expertId
+	 * @param query
+	 * @return
+	 * ResponseEntity<Page<Task>>
+	 */
+	@RequestMapping(value = "{id}/task" , method = RequestMethod.GET ,produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public ResponseEntity<Page<Task>> findTask(@PathVariable("id") Long expertId , Query<Task> query) {
+		query.eq(Task.EXPERT_ID , expertId);
+		long total = taskService.count(query);
+		query.getPage().setTotal(total);
+		query.getPage().setDatas(taskService.findAll(query));
+		return new ResponseEntity(query.getPage() ,HttpStatus.OK);
 	}
 	
 	

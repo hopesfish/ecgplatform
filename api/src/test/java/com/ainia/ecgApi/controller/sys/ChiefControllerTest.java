@@ -92,7 +92,6 @@ public class ChiefControllerTest {
 
         Assert.isTrue(201 == response.getStatus());
     }
-    @Test
     public void testUpdate() throws NoSuchMethodException, Exception {
         request.setRequestURI("/api/chief/1");
         request.setMethod(HttpMethod.PUT.name());

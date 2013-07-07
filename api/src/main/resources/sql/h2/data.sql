@@ -25,5 +25,12 @@ insert into health_rule (id , name , code , usage , can_reply, type , user_id , 
 values (5 , '心跳规则的回复区间' , '1' , 'filter' , 1, '11' , null , '次' , 'warning' , 91 , 100 , '2012-06-04 01:00:00' , '心跳规则的说明' , 1);
 insert into health_rule (id , name , code , usage , can_reply, type , user_id , unit , level ,min , max,created_date,remark , version)
 values (6 , '心跳规则的回复区间' , '1' , 'filter' , 1, '11' , null , '次' , 'danger' , 101 , 200 , '2012-06-04 01:00:00' , '心跳规则的说明' , 1);
-
+-- health_examination start
+insert into health_examination (id , user_id , test_item , user_type , level , blood_pressure_low,blood_pressure_high,heart_rhythm , breath,body_temp,pulserate,heart_data,latitude,altitude,temp,humidity,pressure,charge_type,heart_features,algorithm_version,created_date,version) 
+values (1,null,'PHONE','VIP','danger',80,120,60,60,37.5,60,'',0.0,200,37.6,null,null,'YEAR',null,null,'2013-07-04 01:00:00',1);
+-- health_examination end
+-- task start
+insert into task (id , type ,examination_id , status,expert_id,operator_id,auto , created_date , completed_date,version)
+values (1,'examinationTask' , 1 ,'pending',null,4,0,'2013-07-04 01:00:00',null,1);
+-- task end
 commit;
