@@ -27,6 +27,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
  */
 @Entity
 public class HealthReply implements Domain {
+	
+	public static final String EXAMINATION_ID = "examinationId";
 
 	private Long id;
 	private String type;

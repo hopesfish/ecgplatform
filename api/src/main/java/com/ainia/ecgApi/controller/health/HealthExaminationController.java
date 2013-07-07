@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ainia.ecgApi.core.crud.BaseController;
 import com.ainia.ecgApi.core.crud.BaseService;
+import com.ainia.ecgApi.core.crud.Query;
 import com.ainia.ecgApi.core.security.AuthUser;
 import com.ainia.ecgApi.core.security.AuthenticateService;
 import com.ainia.ecgApi.core.web.AjaxResult;
@@ -80,4 +81,23 @@ public class HealthExaminationController extends BaseController<HealthExaminatio
     	return new ResponseEntity<AjaxResult>(HttpStatus.CREATED);
     }
 
+    /**
+     * <p>获取健康监测回复</p>
+     * @param id
+     * @param reply
+     * @return
+     * ResponseEntity<AjaxResult>
+     */
+	@RequestMapping(value = "/{id}/reply" , method = RequestMethod.GET , produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+    public ResponseEntity<?> findReply(@PathVariable("id") Long id) {
+    	HealthExamination examination = healthExaminationService.get(id);
+    	if (examination == null) {
+    		return new ResponseEntity(HttpStatus.NOT_FOUND);
+    	}
+    	Query<HealthReply> query = new Query();
+    	query.eq(HealthReply.EXAMINATION_ID , id);
+    	
+    	return new ResponseEntity(healthReplyService.findAll(query) , HttpStatus.OK);
+    }
 }
