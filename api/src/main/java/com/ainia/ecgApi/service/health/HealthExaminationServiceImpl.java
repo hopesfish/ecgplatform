@@ -7,6 +7,10 @@ import com.ainia.ecgApi.core.crud.BaseDao;
 import com.ainia.ecgApi.core.crud.BaseServiceImpl;
 import com.ainia.ecgApi.dao.health.HealthExaminationDao;
 import com.ainia.ecgApi.domain.health.HealthExamination;
+import com.ainia.ecgApi.domain.health.HealthReply;
+import com.ainia.ecgApi.domain.task.ExaminationTask;
+import com.ainia.ecgApi.domain.task.Task.Status;
+import com.ainia.ecgApi.service.task.ExaminationTaskService;
 
 /**
  * <p>HealthExamination Service Impl</p>
@@ -22,10 +26,21 @@ public class HealthExaminationServiceImpl extends BaseServiceImpl<HealthExaminat
     
     @Autowired
     private HealthExaminationDao healthExaminationDao;
+    @Autowired
+    private HealthReplyService healthReplyService;
+    @Autowired
+    private ExaminationTaskService examinationTaskService;
     
     @Override
     public BaseDao<HealthExamination , Long> getBaseDao() {
         return healthExaminationDao;
     }
+
+	public void reply(Long id , HealthReply reply) {
+		healthReplyService.create(reply);
+		ExaminationTask task = examinationTaskService.getByExaminationId(id);
+		task.setStatus(Status.completed);
+		examinationTaskService.update(task);
+	}
 
 }

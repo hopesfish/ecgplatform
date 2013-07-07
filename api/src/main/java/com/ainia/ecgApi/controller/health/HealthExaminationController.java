@@ -76,7 +76,7 @@ public class HealthExaminationController extends BaseController<HealthExaminatio
     	reply.setEmployeeId(authUser.getId());
     	reply.setExaminationId(id);
     	
-    	healthReplyService.create(reply);
+    	healthExaminationService.reply(id , reply);
     	return new ResponseEntity<AjaxResult>(HttpStatus.CREATED);
     }
 

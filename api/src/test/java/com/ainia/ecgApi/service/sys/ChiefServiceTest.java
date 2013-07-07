@@ -41,7 +41,6 @@ public class ChiefServiceTest {
 	}
 	
 	
-	
 	@Before
 	public void setUp() {
 		chief = new Chief();

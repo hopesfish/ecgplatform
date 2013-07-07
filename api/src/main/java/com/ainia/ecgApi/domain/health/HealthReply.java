@@ -58,7 +58,6 @@ public class HealthReply implements Domain {
 	public Long getId() {
 		return id;
 	}	
-	@NotBlank
 	public String getType() {
 		return type;
 	}
