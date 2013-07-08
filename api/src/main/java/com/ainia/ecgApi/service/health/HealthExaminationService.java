@@ -22,4 +22,11 @@ public interface HealthExaminationService extends BaseService<HealthExamination 
 	 * void
 	 */
 	public void reply(Long id , HealthReply reply);
+	
+	/**
+	 * <p>上传健康监测数据</p>
+	 * @param uploadData
+	 * void
+	 */
+	public void upload(byte[] uploadData);
 }

@@ -4,12 +4,14 @@ import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map.Entry;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
@@ -20,6 +22,7 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.util.ReflectionUtils;
 
 import com.ainia.ecgApi.core.bean.Domain;
+import com.ainia.ecgApi.core.crud.Query.OrderType;
 import com.ainia.ecgApi.core.utils.JPAUtils;
 
 /**
@@ -67,6 +70,15 @@ public abstract class BaseDaoImpl<T extends Domain , ID extends Serializable> im
 		Root<T> root = criteria.from(query.getClazz());
 		criteria.select(root);
 		generateCondition(query , builder , criteria , root);
+		//检查是否排序
+		if (query.isOrder()) {
+			Order[] orders = new Order[query.getOrders().size()];
+			int i = 0;
+			for (Entry<String , OrderType> entry : query.getOrders().entrySet()) {
+				orders[i++] = JPAUtils.resolverOrder(root , builder, entry.getKey() , entry.getValue());
+			}
+			criteria.orderBy(orders);
+		}
         TypedQuery typedQuery = em.createQuery(criteria);
         //检查是否分页
         Page page = query.getPage();

@@ -39,8 +39,14 @@ public class HealthExaminationServiceImpl extends BaseServiceImpl<HealthExaminat
 	public void reply(Long id , HealthReply reply) {
 		healthReplyService.create(reply);
 		ExaminationTask task = examinationTaskService.getByExaminationId(id);
-		task.setStatus(Status.completed);
-		examinationTaskService.update(task);
+		if (!task.isComplete()) {
+			task.setStatus(Status.completed);
+			examinationTaskService.update(task);
+		}
+	}
+
+	public void upload(byte[] uploadData) {
+		
 	}
 
 }

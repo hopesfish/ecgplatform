@@ -8,7 +8,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.ainia.ecgApi.core.crud.BaseController;
 import com.ainia.ecgApi.core.crud.BaseService;
@@ -99,5 +101,16 @@ public class HealthExaminationController extends BaseController<HealthExaminatio
     	query.eq(HealthReply.EXAMINATION_ID , id);
     	
     	return new ResponseEntity(healthReplyService.findAll(query) , HttpStatus.OK);
+    }
+	
+    /**
+     * <p>测试数据上传接口</p>
+     * @param file
+     * @return
+     * ResponseEntity
+     */
+    public ResponseEntity upload( @RequestParam("file") MultipartFile file) {
+    	
+    	return null;
     }
 }

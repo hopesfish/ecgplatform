@@ -14,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.PrePersist;
+import javax.persistence.Transient;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 
@@ -29,6 +30,7 @@ public class Task implements Domain {
 	public static final String EXPERT_ID = "expertId";
 	public static final String OPERATOR_ID = "operatorId";
 	public static final String AUTO = "auto";
+	public static final String CREATED_DATE = "createdDate";
 	
 	private Long id;
 	private Status status;
@@ -39,7 +41,10 @@ public class Task implements Domain {
 	private Date completedDate;
 	private Integer version;
 	
-	
+	@Transient
+	public boolean isComplete() {
+		return Status.completed.equals(status);
+	}
 	@PrePersist
 	public void onCreate() {
 		this.createdDate = new Date();
@@ -109,7 +114,6 @@ public class Task implements Domain {
 	public void setCompletedDate(Date completedDate) {
 		this.completedDate = completedDate;
 	}
-	@Version
 	public Integer getVersion() {
 		return version;
 	}

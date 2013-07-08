@@ -33,6 +33,10 @@ public class Query<T extends Domain> {
 		return this;
 	}
 	
+	public boolean isOrder() {
+		return this.orders.size() > 0;
+	}
+	
 	public Query<T> addOrder(String field , OrderType order) {
 		this.orders.put(field, order);
 		return this;

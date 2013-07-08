@@ -14,6 +14,7 @@ import com.ainia.ecgApi.core.crud.BaseController;
 import com.ainia.ecgApi.core.crud.BaseService;
 import com.ainia.ecgApi.core.crud.Page;
 import com.ainia.ecgApi.core.crud.Query;
+import com.ainia.ecgApi.core.crud.Query.OrderType;
 import com.ainia.ecgApi.domain.sys.Expert;
 import com.ainia.ecgApi.domain.sys.Operator;
 import com.ainia.ecgApi.domain.task.Task;
@@ -92,6 +93,7 @@ public class OperatorController extends BaseController<Operator, Long> {
 	@ResponseBody
 	public ResponseEntity<Page<Task>> findTask(@PathVariable("id") Long operatorId , Query<Task> query) {
 		query.eq(Task.OPERATOR_ID  , operatorId);
+		query.addOrder(Task.CREATED_DATE , OrderType.desc);
 		long total = taskService.count(query);
 		query.getPage().setTotal(total);
 		query.getPage().setDatas(taskService.findAll(query));
