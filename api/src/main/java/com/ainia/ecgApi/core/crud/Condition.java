@@ -77,11 +77,11 @@ public class Condition {
 	}
 	
 	public static Condition isNull(String field) {
-		return new Condition(field , Type.isNull);
+		return new Condition(field , Type.isNull , null);
 	}
 	
 	public static Condition isNotNull(String field) {
-		return new Condition(field , Type.notNull);
+		return new Condition(field , Type.notNull , null);
 	}
 	
 	public enum Type {

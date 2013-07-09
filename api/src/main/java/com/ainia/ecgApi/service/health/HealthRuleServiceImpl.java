@@ -29,6 +29,6 @@ public class HealthRuleServiceImpl extends BaseServiceImpl<HealthRule , Long> im
     }
 
     public HealthRule findSimpleByCode(String code) {
-    	return healthRuleDao.findByCodeAndUserIdIsNull(code);
+    	return healthRuleDao.findByCode(code);
     }
 }

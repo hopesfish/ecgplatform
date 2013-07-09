@@ -22,5 +22,5 @@ public interface HealthRuleDao extends JpaRepository<HealthRule , Long>, BaseDao
      * @return
      * HealthRule
      */
-	public HealthRule findByCodeAndUserIdIsNull(String code);
+	public HealthRule findByCode(String code);
 }

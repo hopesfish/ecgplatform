@@ -40,7 +40,8 @@ public class HealthRule implements Domain {
 	private String code;
 	private String type;
 	private String usage;
-	private Long  userId;
+	private Long  groupId;
+	private Long  employeeId;
 	private String unit;
 	private Level  level;
 	private Float  min;
@@ -107,14 +108,13 @@ public class HealthRule implements Domain {
 	public void setUsage(String usage) {
 		this.usage = usage;
 	}
-	public Long getUserId() {
-		return userId;
-	}
 
-	public void setUserId(Long userId) {
-		this.userId = userId;
+	public Long getEmployeeId() {
+		return employeeId;
 	}
-
+	public void setEmployeeId(Long employeeId) {
+		this.employeeId = employeeId;
+	}
 	public String getType() {
 		return type;
 	}
@@ -169,6 +169,12 @@ public class HealthRule implements Domain {
 		this.lastUpdated = lastUpdated;
 	}
 
+	public Long getGroupId() {
+		return groupId;
+	}
+	public void setGroupId(Long groupId) {
+		this.groupId = groupId;
+	}
 	public String getRemark() {
 		return remark;
 	}

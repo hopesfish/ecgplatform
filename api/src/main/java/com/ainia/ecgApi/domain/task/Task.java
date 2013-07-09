@@ -31,6 +31,7 @@ public class Task implements Domain {
 	public static final String OPERATOR_ID = "operatorId";
 	public static final String AUTO = "auto";
 	public static final String CREATED_DATE = "createdDate";
+	public static final String STATUS = "status";
 	
 	private Long id;
 	private Status status;
