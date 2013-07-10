@@ -25,7 +25,7 @@ public interface TaskService extends BaseService<Task , Long> {
 	 * @param task
 	 * void
 	 */
-	public void pending(Task task);
+	public Task pending(Task task);
 	/**
 	 * <p>将任务提交处理</p>
 	 * <pre>
@@ -34,14 +34,14 @@ public interface TaskService extends BaseService<Task , Long> {
 	 * @param task
 	 * void
 	 */
-	public void proceeding(Task task);
+	public Task proceeding(Task task);
 	
 	/**
 	 * <p>完成任务</p>
 	 * @param task
 	 * void
 	 */
-	public void complete(Task task);
+	public Task complete(Task task);
 	/**
 	 * <p>获得接线员现有的任务</p>
 	 * @param operatorId

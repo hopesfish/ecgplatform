@@ -29,15 +29,15 @@ public class PropertyUtil {
 		 */
 		public static void copyProperties(Object target,Object source)
 		{
-			copyProperties(target, source , false , true , null);
+			copyProperties(target, source , false , false , null);
 		}
 		
 		public static void copyProperties(Object target , Object source , boolean nullable) {
-			copyProperties(target, source , nullable , true , null);
+			copyProperties(target, source , nullable , false , null);
 		}
 		
 		public static void copyProperties(Object target , Object source , Collection<String> excludes) {
-			copyProperties(target, source , false , true , excludes);
+			copyProperties(target, source , false , false , excludes);
 		}
 		/**
 		 * 

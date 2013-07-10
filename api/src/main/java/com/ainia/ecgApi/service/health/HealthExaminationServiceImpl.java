@@ -11,6 +11,7 @@ import com.ainia.ecgApi.domain.health.HealthReply;
 import com.ainia.ecgApi.domain.task.ExaminationTask;
 import com.ainia.ecgApi.domain.task.Task.Status;
 import com.ainia.ecgApi.service.task.ExaminationTaskService;
+import com.ainia.ecgApi.service.task.TaskService;
 
 /**
  * <p>HealthExamination Service Impl</p>
@@ -30,6 +31,8 @@ public class HealthExaminationServiceImpl extends BaseServiceImpl<HealthExaminat
     private HealthReplyService healthReplyService;
     @Autowired
     private ExaminationTaskService examinationTaskService;
+    @Autowired
+    private TaskService taskService;
     
     @Override
     public BaseDao<HealthExamination , Long> getBaseDao() {
@@ -39,10 +42,7 @@ public class HealthExaminationServiceImpl extends BaseServiceImpl<HealthExaminat
 	public void reply(Long id , HealthReply reply) {
 		healthReplyService.create(reply);
 		ExaminationTask task = examinationTaskService.getByExaminationId(id);
-		if (!task.isComplete()) {
-			task.setStatus(Status.completed);
-			examinationTaskService.update(task);
-		}
+		taskService.complete(task);
 	}
 
 	public void upload(byte[] uploadData) {

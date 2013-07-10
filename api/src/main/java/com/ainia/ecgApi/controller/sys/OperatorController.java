@@ -73,8 +73,8 @@ public class OperatorController extends BaseController<Operator, Long> {
 			return new ResponseEntity(HttpStatus.NOT_FOUND);
 		}
 		operator.addExpert(expertService.get(expertId));
-		operatorService.update(operator);
-		return new ResponseEntity(HttpStatus.OK);
+		operatorService.patch(operator);
+		return new ResponseEntity(HttpStatus.CREATED);
 	}
 
 	/**
