@@ -1,12 +1,18 @@
 package com.ainia.ecgApi.domain.sys;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
@@ -17,6 +23,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.ainia.ecgApi.core.bean.Domain;
+import com.ainia.ecgApi.domain.health.HealthRule;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -32,8 +39,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class User implements Domain {
 
 	private static final long serialVersionUID = 1L;
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+
 	private Long    id;
 	private String  mobile;
 	private String  name;
@@ -48,10 +54,8 @@ public class User implements Domain {
 	private int gender;
 	private String city;
 	private String emContact1;
-	@Column(name="em_contact1_tel")
 	private String emContact1Tel;
 	private String emContact2;
-	@Column(name="em_contact2_tel")
 	private String emContact2Tel;
 	private String badHabits;
 	private String anamnesis;
@@ -60,6 +64,7 @@ public class User implements Domain {
 	private String remark;
 	private Boolean isFree;
 	private Integer version;
+	private Set<HealthRule> rules;
 	
 	@PrePersist
 	public void onCreate() {
@@ -78,7 +83,8 @@ public class User implements Domain {
 	public String getMobilePrefix () {
 		return mobile == null?null : mobile.substring(7);
 	}
-	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public Long getId() {
 		return id;
 	}
@@ -182,7 +188,7 @@ public class User implements Domain {
 	public void setEmContact1(String emContact1) {
 		this.emContact1 = emContact1;
 	}
-
+	@Column(name="em_contact1_tel")
 	public String getEmContact1Tel() {
 		return emContact1Tel;
 	}
@@ -198,7 +204,7 @@ public class User implements Domain {
 	public void setEmContact2(String emContact2) {
 		this.emContact2 = emContact2;
 	}
-
+	@Column(name="em_contact2_tel")
 	public String getEmContact2Tel() {
 		return emContact2Tel;
 	}
@@ -264,6 +270,34 @@ public class User implements Domain {
 	public String getIdCard() {
 		return idCard;
 	}
+	
+	@JsonIgnore
+	@ManyToMany
+	@JoinTable(name="health_rule_user"  , joinColumns={@JoinColumn(name="user_id")}  
+        						, inverseJoinColumns={@JoinColumn(name="rule_id")}  
+    )  
+	public Set<HealthRule> getRules() {
+		return rules;
+	}
+	private void setRules(Set<HealthRule> rules) {
+		this.rules = rules;
+	}
+	@Transient
+	public void addRule(HealthRule rule) {
+		if (rules == null) {
+			rules = new HashSet();
+		}
+		rules.add(rule);
+	}
+	
+	@Transient
+	public void removeRule(HealthRule rule) {
+		if (rules == null) {
+			return;
+		}
+		rules.remove(rule);
+	}
+	
 	public void setIdCard(String idCard) {
 		this.idCard = idCard;
 	}

@@ -6,8 +6,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
-import java.io.Serializable;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -92,21 +90,23 @@ public class ChiefControllerTest {
 
         Assert.isTrue(201 == response.getStatus());
     }
+    
     public void testUpdate() throws NoSuchMethodException, Exception {
-        request.setRequestURI("/api/chief/1");
-        request.setMethod(HttpMethod.PUT.name());
-        request.addParameter("status" , "ONLINE");
-        request.addParameter("id" , "1");
-        
-        handlerAdapter.handle(request, response, new HandlerMethod(chiefController, "update" , Serializable.class , Domain.class));
-
-        Assert.isTrue(201 == response.getStatus());
-//        mockMvc.perform(put("/api/chief/{id}").contentType(MediaType.APPLICATION_FORM_URLENCODED)
-//        	   .param("status" , "ONLINE")
-//         	   .accept(MediaType.APPLICATION_JSON))
-//         	   .andExpect(status().isOk());
+//        request.setRequestURI("/api/chief/1");
+//        request.setMethod(HttpMethod.PUT.name());
+//        request.addParameter("status" , "ONLINE");
+////        HashMap pathvars = new HashMap();
+////        pathvars.put("id", "1");
+////        request.setAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE, pathvars);
+//        handlerAdapter.handle(request, response, new HandlerMethod(chiefController, "update" , Serializable.class , Domain.class));
+//        System.out.println("=========== " + response.getStatus());
+ //       Assert.isTrue(200 == response.getStatus());
+        mockMvc.perform(put("api/chief/1").contentType(MediaType.APPLICATION_FORM_URLENCODED)
+        	   .param("status" , "ONLINE")
+         	   .accept(MediaType.APPLICATION_JSON))
+         	   .andExpect(status().isOk());
     }
-
+    
 	public void setChiefController(ChiefController chiefController) {
 		this.chiefController = chiefController;
 	}

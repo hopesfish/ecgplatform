@@ -76,7 +76,31 @@
             </list>
         </property>
     </bean>
-
+    
+    <bean class="org.dozer.spring.DozerBeanMapperFactoryBean">
+       <property name="mappingFiles">
+            <list>
+                <value>classpath*:mapping/mapping.xml</value>
+            </list>
+        </property>
+        <property name="customConverters">
+            <list>
+                <bean class="com.ainia.ecgApi.core.bean.converter.DozerStringDateConverter" />
+            </list>
+        </property>
+    </bean>
+    
+    <bean id="mapper" class="org.dozer.DozerBeanMapper">
+        <property name="customConverters">
+            <list>
+                <bean class="com.ainia.ecgApi.core.bean.converter.DozerStringDateConverter" />
+            </list>
+        </property>
+    </bean>
+    
+    <!-- 非spring bean 下获得bean的工具类 -->
+    <bean class="com.ainia.ecgApi.core.utils.ServiceUtils" lazy-init="false"/>
+    
     <!-- production环境 -->
     <beans profile="production">
         <context:property-placeholder ignore-unresolvable="true"

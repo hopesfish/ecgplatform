@@ -21,4 +21,17 @@ public interface HealthRuleService extends BaseService<HealthRule , Long> {
 	 * HealthRule
 	 */
 	public HealthRule findSimpleByCode(String code);
+	
+	/**
+	 * <p>将规则绑定至用户</p>
+	 * void
+	 */
+	public void addUser(Long ruleId , Long userId);
+	/**
+	 * <p>解除规则与用户绑定关系</p>
+	 * @param ruleId
+	 * @param userId
+	 * void
+	 */
+	public void removeUser(Long ruleId , Long userId);
 }

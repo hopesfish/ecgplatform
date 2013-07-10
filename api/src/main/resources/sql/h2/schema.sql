@@ -99,6 +99,10 @@ create table health_rule_reply (
     primary key(id)
 );
 
+drop table if exists health_rule_user;
+
+create table health_rule_user (rule_id bigint , user_id bigint);
+
 drop table if exists health_examination;
 
 create table health_examination (

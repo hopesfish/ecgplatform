@@ -21,7 +21,6 @@
     <commons-dbcp.version>1.4</commons-dbcp.version>
     <commons-lang3.version>3.1</commons-lang3.version>
     <commons-io.version>2.4</commons-io.version>
-    <dozer.version>5.4.0</dozer.version>
     <slf4j.version>1.7.5</slf4j.version>
     <log4j.version>1.2.17</log4j.version>
     <mockito.version>1.9.5</mockito.version>
