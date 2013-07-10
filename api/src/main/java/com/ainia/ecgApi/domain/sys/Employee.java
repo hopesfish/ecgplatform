@@ -212,7 +212,7 @@ public class Employee implements Domain {
 	public void setTitle(String title) {
 		this.title = title;
 	}
-	@Version
+
 	public Integer getVersion() {
 		return version;
 	}

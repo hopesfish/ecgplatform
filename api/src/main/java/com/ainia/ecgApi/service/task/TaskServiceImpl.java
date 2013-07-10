@@ -10,6 +10,7 @@ import com.ainia.ecgApi.core.crud.BaseDao;
 import com.ainia.ecgApi.core.crud.BaseServiceImpl;
 import com.ainia.ecgApi.core.crud.Query;
 import com.ainia.ecgApi.core.exception.ServiceException;
+import com.ainia.ecgApi.core.utils.PropertyUtil;
 import com.ainia.ecgApi.dao.task.TaskDao;
 import com.ainia.ecgApi.domain.sys.Expert;
 import com.ainia.ecgApi.domain.sys.Operator;
@@ -43,11 +44,23 @@ public class TaskServiceImpl extends BaseServiceImpl<Task , Long> implements Tas
     }
 
 	@Override
-	public <S extends Task> S update(S domain) {
-		return super.update(domain);
+	public Task  update(Task task) {
+		Task old = this.get(task.getId());
+		PropertyUtil.copyProperties(old , task);
+		Status status = old.getStatus();
+		if (Status.pending.equals(status)) {
+			return this.pending(old);
+		}
+		else if (Status.proceeding.equals(status)) {
+			return this.proceeding(old);
+		}
+		else if (Status.completed.equals(status)) {
+			return this.complete(old);
+		}
+		throw new ServiceException("task.error.status.notNull");
 	}
 
-	public void pending(Task task) {
+	public Task pending(Task task) {
 		Long operatorId = task.getOperatorId();
 		if (operatorId == null) {
 			throw new ServiceException("task.error.operator.notNull");
@@ -65,10 +78,10 @@ public class TaskServiceImpl extends BaseServiceImpl<Task , Long> implements Tas
 		}
 		task.setOperatorId(selectedOperator.getId());
 		task.setStatus(Status.pending);
-		this.create(task);
+		return super.create(task);
 	}
 
-	public void proceeding(Task task) {
+	public Task proceeding(Task task) {
 		Long operatorId = task.getOperatorId();
 		if (operatorId == null) {
 			throw new ServiceException("task.error.operator.notNull");
@@ -95,12 +108,12 @@ public class TaskServiceImpl extends BaseServiceImpl<Task , Long> implements Tas
 		task.setExpertId(selectedExpert.getId());
 		task.setStatus(Status.proceeding);
 		
-		this.patch(task);
+		return super.update(task);
 	}
 
-	public void complete(Task task) {
-		// TODO Auto-generated method stub
-		
+	public Task complete(Task task) {
+		task.setStatus(Status.completed);
+		return super.update(task);
 	}
 
 	public List<Task> findAllByOperator(Long operatorId) {

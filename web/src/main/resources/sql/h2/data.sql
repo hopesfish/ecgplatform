@@ -14,19 +14,19 @@ insert into employee (id ,type, name , username , password , roles , status,enab
 insert into employee (id ,type, name , username , password , roles , status,enabled,dismissed,gender,expire,birthday,id_card , mobile ,created_date,last_updated,version) values 
 (4,'operator' ,'接线员','operator','2e8ec7d18a6e108fce3af34044c661ffa56b084f', 'operator' ,'INLINE',1,0,1,null,'1983-06-04 01:00:00','430203198602031218','13028339212','2012-06-04 01:00:00','2012-06-04 01:00:00',1);
 --employee end
---insert into expert_operator(expert_id , operator_id) values (3 , 4);
-insert into health_rule (id , name , code , usage , can_reply , type , user_id , unit , level ,min , max,created_date,remark , version)
-values (1 , '心跳规则' , '3' , 'group' ,1, '11', null , '次' , 'success' , 0 , 100 , '2012-06-04 01:00:00' , '心跳数字的用于检测的区间' , 1);
-insert into health_rule (id , name , code , usage , can_reply, type , user_id , unit , level ,min , max,created_date,remark , version)
-values (2 , '心跳规则的无效区间' , '3' , 'filter' , 1, '11' , null , '次' , 'outside' , -9999 , 0 , '2012-06-04 01:00:00' , '心跳规则的说明' , 1);
-insert into health_rule (id , name , code , usage , can_reply, type , user_id , unit , level ,min , max,created_date,remark , version)
-values (3 , '心跳规则的回复区间' , '3' , 'filter' , 1, '11' , null , '次' , 'danger' , 0 , 60 , '2012-06-04 01:00:00' , '心跳规则的说明' , 1);
-insert into health_rule (id , name , code , usage , can_reply, type , user_id , unit , level ,min , max,created_date,remark , version)
-values (4 , '心跳规则的回复区间' , '3' , 'filter' , 1, '11' , null , '次' , 'success' , 60 , 90 , '2012-06-04 01:00:00' , '心跳规则的说明' , 1);
-insert into health_rule (id , name , code , usage , can_reply, type , user_id , unit , level ,min , max,created_date,remark , version)
-values (5 , '心跳规则的回复区间' , '3' , 'filter' , 1, '11' , null , '次' , 'warning' , 90 , 100 , '2012-06-04 01:00:00' , '心跳规则的说明' , 1);
-insert into health_rule (id , name , code , usage , can_reply, type , user_id , unit , level ,min , max,created_date,remark , version)
-values (6 , '心跳规则的无效区间' , '3' , 'filter' , 1, '11' , null , '次' , 'outside' , 100 , 9999 , '2012-06-04 01:00:00' , '心跳规则的说明' , 1);
+insert into expert_operator(expert_id , operator_id) values (3 , 4);
+insert into health_rule (id , name , code , usage , can_reply , type , employee_id , group_id, unit , level ,min , max,created_date,remark , version)
+values (1 , '心跳规则' , '3' , 'group' ,1, '11', null , null, '次' , 'success' , 0 , 100 , '2012-06-04 01:00:00' , '心跳数字的用于检测的区间' , 1);
+insert into health_rule (id , name , code , usage , can_reply, type , employee_id ,group_id, unit , level ,min , max,created_date,remark , version)
+values (2 , '心跳规则的无效区间' , '3' , 'filter' , 1, '11' , null ,1, '次' , 'outside' , -9999 , 0 , '2012-06-04 01:00:00' , '心跳规则的说明' , 1);
+insert into health_rule (id , name , code , usage , can_reply, type , employee_id ,group_id, unit , level ,min , max,created_date,remark , version)
+values (3 , '心跳规则的回复区间' , '3' , 'filter' , 1, '11' , null , 1, '次' , 'danger' , 0 , 60 , '2012-06-04 01:00:00' , '心跳规则的说明' , 1);
+insert into health_rule (id , name , code , usage , can_reply, type , employee_id ,group_id, unit , level ,min , max,created_date,remark , version)
+values (4 , '心跳规则的回复区间' , '3' , 'filter' , 1, '11' , null , 1,'次' , 'success' , 60 , 90 , '2012-06-04 01:00:00' , '心跳规则的说明' , 1);
+insert into health_rule (id , name , code , usage , can_reply, type , employee_id ,group_id, unit , level ,min , max,created_date,remark , version)
+values (5 , '心跳规则的回复区间' , '3' , 'filter' , 1, '11' , null , 1, '次' , 'warning' , 90 , 100 , '2012-06-04 01:00:00' , '心跳规则的说明' , 1);
+insert into health_rule (id , name , code , usage , can_reply, type , employee_id ,group_id, unit , level ,min , max,created_date,remark , version)
+values (6 , '心跳规则的无效区间' , '3' , 'filter' , 1, '11' , null ,  1 ,'次' , 'outside' , 100 , 9999 , '2012-06-04 01:00:00' , '心跳规则的说明' , 1);
 
 insert into health_rule_reply (id , title , content , result , rule_id, created_date, last_updated, version)
 values (1, '标题' ,  '心跳异常的建议' , '心跳异常' ,2, '2012-06-04 01:00:00', '2012-06-04 01:00:00' , 1);
@@ -39,18 +39,18 @@ values (4, '标题' , '需要检查的建议' , '需要检查' , 5, '2012-06-04 
 insert into health_rule_reply (id , title , content , result , rule_id, created_date, last_updated, version)
 values (5, '标题' , '心跳异常的建议' , '心跳异常' , 6, '2012-06-04 01:00:00', '2012-06-04 01:00:00' , 1);
 
-insert into health_rule (id , name , code , usage , can_reply , type , user_id , unit , level ,min , max,created_date,remark , version)
-values (7 , '呼吸规则' , '5' , 'group' ,1, '11', null , '次' , 'success' , 0 , 100 , '2012-06-04 01:00:00' , '心跳数字的用于检测的区间' , 1);
-insert into health_rule (id , name , code , usage , can_reply, type , user_id , unit , level ,min , max,created_date,remark , version)
-values (8 , '呼吸规则的回复区间' , '5' , 'filter' , 1, '11' , null , '次' , 'outside' , -9999 , 0 , '2012-06-04 01:00:00' , '呼吸规则的说明' , 1);
-insert into health_rule (id , name , code , usage , can_reply, type , user_id , unit , level ,min , max,created_date,remark , version)
-values (9 , '呼吸规则的回复区间' , '5' , 'filter' , 1, '11' , null , '次' , 'warning' , 0 , 40 , '2012-06-04 01:00:00' , '呼吸规则的说明' , 1);
-insert into health_rule (id , name , code , usage , can_reply, type , user_id , unit , level ,min , max,created_date,remark , version)
-values (10 , '呼吸规则的回复区间' , '5' , 'filter' , 1, '11' , null , '次' , 'success' , 40 , 90 , '2012-06-04 01:00:00' , '呼吸规则的说明' , 1);
-insert into health_rule (id , name , code , usage , can_reply, type , user_id , unit , level ,min , max,created_date,remark , version)
-values (11, '呼吸规则的回复区间' , '5' , 'filter' , 1, '11' , null , '次' , 'warning' , 90 , 100 , '2012-06-04 01:00:00' , '呼吸规则的说明' , 1);
-insert into health_rule (id , name , code , usage , can_reply, type , user_id , unit , level ,min , max,created_date,remark , version)
-values (12 , '呼吸规则的回复区间' , '5' , 'filter' , 1, '11' , null , '次' , 'outside' , 100 , 9999 , '2012-06-04 01:00:00' , '呼吸规则的说明' , 1);
+insert into health_rule (id , name , code , usage , can_reply , type , employee_id ,group_id, unit , level ,min , max,created_date,remark , version)
+values (7 , '呼吸规则' , '5' , 'group' ,1, '11', null ,1, '次' , 'success' , 0 , 100 , '2012-06-04 01:00:00' , '心跳数字的用于检测的区间' , 1);
+insert into health_rule (id , name , code , usage , can_reply, type , employee_id ,group_id,  unit , level ,min , max,created_date,remark , version)
+values (8 , '呼吸规则的回复区间' , '5' , 'filter' , 1, '11' , null , 1, '次' , 'outside' , -9999 , 0 , '2012-06-04 01:00:00' , '呼吸规则的说明' , 1);
+insert into health_rule (id , name , code , usage , can_reply, type , employee_id ,group_id,  unit , level ,min , max,created_date,remark , version)
+values (9 , '呼吸规则的回复区间' , '5' , 'filter' , 1, '11' , null , 1,'次' , 'warning' , 0 , 40 , '2012-06-04 01:00:00' , '呼吸规则的说明' , 1);
+insert into health_rule (id , name , code , usage , can_reply, type , employee_id ,group_id,  unit , level ,min , max,created_date,remark , version)
+values (10 , '呼吸规则的回复区间' , '5' , 'filter' , 1, '11' , null ,1, '次' , 'success' , 40 , 90 , '2012-06-04 01:00:00' , '呼吸规则的说明' , 1);
+insert into health_rule (id , name , code , usage , can_reply, type , employee_id ,group_id,  unit , level ,min , max,created_date,remark , version)
+values (11, '呼吸规则的回复区间' , '5' , 'filter' , 1, '11' , null , 1, '次' , 'warning' , 90 , 100 , '2012-06-04 01:00:00' , '呼吸规则的说明' , 1);
+insert into health_rule (id , name , code , usage , can_reply, type , employee_id ,group_id, unit , level ,min , max,created_date,remark , version)
+values (12 , '呼吸规则的回复区间' , '5' , 'filter' , 1, '11' , null , 1, '次' , 'outside' , 100 , 9999 , '2012-06-04 01:00:00' , '呼吸规则的说明' , 1);
 
 insert into health_rule_reply (id , title , content , result , rule_id, created_date, last_updated, version)
 values (6, '标题' , '呼吸异常的建议' , '呼吸异常' ,  8, '2012-06-04 01:00:00', '2012-06-04 01:00:00' , 1);
