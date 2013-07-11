@@ -14,6 +14,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.ainia.ecgApi.core.bean.Domain;
 import com.ainia.ecgApi.core.exception.ServiceException;
+import com.ainia.ecgApi.core.utils.PropertyUtil;
 
 /**
  * <p>the default baseService impl</p>
@@ -73,8 +74,8 @@ public abstract class BaseServiceImpl<T extends Domain, ID extends Serializable>
 		try {
 			JpaRepository<T , ID> dao = ((JpaRepository<T , ID>)getBaseDao());
 			S old = (S) dao.findOne((ID)domain.getId());
-			mapper.map(domain , old);
-			//PropertyUtil.copyProperties(old , domain);
+			//mapper.map(domain , old);
+			PropertyUtil.copyProperties(old , domain);
 			return dao.save(old);
 		}
 		catch(ConstraintViolationException ce){

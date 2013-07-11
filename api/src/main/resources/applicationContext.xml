@@ -14,6 +14,8 @@
         http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.1.xsd"
     default-lazy-init="true">
 
+    <aop:config proxy-target-class="true"/>
+
     <context:component-scan base-package="com.ainia.ecgApi">
         <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
         <context:exclude-filter type="annotation" expression="org.springframework.web.bind.annotation.ControllerAdvice"/>
@@ -51,7 +53,7 @@
     <!-- tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true" /-->
   
     <aop:config>  
-        <aop:advisor pointcut="execution(* com.csr.framework.service.**.*Service.*(..))" advice-ref="txAdvice"/>  
+        <aop:advisor pointcut="execution(* com.ainia.ecgApi.service.**.*Service.*(..))" advice-ref="txAdvice"/>  
     </aop:config> 
 
     <tx:advice id="txAdvice" transaction-manager="transactionManager">  
@@ -61,6 +63,12 @@
             <tx:method name="find*" read-only="true"/>  
             <tx:method name="load*" read-only="true"/>  
             <tx:method name="save*" read-only="false"/>
+            <tx:method name="create*" read-only="false"/>
+            <tx:method name="update*" read-only="false"/>
+            <tx:method name="patch*" read-only="false"/>
+            <tx:method name="delete*" read-only="false"/>
+            <tx:method name="add*" read-only="false"/>
+            <tx:method name="remove*" read-only="false"/>
             <tx:method name="*" rollback-for="Exception"/>  
         </tx:attributes>  
     </tx:advice>     
@@ -91,6 +99,11 @@
     </bean>
     
     <bean id="mapper" class="org.dozer.DozerBeanMapper">
+        <property name="mappingFiles">
+            <list>
+                <value>classpath*:mapping/mapping.xml</value>
+            </list>        
+        </property>
         <property name="customConverters">
             <list>
                 <bean class="com.ainia.ecgApi.core.bean.converter.DozerStringDateConverter" />

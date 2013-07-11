@@ -34,4 +34,11 @@ public interface HealthRuleService extends BaseService<HealthRule , Long> {
 	 * void
 	 */
 	public void removeUser(Long ruleId , Long userId);
+	
+	/**
+	 * <p>删除所有groupId 为制定值的规则</p>
+	 * @param groupId
+	 * void
+	 */
+	public void deleteByGroup(Long groupId);
 }

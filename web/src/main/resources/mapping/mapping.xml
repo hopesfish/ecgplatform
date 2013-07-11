@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mappings xmlns="http://dozer.sourceforge.net"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://dozer.sourceforge.net http://dozer.sourceforge.net/schema/beanmapping.xsd">
+
+
+<mapping >
+  <class-a  map-null="false" map-empty-string="false">java.lang.Object</class-a>
+  <class-b  map-null="false" map-empty-string="false">java.lang.Object</class-b>    
+</mapping>
+
+</mappings>

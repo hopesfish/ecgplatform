@@ -44,4 +44,13 @@ public interface HealthRuleDao extends JpaRepository<HealthRule , Long>, BaseDao
 	@Query(nativeQuery = true , value = "delete from health_rule_user where rule_id = ? and user_id = ? ")
 	@Modifying
 	public void removeUser(Long ruleId , Long userId);
+	
+	/**
+	 * <p>删除指定groupId的规则</p>
+	 * @param groupId
+	 * void
+	 */
+	@Query(value = "delete from HealthRule where groupId = ?")
+	@Modifying
+	public void deleteByGroup(Long groupId);
 }

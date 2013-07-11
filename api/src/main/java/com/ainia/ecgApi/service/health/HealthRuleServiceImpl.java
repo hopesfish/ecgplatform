@@ -44,4 +44,8 @@ public class HealthRuleServiceImpl extends BaseServiceImpl<HealthRule , Long> im
 	public void removeUser(Long ruleId, Long userId) {
 		healthRuleDao.removeUser(ruleId, userId);
 	}
+
+	public void deleteByGroup(Long groupId) {
+		healthRuleDao.deleteByGroup(groupId);
+	}
 }

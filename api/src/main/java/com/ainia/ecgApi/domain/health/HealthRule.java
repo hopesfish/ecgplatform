@@ -16,6 +16,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
+import javax.persistence.PreRemove;
 import javax.persistence.PreUpdate;
 import javax.persistence.Transient;
 import javax.persistence.Version;
@@ -30,6 +31,7 @@ import com.ainia.ecgApi.core.bean.Domain;
 import com.ainia.ecgApi.core.utils.ServiceUtils;
 import com.ainia.ecgApi.domain.sys.Employee;
 import com.ainia.ecgApi.domain.sys.User;
+import com.ainia.ecgApi.service.health.HealthRuleService;
 import com.ainia.ecgApi.service.sys.EmployeeService;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -91,6 +93,11 @@ public class HealthRule implements Domain {
 	@PreUpdate
 	public void onUpdate() {
 		this.lastUpdated = new Date();
+	}
+	@PreRemove
+	public void onDelete() {
+		HealthRuleService healthRuleService = (HealthRuleService)ServiceUtils.getService(HealthRuleService.class);
+		healthRuleService.deleteByGroup(this.id);	
 	}
 	
 	@Id
@@ -227,7 +234,7 @@ public class HealthRule implements Domain {
 		this.version = version;
 	}
 	@JsonIgnore
-	@Fetch(FetchMode.JOIN)
+	@Fetch(FetchMode.SUBSELECT)
 	@OneToMany(orphanRemoval = true , targetEntity = HealthRuleReply.class)
 	@JoinColumn(name = "ruleId")
 	public List<HealthRuleReply> getReplys() {
@@ -238,6 +245,7 @@ public class HealthRule implements Domain {
 	}
 	
 	@JsonIgnore
+	@Fetch(FetchMode.JOIN)
 	@ManyToMany
 	@JoinTable(name="health_rule_user"  , joinColumns={@JoinColumn(name="rule_id")}  
         						, inverseJoinColumns={@JoinColumn(name="user_id")}  
