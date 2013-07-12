@@ -1,5 +1,7 @@
 package com.ainia.ecgApi.controller.health;
 
+import java.io.IOException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -108,9 +110,11 @@ public class HealthExaminationController extends BaseController<HealthExaminatio
      * @param file
      * @return
      * ResponseEntity
+     * @throws IOException 
      */
-    public ResponseEntity upload( @RequestParam("file") MultipartFile file) {
+    public ResponseEntity upload( @RequestParam("file") MultipartFile file) throws IOException {
     	
-    	return null;
+    	healthExaminationService.upload(file.getBytes());
+    	return new ResponseEntity(HttpStatus.OK);
     }
 }
