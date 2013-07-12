@@ -98,7 +98,7 @@ public class HealthRuleController extends BaseController<HealthRule , Long> {
     	}
     	reply.setRuleId(id);
     	healthRuleReply = healthRuleReplyService.update(reply);
-    	return new ResponseEntity<HealthRuleReply>(healthRuleReply , HttpStatus.CREATED);
+    	return new ResponseEntity<HealthRuleReply>(healthRuleReply , HttpStatus.OK);
     }
     /**
      * <p>规则提交</p>
@@ -115,7 +115,7 @@ public class HealthRuleController extends BaseController<HealthRule , Long> {
     		return new ResponseEntity(HttpStatus.NOT_FOUND);
     	}
     	healthRuleReplyService.delete(replyId);
-    	return new ResponseEntity<HealthRuleReply>(HttpStatus.CREATED);
+    	return new ResponseEntity<HealthRuleReply>(HttpStatus.OK);
     }
     
     /**
@@ -167,6 +167,6 @@ public class HealthRuleController extends BaseController<HealthRule , Long> {
     		return new ResponseEntity(HttpStatus.NOT_FOUND);
     	}
     	healthRuleService.removeUser(id , userId);
-    	return new ResponseEntity(HttpStatus.CREATED);
+    	return new ResponseEntity(HttpStatus.OK);
     }
 }
