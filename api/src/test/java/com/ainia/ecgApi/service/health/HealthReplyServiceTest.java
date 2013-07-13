@@ -45,7 +45,7 @@ public class HealthReplyServiceTest {
     public void setUp() {
         healthReply = new HealthReply();
         healthReply.setType("auto");
-        healthReply.setTitle("title");
+        healthReply.setReason("title");
         healthReply.setResult("result");
         healthReply.setContent("content");
         healthReply.setEmployeeId(1L);

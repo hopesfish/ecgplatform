@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ainia.ecgApi.core.crud.BaseController;
 import com.ainia.ecgApi.core.crud.BaseService;
+import com.ainia.ecgApi.core.crud.Page;
+import com.ainia.ecgApi.core.crud.Query;
+import com.ainia.ecgApi.core.crud.Query.OrderType;
 import com.ainia.ecgApi.core.web.AjaxResult;
 import com.ainia.ecgApi.domain.task.Task;
 import com.ainia.ecgApi.service.task.TaskService;
@@ -34,6 +37,17 @@ public class TaskController extends BaseController<Task , Long> {
     public BaseService<Task , Long> getBaseService() {
         return taskService;
     }
+    
+
+	@Override
+	@RequestMapping(method = RequestMethod.GET, produces = "application/json")
+	@ResponseBody
+	public Page<Task> index(Query<Task> query) {
+		query.addOrder(Task.CREATED_DATE , OrderType.desc);
+		return super.index(query);
+	}
+
+
 
 	@Override
 	@RequestMapping(value = "/{id}", method = RequestMethod.PATCH, produces = "application/json")

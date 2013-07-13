@@ -2,10 +2,15 @@ package com.ainia.ecgApi.domain.task;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
+
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.Subselect;
 
 import com.ainia.ecgApi.domain.health.HealthExamination;
 import com.ainia.ecgApi.domain.health.HealthRule.Level;
@@ -48,7 +53,7 @@ public class ExaminationTask extends Task {
 	public Level getLevel() {
 		return examination.getLevel();
 	}
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name="examinationId", nullable = false ,insertable = false , updatable = false)
 	@JsonIgnore
 	public HealthExamination getExamination() {

@@ -32,7 +32,7 @@ public class QueryArgumentResolver implements WebArgumentResolver {
 				if (param.indexOf(CONDITION_SPLIT) != -1) {
 					String[] values = param.split(CONDITION_SPLIT);
 					query.addCondition(new Condition(values[0] , Condition.Type.valueOf(values[1]),
-											webRequest.getParameter(values[0])));
+											webRequest.getParameter(param)));
 				}
 				else {
 					query.addCondition(Condition.eq(param , webRequest.getParameter(param)));
