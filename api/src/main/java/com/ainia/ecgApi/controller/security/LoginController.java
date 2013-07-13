@@ -18,7 +18,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.ainia.ecgApi.core.security.AuthenticateService;
 import com.ainia.ecgApi.core.web.AjaxResult;
 import com.ainia.ecgApi.domain.sys.Employee;
+import com.ainia.ecgApi.domain.sys.User;
 import com.ainia.ecgApi.service.sys.EmployeeService;
+import com.ainia.ecgApi.service.sys.UserService;
 
 /**
  * <p>login controller</p>
@@ -37,6 +39,8 @@ public class LoginController {
 	
 	@Autowired
 	private EmployeeService employeeService;
+	@Autowired
+	private UserService userService;
 	@Autowired
 	private AuthenticateService authenticateService;
 
@@ -61,6 +65,31 @@ public class LoginController {
 			ajaxResult.setStatus(HttpStatus.OK.value());
 			//TODO 用户类型暂时硬编码为 员工
 			result.put(AjaxResult.AUTH_TOKEN , authenticateService.generateToken(username , Employee.class.getSimpleName()));
+		}
+		return new ResponseEntity<Map<String , String>>(result, HttpStatus.valueOf(ajaxResult.getStatus()));
+	}
+	
+	/**
+	 * <p>check the user login</p>
+	 * void
+	 */
+	@RequestMapping(value = "user/auth" , method = RequestMethod.POST , produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public ResponseEntity<Map<String , String>> userLogin(@RequestParam("username") String username , 
+					  @RequestParam("password") String password) {
+		User user = userService.findByUsername(username);
+		AjaxResult ajaxResult = new AjaxResult();
+		Map<String , String> result = new HashMap<String , String>(1);
+		if (user == null) {
+			ajaxResult.setStatus(HttpStatus.NOT_FOUND.value());
+		}
+		if (!authenticateService.checkPassword(user.getPassword() , password , null)) {
+			ajaxResult.setStatus(HttpStatus.UNAUTHORIZED.value());
+		}
+		else {
+			ajaxResult.setStatus(HttpStatus.OK.value());
+			//TODO 用户类型暂时硬编码为 员工
+			result.put(AjaxResult.AUTH_TOKEN , authenticateService.generateToken(username , User.class.getSimpleName()));
 		}
 		return new ResponseEntity<Map<String , String>>(result, HttpStatus.valueOf(ajaxResult.getStatus()));
 	}

@@ -15,4 +15,11 @@ import com.ainia.ecgApi.domain.sys.User;
 public interface UserService extends BaseService<User , Long> {
     
 
+	/**
+	 * <p>根据用户名获得用户</p>
+	 * @param username
+	 * @return
+	 * User
+	 */
+	public User findByUsername(String username);
 }

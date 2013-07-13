@@ -19,6 +19,7 @@ public final class DigestUtils {
 
 	public static final String SHA1 = "sha-1";
 	public static final String MD5  = "MD5";
+	public static final String DES  = "DES";
 	
 	private static SecureRandom random = new SecureRandom();
 	

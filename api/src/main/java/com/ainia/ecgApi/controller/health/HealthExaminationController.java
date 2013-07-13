@@ -70,9 +70,9 @@ public class HealthExaminationController extends BaseController<HealthExaminatio
      * @return
      * ResponseEntity<AjaxResult>
      */
-	@RequestMapping(value = "/{id}/reply" , method = RequestMethod.POST , produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/{examinationId}/reply" , method = RequestMethod.POST , produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-    public ResponseEntity<AjaxResult> reply(@PathVariable("id") Long id , HealthReply reply) {
+    public ResponseEntity<AjaxResult> reply(@PathVariable("examinationId") Long id , HealthReply reply) {
     	HealthExamination examination = healthExaminationService.get(id);
     	if (examination == null) {
     		return new ResponseEntity<AjaxResult>(HttpStatus.NOT_FOUND);

@@ -20,7 +20,7 @@ import com.ainia.ecgApi.core.exception.ServiceException;
  * @version
  */
 @Service
-public class UploadServiceImpl {
+public class UploadServiceImpl implements UploadService {
 
 	//TODO 暂时固定
 	public static final String rootPath = "d:/upload/";

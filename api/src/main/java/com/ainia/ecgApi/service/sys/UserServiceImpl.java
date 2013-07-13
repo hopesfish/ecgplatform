@@ -49,5 +49,9 @@ public class UserServiceImpl extends BaseServiceImpl<User , Long> implements Use
 		return userDao.save(user);
 	}
 
+	public User findByUsername(String username) {
+		return userDao.findByUsername(username);
+	}
+
     
 }
