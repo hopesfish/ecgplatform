@@ -6,9 +6,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.apache.commons.io.FileUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ainia.ecgApi.core.exception.ServiceException;
+import com.ainia.ecgApi.service.sys.SystemConfigService;
 
 /**
  * <p>文件保存服务</p>
@@ -22,8 +24,12 @@ import com.ainia.ecgApi.core.exception.ServiceException;
 @Service
 public class UploadServiceImpl implements UploadService {
 
+	@Autowired
+	private SystemConfigService systemConfigService;
+	
 	//TODO 暂时固定
-	public static final String rootPath = "d:/upload/";
+	//public static final String rootPath = "d:/upload/";
+	public static final String ROOT_PATH_KEY = "upload.rootPath";
 	public static final String UPLOAD_URI = "/upload/";
 	
 	public String save(Type type , String key , byte[] content) throws IOException{
@@ -36,6 +42,7 @@ public class UploadServiceImpl implements UploadService {
 	
 	public String saveHeartImg(Type type , String key , byte[] content) throws IOException {
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH");
+		String rootPath     = systemConfigService.findByKey(ROOT_PATH_KEY);
 		String relativePath = format.format(new Date()) + "/" + key + ".jpg";
 		//TODO 后缀名暂时固定
 		String path = rootPath + relativePath;

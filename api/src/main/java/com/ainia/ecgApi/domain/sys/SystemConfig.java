@@ -1,8 +1,8 @@
 package com.ainia.ecgApi.domain.sys;
 
-import java.io.Serializable;
-
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -21,10 +21,10 @@ import com.ainia.ecgApi.core.bean.Domain;
  * @version
  */
 @Entity
-public class SysConfig implements Domain {
+public class SystemConfig implements Domain {
 
 	private Long  id;
-	private String type;
+	private Type type;
 	private String key;
 	private String value;
 	
@@ -33,12 +33,12 @@ public class SysConfig implements Domain {
 	public Long getId() {
 		return id;
 	}
-
-	public String getType() {
+	@Enumerated(EnumType.STRING)
+	public Type getType() {
 		return type;
 	}
 
-	public void setType(String type) {
+	public void setType(Type type) {
 		this.type = type;
 	}
 
@@ -62,6 +62,7 @@ public class SysConfig implements Domain {
 		this.id = id;
 	}
 
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -78,7 +79,7 @@ public class SysConfig implements Domain {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		SysConfig other = (SysConfig) obj;
+		SystemConfig other = (SystemConfig) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;
@@ -92,7 +93,9 @@ public class SysConfig implements Domain {
 		return ToStringBuilder.reflectionToString(this);
 	}
 	
-	
+	public enum Type {
+		basic
+	}
 
 	
 }

@@ -8,6 +8,9 @@ import org.springframework.stereotype.Service;
 
 import com.ainia.ecgApi.core.crud.BaseDao;
 import com.ainia.ecgApi.core.crud.BaseServiceImpl;
+import com.ainia.ecgApi.core.exception.ServiceException;
+import com.ainia.ecgApi.core.security.AuthUser;
+import com.ainia.ecgApi.core.security.AuthenticateService;
 import com.ainia.ecgApi.core.utils.PropertyUtil;
 import com.ainia.ecgApi.dao.sys.UserDao;
 import com.ainia.ecgApi.domain.sys.Employee;
@@ -27,6 +30,9 @@ public class UserServiceImpl extends BaseServiceImpl<User , Long> implements Use
     
     @Autowired
     private UserDao userDao;
+    @Autowired
+    private AuthenticateService authenticateService;
+    
     public BaseDao<User , Long> getBaseDao() {
         return userDao;
     }
@@ -53,5 +59,35 @@ public class UserServiceImpl extends BaseServiceImpl<User , Long> implements Use
 		return userDao.findByUsername(username);
 	}
 
-    
+	public void changePassword(Long id, String oldPassword,
+			String newPassword) {
+		User user = this.get(id);
+		AuthUser currentUser = authenticateService.getCurrentUser();
+		if (user == null) {
+			throw new ServiceException("exception.notFound");
+		}
+		if (!currentUser.isSuperAdmin() && !user.getUsername().equals(currentUser.getUsername())) {
+			throw new ServiceException("exception.password.cannotChange");
+		}
+		
+		if (!authenticateService.checkPassword(user.getPassword() , oldPassword , null)) {
+			throw new ServiceException("exception.oldPassword.notEquals");
+		}
+		user.setPassword(authenticateService.encodePassword(newPassword , null));
+		this.userDao.save(user);
+	}
+	
+	public void resetPassword(Long id) {
+		User user = this.get(id);
+		AuthUser currentUser = authenticateService.getCurrentUser();
+		if (user == null) {
+			throw new ServiceException("exception.notFound");
+		}
+		if (!currentUser.isSuperAdmin() && !user.getUsername().equals(currentUser.getUsername())) {
+			throw new ServiceException("exception.password.cannotChange");
+		}
+		user.setPassword(authenticateService.encodePassword(user.getUsername() , null));
+		this.userDao.save(user);
+		
+	} 
 }
