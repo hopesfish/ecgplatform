@@ -2,6 +2,10 @@
 define(function(require, exports) {
 
     exports.testCommon = function(it, EnumService) {
+        if (!runCase('common')) {
+            return;
+        }
+
         it("the EnumService should be defined", function() {
             expect(EnumService).not.to.be(undefined);
         });

@@ -81,10 +81,11 @@ public class ChiefServiceTest {
 		chief.setEnabled(false);
 		chief.setCompany("test");
 		chief.setPassword(null);
+		chief.setName(null);
 		Chief _chief = chiefService.update(chief);
 		
 		Assert.assertNotNull(_chief.getPassword());
-		
+		Assert.assertNotNull(_chief.getName());
 		chiefService.delete(_chief);
 	}
 	

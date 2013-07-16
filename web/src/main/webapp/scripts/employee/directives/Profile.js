@@ -3,7 +3,6 @@ define(function(require, exports) {
 
 var profileEditTemp = require("../templates/profile/edit.html");
 var profilePasswordTemp = require("../templates/profile/password.html");
-var profileRuleTemp = require("../templates/profile/rule.html");
 
 angular.module('ecgProfile', [])
 .controller('ProfileController', ['$scope', '$routeParams', '$timeout', '$location', 'EnumService', 'ProfileService',
@@ -103,21 +102,6 @@ angular.module('ecgProfile', [])
         replace : false,
         template : profilePasswordTemp,
         controller : "ProfilPasswordController",
-        link : function($scope, $element, $attrs) {
-        }
-    };
-}])
-// 修改密码
-.controller('ProfilRuleController', ['$scope', '$routeParams', '$timeout', '$location', 'EnumService', 'ProfileService',
-function ($scope, $routeParams, $timeout, $location, EnumService, ProfileService) {
-    
-}])
-.directive("ecgProfileRule", [ '$location', function($location) {
-    return {
-        restrict : 'A',
-        replace : false,
-        template : profileRuleTemp,
-        controller : "ProfilRuleController",
         link : function($scope, $element, $attrs) {
         }
     };

@@ -1,74 +1,10 @@
 <div id="ecgReplyDialog" class="modal hide" style="width:650px;" tabindex="-1" role="dialog" aria-labelledby="ecgModalLabel" aria-hidden="true">
-  <div class="modal-header">
+    <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-    <h3>提交回复</h3>
-  </div>
-  <div class="modal-body">
-    <!-- 当前回复 -->
-    <table class="table table-hover" ng-show="replydialog.replys.length > 0">
-    <thead>
-      <tr>
-      <th >回复</th>
-      <th width="15%">操作</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr ng-repeat="reply in replydialog.replys">
-        <td>
-        <p style="width:500px; word-wrap: break-word;">
-          <strong>检测结果：</strong> {{reply.result}} <br/><strong>检测建议：</strong> {{reply.content}}
-        </p>
-        </td>
-        <td>
-          <button class="btn btn-small btn-danger" type="button" ng-click="replydialog.remove($index)">删除</button>
-        </td>
-      </tr>
-    </tbody>
-    </table>
-    <div ng-show="!replydialog.replys.length">
-      <strong>请您选择下列预设回复（可多选）或者人工回复(可多次录入)。</strong>
-    </div>
-
-    <br/>
-
-    <ul class="nav nav-tabs" id="replydialogTab">
-      <li ng-class="{'active': replydialog.tab == 1}" ng-click="replydialog.tab = 1">
-        <a href="javascript:void(0)" data-toggle="tab">预设回复({{replydialog.rules.length}}条可选)</a>
-      </li>
-      <li ng-class="{'active': replydialog.tab == 2}" ng-click="replydialog.tab = 2">
-        <a href="javascript:void(0)" data-toggle="tab">人工回复</a>
-      </li>
-    </ul>
-     
-    <div class="tab-content">
-      <div class="tab-pane" ng-class="{'active': replydialog.tab == 1}">
-        <table class="table table-hover" ng-show="replydialog.rules && replydialog.rules.length > 0">
-        <tbody>
-          <tr ng-repeat="rule in replydialog.rules"
-              ng-click="replydialog.usereply(rule)">
-            <td>
-              <p style="width:500px; word-wrap: break-word;">
-              <strong>检测内容：</strong> {{rule.name}} <strong>检测值</strong>：<span class="label label-{{rule.level}}">{{rule.val}}</span>
-              <strong>检测值所在区间：</strong> [{{rule.min}}, {{rule.max}})<br/>
-              <strong>预设结果：</strong> {{rule.replyconfig.result}} <br/>
-              <strong>预设建议：</strong> {{rule.replyconfig.content}} <br/>
-              </p>
-            </td>
-            <td width="15%">
-              <button class="btn btn-small" type="button" ng-disabled="rule.used">选用</button>
-            </td>
-          </tr>
-        </tbody>
-        </table>
-        <div ng-show="!replydialog.rules">
-          正在加载预设回复，请耐心等待......
-        </div>
-        <div ng-show="replydialog.rules.length == 0">
-          抱歉，没有预设回复，请和管理员联系。
-        </div>
-      </div>
-      <div class="tab-pane" ng-class="{'active': replydialog.tab == 2}">
-        <form name="saveReplyForm">
+    <h3>增加人工回复</h3>
+</div>
+<div class="modal-body">
+    <form name="addManualReplyForm">
         <table class="ecgprops">
 
         <tr>
@@ -77,8 +13,8 @@
 
         <tr>
         <td>
-          <input ng-model="replydialog.reply.result" class="input-xlarge" id="replydialog-result" required placeholder="请输入结果,最多10个汉字。"></input>
-          <span class="required">*</span>
+        <input ng-model="replydialog.reply.result" class="input-xlarge" id="replydialog-result" required placeholder="请输入结果,最多10个汉字。"></input>
+        <span class="required">*</span>
         </tr>
 
         <tr>
@@ -87,29 +23,26 @@
 
         <tr>
         <td>
-          <textarea rows="3" ng-model="replydialog.reply.content"
-           class="input-xlarge" id="replydialog-content" required placeholder="请输入回复内容" style="width:450px;"></textarea>
-          <span class="required">*</span>
+        <textarea rows="3" ng-model="replydialog.reply.content"
+        class="input-xlarge" id="replydialog-content" required placeholder="请输入回复内容" style="width:450px;"></textarea>
+        <span class="required">*</span>
         </td>
         </tr>
 
         </table>
-        <button class="btn" type="button"
-            ng-class="{'btn-primary': saveReplyForm.$valid}" 
-            ng-click="replydialog.save()"
-            ng-disabled="!saveReplyForm.$valid">
-          <i class="icon-save"></i><span ng-show="!replydialog.selectedReplyConfig.id">保存</span>
-        </button>
-        </form>
-      </div>
-    </div>
-  </div>
+    </form>
+</div>
 
-  <div class="modal-footer">
-    <button class="btn" ng-class="{'btn-primary':  replydialog.rules && replydialog.rules.length > 0}" 
-      ng-disabled="!replydialog.rules || replydialog.rules.length == 0" ng-click="replydialog.useallreply()">使用全部预设回复</button>
-    <button class="btn" ng-class="{'btn-primary':  replydialog.replys.length}" 
-    ng-click="replydialog.execute()" ng-disabled="!replydialog.replys.length">提交</button>
-    <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
-  </div>
+<div class="modal-footer">
+    <button class="btn" type="button"
+        ng-class="{'btn-primary': addManualReplyForm.$valid}" 
+        ng-click="replydialog.execute()"
+        ng-disabled="!addManualReplyForm.$valid">
+        <i class="icon-ok"></i>增加
+    </button>
+    <button class="btn" data-dismiss="modal" aria-hidden="true">
+        <i class="icon-remove"></i>关闭
+    </button>
+</div>
+
 </div>

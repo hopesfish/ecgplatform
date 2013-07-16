@@ -12,8 +12,21 @@ angular.module('ecgChief', [])
     $scope.chief = {};
 
     // 表格展示
-    $scope.chief.data = ChiefService.queryAll();
-    $scope.chief.filteredData = $scope.chief.data;
+    $scope.chief.data = null;
+    $scope.chief.filteredData = null;
+    // 刷新功能
+    function refreshGrid() {
+        $scope.dialog.showLoading();
+        ChiefService.queryAll().then(function(chiefs) {
+            $scope.dialog.hideStandby();
+            $scope.chief.data = chiefs;
+            $scope.chief.filteredData = $scope.chief.data;
+        }, function() {
+            $scope.dialog.hideStandby();
+            $scope.message.error("无法加载专家数据!");
+        });
+    }
+    refreshGrid();
 
     // 显示label
     $scope.chief.getGenderLabel = function(chief) {
@@ -25,12 +38,6 @@ angular.module('ecgChief', [])
 
     // 当前选中数据
     $scope.chief.selectedItem = null;
-
-    // 刷新功能
-    function refreshGrid() {
-        $scope.chief.data = ChiefService.queryAll();
-        $scope.chief.filteredData = $scope.chief.data;
-    }
 
     // 删除功能
     $scope.chief.confirmDelete = function() {
@@ -140,9 +147,12 @@ angular.module('ecgChief', [])
 
     // 初始化界面,并获得最新version
     function refresh() {
+        $scope.dialog.showLoading();
         ChiefService.get($routeParams.id).then(function(chief) {
+            $scope.dialog.hideStandby();
             $scope.chief.updateobj = chief;
         }, function() {
+            $scope.dialog.hideStandby();
             $scope.message.error("加载主任数据失败.");
         });
     };

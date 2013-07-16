@@ -1,0 +1,12 @@
+<a class="block-heading" data-toggle="collapse">
+<span>检测请求 - {{taskview.id}}</span><span class="label label-{{taskview.translateLevel(taskview.level)}}">
+{{taskview.getLevelLabel(taskview.level)}}
+</span>
+</a>
+<div class="block-body collapse in">
+	<div ecg-user-card></div>
+	<div ecg-examination-view></div>
+	<div ecg-plot></div>
+	<div ecg-examination-reply></div>
+	<br/>
+</div>

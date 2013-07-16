@@ -1,6 +1,8 @@
-'use strict';
+
 define(function(require, exports) {
 
+'use strict';
+    
 require("./services/UserService");
 require("./directives/User");
 

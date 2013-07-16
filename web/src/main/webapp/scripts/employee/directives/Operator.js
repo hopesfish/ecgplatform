@@ -15,8 +15,21 @@ angular.module('ecgOperator', [])
     $scope.operator = {};
 
     // 表格展示
-    $scope.operator.data = OperatorService.queryAll();
-    $scope.operator.filteredData = $scope.operator.data;
+    $scope.operator.data = null;
+    $scope.operator.filteredData = null;
+    // 刷新功能
+    function refreshGrid() {
+        $scope.dialog.showLoading();
+        OperatorService.queryAll().then(function(operators) {
+            $scope.dialog.hideStandby();
+            $scope.operator.data = operators;
+            $scope.operator.filteredData = $scope.operator.data;
+        }, function() {
+            $scope.dialog.hideStandby();
+            $scope.message.error("无法加载用户数据!");
+        });
+    }
+    refreshGrid();
 
     // 显示label
     $scope.operator.getGenderLabel = function(operator) {
@@ -28,12 +41,6 @@ angular.module('ecgOperator', [])
 
     // 当前选中数据
     $scope.operator.selectedItem = null;
-
-    // 刷新功能
-    function refreshGrid() {
-        $scope.operator.data = OperatorService.queryAll();
-        $scope.operator.filteredData = $scope.operator.data;
-    }
 
     // 删除功能
     $scope.operator.confirmDelete = function() {
@@ -95,11 +102,11 @@ angular.module('ecgOperator', [])
 
     $scope.operator.isUnique = true;
     $scope.operator.checkUnique = function() {
-        if (!$scope.operator.newobj.username) { return; }
-        ProfileService.get($scope.operator.newobj.username).then(function(user) {
-            if (user) { 
+        if (!$scope.operator.newobj.operatorname) { return; }
+        ProfileService.get($scope.operator.newobj.operatorname).then(function(operator) {
+            if (operator) { 
                 $scope.operator.isUnique = false;
-                $scope.message.warn("用户" + $scope.operator.newobj.username + "已存在!");
+                $scope.message.warn("用户" + $scope.operator.newobj.operatorname + "已存在!");
             } else {
                 $scope.operator.isUnique = true;
             }
@@ -112,7 +119,7 @@ angular.module('ecgOperator', [])
     $scope.operator.create = function() {
         $scope.dialog.showStandby();
         $scope.operator.newobj.birthday = $('#operator-birthday input').val();
-        $scope.operator.newobj.password = $scope.operator.newobj.username;
+        $scope.operator.newobj.password = $scope.operator.newobj.operatorname;
         OperatorService.create($scope.operator.newobj)
         .then(function(result) {
             $scope.dialog.hideStandby();
@@ -143,8 +150,13 @@ angular.module('ecgOperator', [])
 
     // 初始化界面,并获得最新version
     function refresh() {
+        $scope.dialog.showLoading();
         OperatorService.get($routeParams.id).then(function(operator) {
+            $scope.dialog.hideStandby();
             $scope.operator.updateobj = operator;
+        }, function() {
+            $scope.dialog.hideStandby();
+            $scope.message.error("加载操作员数据失败!");
         });
     };
     refresh();

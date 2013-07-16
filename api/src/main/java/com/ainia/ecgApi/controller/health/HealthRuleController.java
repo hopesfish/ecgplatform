@@ -1,15 +1,17 @@
 package com.ainia.ecgApi.controller.health;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ainia.ecgApi.core.crud.BaseController;
 import com.ainia.ecgApi.core.crud.BaseService;
@@ -17,8 +19,10 @@ import com.ainia.ecgApi.core.crud.Condition;
 import com.ainia.ecgApi.core.crud.Query;
 import com.ainia.ecgApi.domain.health.HealthRule;
 import com.ainia.ecgApi.domain.health.HealthRuleReply;
+import com.ainia.ecgApi.domain.sys.User;
 import com.ainia.ecgApi.service.health.HealthRuleReplyService;
 import com.ainia.ecgApi.service.health.HealthRuleService;
+import com.ainia.ecgApi.service.sys.UserService;
 
 /**
  * <p>HealthRule controller</p>
@@ -31,12 +35,15 @@ import com.ainia.ecgApi.service.health.HealthRuleService;
  */
 @Controller
 @RequestMapping("/api/rule")
+@SuppressWarnings("unchecked")
 public class HealthRuleController extends BaseController<HealthRule , Long> {
 
     @Autowired
     private HealthRuleService healthRuleService;
     @Autowired
     private HealthRuleReplyService healthRuleReplyService;
+    @Autowired
+    private UserService userService;
     
     @Override
     public BaseService<HealthRule , Long> getBaseService() {
@@ -91,7 +98,7 @@ public class HealthRuleController extends BaseController<HealthRule , Long> {
     	}
     	reply.setRuleId(id);
     	healthRuleReply = healthRuleReplyService.update(reply);
-    	return new ResponseEntity<HealthRuleReply>(healthRuleReply , HttpStatus.CREATED);
+    	return new ResponseEntity<HealthRuleReply>(healthRuleReply , HttpStatus.OK);
     }
     /**
      * <p>规则提交</p>
@@ -108,6 +115,58 @@ public class HealthRuleController extends BaseController<HealthRule , Long> {
     		return new ResponseEntity(HttpStatus.NOT_FOUND);
     	}
     	healthRuleReplyService.delete(replyId);
-    	return new ResponseEntity<HealthRuleReply>(HttpStatus.CREATED);
+    	return new ResponseEntity<HealthRuleReply>(HttpStatus.OK);
+    }
+    
+    /**
+     * <p>获取绑定规则的用户</p>
+     * @param id
+     * @return
+     * ResponseEntity
+     */
+    @RequestMapping(value = "{id}/user" , method = RequestMethod.GET , produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<Set<User>> getUsers(@PathVariable("id") Long id) {
+    	HealthRule rule = healthRuleService.get(id);
+    	if (rule == null) {
+    		return new ResponseEntity(HttpStatus.NOT_FOUND);
+    	}
+    	return new ResponseEntity(rule.getUsers() , HttpStatus.OK);
+    }
+    
+    /**
+     * <p>将规则绑定至用户</p>
+     * @param id
+     * @return
+     * ResponseEntity
+     */
+    @RequestMapping(value = "{id}/user/{userId}" , method = RequestMethod.POST , produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity addUser(@PathVariable("id") Long id , @PathVariable("userId") Long userId) {
+    	HealthRule healthRule = healthRuleService.get(id);
+    	User user = userService.get(userId);
+    	if (healthRule == null || user == null) {
+    		return new ResponseEntity(HttpStatus.NOT_FOUND);
+    	}
+    	healthRuleService.addUser(id , userId);
+    	return new ResponseEntity(HttpStatus.CREATED);
+    }
+    
+    /**
+     * <p>将规则与用户解除</p>
+     * @param id
+     * @return
+     * ResponseEntity
+     */
+    @RequestMapping(value = "{id}/user/{userId}" , method = RequestMethod.DELETE , produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity removeUser(@PathVariable("id") Long id , @PathVariable("userId") Long userId) {
+    	HealthRule healthRule = healthRuleService.get(id);
+    	User user = userService.get(userId);
+    	if (healthRule == null || user == null) {
+    		return new ResponseEntity(HttpStatus.NOT_FOUND);
+    	}
+    	healthRuleService.removeUser(id , userId);
+    	return new ResponseEntity(HttpStatus.OK);
     }
 }

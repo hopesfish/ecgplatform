@@ -1,0 +1,51 @@
+<div class="row-fluid" ng-show="todo.tasks && todo.tasks.length > 0 && todo.replyform != 'top' && todo.replyform != 'bottom'">
+	<div class="span12 buttons">
+		<button class="btn" type="button"
+                ng-show="todo.current && todo.current.status != 'completed'"
+				ng-click="todo.reply('top')" ng-disabled="todo.current == null || todo.current.examination == null">
+			<i class="icon-edit"></i>回复...
+		</button>
+        <button class="btn" type="button"
+                ng-show="todo.current && todo.tasks.length > 0"
+                ng-click="todo.ignore()">
+            <i class="icon-share-alt"></i>跳过
+        </button>
+        <a href="#/task" class="btn" ng-show="session.user.isOperator() || session.user.isExpert()">工作清单</a>
+    </div>
+</div>
+<div class="row-fluid" ng-show="todo.tasks && todo.tasks.length > 0 && todo.replyform == 'top'">
+    <div class="block span12">
+        <div ecg-reply-form></div>
+    </div>
+</div>
+<div class="row-fluid" ng-show="todo.tasks && todo.tasks.length > 0">
+    <div class="block span12">
+        <div ecg-task-view></div>
+    </div>
+</div>
+<div class="row-fluid" ng-show="todo.tasks && todo.tasks.length == 0">
+    <div class="span12">
+        没有可处理的检测请求 <a href="#/task" ng-show="session.user.isOperator() || session.user.isExpert()">工作清单</a>
+    </div>
+</div>
+<div class="row-fluid" ng-show="todo.tasks && todo.tasks.length > 0 && todo.replyform == 'bottom'">
+    <div class="block span12">
+        <div ecg-reply-form></div>
+    </div>
+</div>
+<div class="row-fluid" ng-show="todo.tasks && todo.tasks.length > 0 && todo.replyform != 'top' && todo.replyform != 'bottom'">
+    <div class="span12 buttons">
+        <button class="btn" type="button"
+                ng-show="todo.current && todo.current.status != 'completed'"
+                ng-click="todo.reply('bottom')" ng-disabled="todo.current == null || todo.current.examination == null">
+            <i class="icon-edit"></i>回复...
+        </button>
+        <button class="btn" type="button"
+                ng-show="todo.current && todo.tasks.length > 0"
+                ng-click="todo.ignore()">
+            <i class="icon-share-alt"></i>跳过
+        </button>
+        <a href="#/task" class="btn" ng-show="session.user.isOperator() || session.user.isExpert()">工作清单</a>
+    </div>
+</div>
+<div ecg-reply-dialog></div>

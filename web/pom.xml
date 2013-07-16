@@ -1,99 +1,207 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>com.ainia</groupId>
-  <artifactId>web</artifactId>
-  <packaging>war</packaging>
-  <version>0.0.1-SNAPSHOT</version>
-  <name>web Maven Webapp</name>
-  <url>http://maven.apache.org</url>
-  
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <jetty.version>7.6.7.v20120910</jetty.version>
-    <jdk.version>1.6</jdk.version>
-  </properties>
-  
-  <dependencies>
-    <dependency>
-      <groupId>com.ainia</groupId>
-      <artifactId>api</artifactId>
-      <version>0.0.2-SNAPSHOT</version>    
-    </dependency>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.1</version>
-      <scope>test</scope>
-    </dependency>
-  </dependencies>
-  
-  <build>
-    <finalName>web</finalName>
-    
-    <pluginManagement>
-        <plugins> 
-           <plugin>
-               <groupId>org.apache.maven.plugins</groupId>
-               <artifactId>maven-compiler-plugin</artifactId>
-               <version>3.0</version>
-               <configuration>
-                   <source>${jdk.version}</source>
-                   <target>${jdk.version}</target>
-                   <showWarnings>true</showWarnings>
-               </configuration>
-           </plugin>
-           <!-- jetty 插件 -->
-           <plugin>
-              <groupId>org.mortbay.jetty</groupId>
-              <artifactId>jetty-maven-plugin</artifactId>
-              <version>${jetty.version}</version>
-              <configuration>      
-                <webAppConfig>
-                  <contextPath>/</contextPath>
-                 <defaultsDescriptor>
-                  webdefault.xml
-                </defaultsDescriptor>
-                </webAppConfig>
-              </configuration>
-            </plugin>
-          <plugin>
-              <!-- YUI Compressor Maven压缩插件 -->
-              <groupId>net.alchim31.maven</groupId>
-              <artifactId>yuicompressor-maven-plugin</artifactId>
-              <version>1.3.0</version>
-              <configuration>
-                <!-- 读取js,css文件采用UTF-8编码 -->
-                <encoding>UTF-8</encoding>
-                <!-- 不显示js可能的错误 -->
-                <jswarn>false</jswarn>
-                <!-- 若存在已压缩的文件，会先对比源文件是否有改动。有改动便压缩，无改动就不压缩 -->
-                <force>false</force>
-                <!-- 在指定的列号后插入新行 -->
-                <linebreakpos>-1</linebreakpos>
-                <!-- 压缩之前先执行聚合文件操作 -->
-                <preProcessAggregates>true</preProcessAggregates>
-                <!-- 压缩后保存文件后缀 -->
-                <nosuffix>true</nosuffix>
-                <!-- 源目录，即需压缩的根目录 -->
-                <sourceDirectory>${project.build.outputDirectory}/web/scripts</sourceDirectory>
-                <!-- 压缩js和css文件 -->
-                <includes>
-                  <include>**/*.js</include>
-                  <include>**/*.css</include>
-                </includes>
-                <!-- 以下目录和文件不会被压缩 -->
-                <excludes>
-                  <exclude>**/angular.js</exclude>
-                  <exclude>**/angular-table.js</exclude>
-                  <exclude>**/*.min.js</exclude>
-                  <exclude>**/*.min.css</exclude>
-                </excludes>
-                <!-- 压缩后输出文件目录 -->
-                <outputDirectory>${project.build.outputDirectory}/web/scripts</outputDirectory>
-              </configuration>
-        </plugin>
-       </plugins>
-    </pluginManagement>
-  </build>
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.ainia</groupId>
+	<artifactId>web</artifactId>
+	<packaging>war</packaging>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>web Maven Webapp</name>
+	<url>http://maven.apache.org</url>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<jetty.version>7.6.7.v20120910</jetty.version>
+		<jdk.version>1.6</jdk.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.ainia</groupId>
+			<artifactId>api</artifactId>
+			<version>0.0.2-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>3.8.1</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.google.javascript</groupId>
+			<artifactId>closure-compiler</artifactId>
+			<version>v20130603</version>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<finalName>web</finalName>
+
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>3.0</version>
+					<configuration>
+						<source>${jdk.version}</source>
+						<target>${jdk.version}</target>
+						<showWarnings>true</showWarnings>
+					</configuration>
+				</plugin>
+				<!-- jetty 插件 -->
+				<plugin>
+					<groupId>org.mortbay.jetty</groupId>
+					<artifactId>jetty-maven-plugin</artifactId>
+					<version>${jetty.version}</version>
+					<configuration>
+						<webAppConfig>
+							<contextPath>/</contextPath>
+							<defaultsDescriptor>
+								webdefault.xml
+							</defaultsDescriptor>
+						</webAppConfig>
+					</configuration>
+				</plugin>
+
+				<plugin>
+					<groupId>net.alchim31.maven</groupId>
+					<artifactId>yuicompressor-maven-plugin</artifactId>
+					<version>1.3.0</version>
+					<executions>
+						<execution>
+							<phase>compile</phase>
+							<goals>
+								<goal>compress</goal>
+							</goals>
+						</execution>
+					</executions>
+					<configuration>
+						<encoding>UTF-8</encoding>
+						<jswarn>false</jswarn>
+						<force>false</force>
+						<linebreakpos>-1</linebreakpos>
+						<preProcessAggregates>true</preProcessAggregates>
+						<nosuffix>true</nosuffix>
+						<nomunge>true</nomunge>
+						<sourceDirectory>${project.build.outputDirectory}/web/scripts</sourceDirectory>
+						<includes>
+							<include>**/*.js</include>
+							<include>**/*.css</include>
+						</includes>
+						<excludes>
+							<exclude>**/angular.js</exclude>
+							<exclude>**/angular-table.js</exclude>
+							<exclude>**/*.min.js</exclude>
+							<exclude>**/*.min.css</exclude>
+						</excludes>
+						<outputDirectory>${project.build.outputDirectory}/web/scripts</outputDirectory>
+					</configuration>
+				</plugin>
+
+	            <!-- http://matychen.iteye.com/blog/1477350 -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-dependency-plugin</artifactId>
+					<version>2.4</version>
+					<executions>
+						<execution>
+							<phase>validate</phase>
+							<goals>
+								<goal>copy</goal>
+							</goals>
+							<configuration>
+								<artifactItems>
+									<artifactItem>
+										<groupId>com.google.javascript</groupId>
+										<artifactId>closure-compiler</artifactId>
+										<version>r1810</version>
+										<type>jar</type>
+										<overWrite>true</overWrite>
+										<outputDirectory>${project.build.directory}/compressor</outputDirectory>
+										<destFileName>closure-compiler.jar</destFileName>
+									</artifactItem>
+									<artifactItem>
+										<groupId>com.yahoo.platform.yui</groupId>
+										<artifactId>yuicompressor</artifactId>
+										<version>2.4.6</version>
+										<type>jar</type>
+										<overWrite>true</overWrite>
+										<outputDirectory>${project.build.directory}/compressor</outputDirectory>
+										<destFileName>yuicompressor.jar</destFileName>
+									</artifactItem>
+								</artifactItems>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-antrun-plugin</artifactId>
+					<version>1.7</version>
+					<executions>
+						<execution>
+							<phase>install</phase>
+							<goals>
+								<goal>run</goal>
+							</goals>
+							<configuration>
+								<tasks>
+									<property name="yuicompressor" value="${project.build.directory}/compressor/yuicompressor.jar" />
+									<property name="closure-compiler" value="${project.build.directory}/compressor/closure-compiler.jar" />
+									<property name="css.compress.directory" value="${project.build.outputDirectory}/web/stylesheets" />
+									<property name="js.compress.directory" value="${project.build.outputDirectory}/web/scripts" />
+									
+									<apply executable="java" parallel="false" failonerror="true" dest="${js.compress.directory}">
+										<fileset dir="${js.compress.directory}" includes="**/*.js" />
+										<arg line="-jar" />
+										<arg path="${closure-compiler}" />
+										<arg line="--warning_level DEFAULT" />
+										<arg line="--compilation_level SIMPLE_OPTIMIZATIONS" />
+										<arg line="--js" />
+										<srcfile />
+										<arg line="--js_output_file" />
+										<targetfile />
+										<mapper type="regexp" from="^(.*)\.(js)$" to="\1-min.\2" />
+									</apply>
+									<move todir="${js.compress.directory}">
+										<fileset dir="${js.compress.directory}" includes="**/*.js" />
+										<mapper type="regexp" from="^(.*)-min\.(js)$" to="\1.\2" />
+									</move>
+									
+									<apply executable="java" parallel="false" failonerror="true" dest="${css.compress.directory}">
+										<fileset dir="${css.compress.directory}" includes="**/*.css" />
+										<arg line="-jar" />
+										<arg path="${yuicompressor}" />
+										<arg line="--charset UTF-8" />
+										<arg value="--type" />
+										<arg value="css" />
+										<srcfile />
+										<arg line="-o" />
+										<targetfile />
+										<mapper type="regexp" from="^(.*)\.(css)$" to="\1-min.\2" />
+									</apply>
+									<move todir="${css.compress.directory}">
+										<fileset dir="${css.compress.directory}" includes="**/*.css" />
+										<mapper type="regexp" from="^(.*)-min\.(css)$" to="\1.\2" />
+									</move>
+								</tasks>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-war-plugin</artifactId>
+					<version>2.4</version>
+					<configuration>
+						<warName>${project.artifactId}</warName>
+						<warSourceExcludes>/**/scripts/**/*.js</warSourceExcludes>
+					</configuration>
+				</plugin>
+				
+			</plugins>
+		</pluginManagement>
+	</build>
 </project>

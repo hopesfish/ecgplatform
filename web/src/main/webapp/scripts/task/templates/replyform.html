@@ -1,0 +1,56 @@
+<a class="block-heading" data-toggle="collapse">填写回复</a>
+<div  class="block-body collapse in">
+
+<!-- 当前回复 -->
+<table class="table table-hover" ng-show="replyform.replys.length > 0">
+    <thead>
+        <tr>
+        <th >回复</th>
+        <th width="15%">操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="reply in replyform.replys" ng-show="!reply.removed">
+        <td>
+            <p style="width:600px; word-wrap: break-word;">
+                <strong>检测结果：</strong> {{reply.result}} <br/>
+                <strong>检测建议：</strong> {{reply.content}} <br/>
+                <strong>判断依据：</strong> <span class="label label-{{replyform.translateLevel(reply.level)}}">{{reply.reason}}</span>
+            </p>
+        </td>
+        <td>
+            <button class="btn btn-small" type="button" ng-click="replyform.edit(reply)">编辑</button>
+            <button class="btn btn-small btn-danger" type="button" ng-click="replyform.remove($index)">删除</button>
+        </td>
+        </tr>
+    </tbody>
+</table>
+
+<div class="pull-right" style="clear:both; margin: 10px 0px;">
+    <button class="btn" type="button"
+        ng-click="replyform.addManual()">
+        <i class="icon-edit"></i>增加人工回复
+    </button>
+    <button class="btn btn-primary" type="button"
+        ng-show="!session.user.isExpert()"
+        ng-click="replyform.forward()" ng-disabled="todo.current == null || todo.current.examination == null">
+        <i class="icon-share"></i>转交专家处理
+    </button>
+    <button class="btn" type="button"
+        ng-class="{'btn-primary': replyform.canReply}" 
+        ng-click="replyform.complete()"
+        ng-disabled="!replyform.canReply">
+        <i class="icon-check"></i>回复用户
+</button>
+</div>
+
+<div class="pull-right" style="clear:both; margin: 10px 0px;">
+    <button class="btn" type="button" ng-click="replyform.reset()">
+        <i class="icon-repeat"></i>重置
+    </button>
+    <button class="btn" type="button" ng-click="todo.replyform = 'hidden'">
+        <i class="icon-remove"></i>取消
+    </button>
+</div>
+<br/>
+</div>

@@ -1,8 +1,9 @@
-'use strict';
 define(function(require, exports) {
 
+'use strict';
+
 angular.module('ecgTaskService', [])
-    .factory("TaskService", ['$rootScope', '$http', function($rootScope, $http) {
+    .factory("TaskService", ['$rootScope', '$http', '$q', function($rootScope, $http, $q) {
         return {
             queryAllTaskByEmployee: function(user, opts) {
                 var opts = opts || {}, url, params = '?';
@@ -15,9 +16,19 @@ angular.module('ecgTaskService', [])
                 }
 
                 if (opts.status === 'undone') {
-                    params += 'status=pending&status=proceeding';
+                    if (user.roles === 'operator') {
+                        params += 'status=pending';
+                    } else if (user.roles === 'expert') {
+                        params += 'status=proceeding'
+                    } else {
+                        params += 'status:ne=completed';
+                    }
                 } else if (opts.status === 'done') {
                     params += 'status=completed';
+                }
+
+                if (opts.id) {
+                    params += '&id=' + opts.id;
                 }
 
                 return $http({
@@ -48,29 +59,57 @@ angular.module('ecgTaskService', [])
             },
             getPlainReply: function() {
                 return {
-                    title: "标题",
                     result: "",
-                    content: ""
+                    content: "",
+                    reason: "reason"
                 };
             },
             reply: function(examination, reply) {
-                var newreply = this.getPlainReply();
-                    newreply.result = reply.result;
-                    newreply.content = reply.content;
-                return $http({
-                    method: 'POST',
-                    headers:{'Content-Type':'application/x-www-form-urlencoded'},
-                    data: $.param(newreply),
-                    url: PATH + '/api/examination/' + examination.id + '/reply'
-                }).then(function(res) {
-                    if (res.status === 201) {
-                        return true;
-                    } else {
+                var newreply = this.getPlainReply(), promise;
+
+                newreply.result = reply.result;
+                newreply.content = reply.content;
+                newreply.reason = reply.reason;
+
+                if (!reply.id) {
+                    promise = $http({
+                        method: 'POST',
+                        headers:{'Content-Type':'application/x-www-form-urlencoded'},
+                        data: $.param(newreply),
+                        url: PATH + '/api/examination/' + examination.id + '/reply'
+                    }).then(function(res) {
+                        if (res.status === 201) {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    }, function() {
                         return false;
+                    });
+                } else {
+                    if (reply.removed) {
+                        promise = $http({
+                            method: 'DELETE',
+                            url: PATH + '/api/reply/' + reply.id
+                        }).then(function(res) {
+                            return true;
+                        }, function() {
+                            return false;
+                        });
+                    } else {
+                        promise = $http({
+                            method: 'PUT',
+                            headers:{'Content-Type':'application/x-www-form-urlencoded'},
+                            data: $.param(newreply),
+                            url: PATH + '/api/reply/' + reply.id
+                        }).then(function(res) {
+                            return true;
+                        }, function() {
+                            return false;
+                        });
                     }
-                }, function() {
-                    return false;
-                });
+                }
+                return promise;
             },
             queryExpertsByOperators: function(user) {
                 return $http({
@@ -87,6 +126,22 @@ angular.module('ecgTaskService', [])
                     return [];
                 });
             },
+            replyInBatch: function(examination, replies) {
+                var posts = [], len = 0, count = 0, that = this;
+                $(replies).each(function(i, reply) {
+                    posts.push(that.reply(examination, reply));
+                });
+
+                return $q.all(posts).then(function(responses) {
+                    var allsuccess = true;
+                    $(responses).each(function(i, result){
+                        if (!result) {
+                            allsuccess = false;
+                        }
+                    });
+                    return allsuccess;
+                });
+            },
             forward: function(task) {
                 return $http({
                     method: 'PUT',
@@ -101,10 +156,25 @@ angular.module('ecgTaskService', [])
                     return false;
                 });
             },
-            getReplyByExamination: function(examinationId) {
+            complete: function(task) {
+                return $http({
+                    method: 'PUT',
+                    headers:{'Content-Type':'application/x-www-form-urlencoded'},
+                    data: $.param({
+                        status: 'completed'
+                    }),
+                    url: PATH + '/api/task/' + task.id
+                }).then(function(res) {
+                    return true;
+                }, function() {
+                    return false;
+                });
+            },
+            getReplyByExamination: function(examination) {
+                var id = examination.id || examination;
                 return $http({
                     method: 'GET',
-                    url: PATH + '/api/examination/' + examinationId + '/reply'
+                    url: PATH + '/api/examination/' + id + '/reply'
                 }).then(function(res) {
                     if (res.data && res.data.length > 0) {
                         return res.data;

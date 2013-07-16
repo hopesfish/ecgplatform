@@ -1,7 +1,9 @@
 package com.ainia.ecgApi.domain.health;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -10,18 +12,29 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
+import javax.persistence.PreRemove;
 import javax.persistence.PreUpdate;
+import javax.persistence.Transient;
 import javax.persistence.Version;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.Formula;
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.ainia.ecgApi.core.bean.Domain;
+import com.ainia.ecgApi.core.utils.ServiceUtils;
+import com.ainia.ecgApi.domain.sys.Employee;
+import com.ainia.ecgApi.domain.sys.User;
+import com.ainia.ecgApi.service.health.HealthRuleService;
+import com.ainia.ecgApi.service.sys.EmployeeService;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * <p>健康规则</p>
@@ -34,6 +47,11 @@ import com.fasterxml.jackson.annotation.JsonFormat;
  */
 @Entity
 public class HealthRule implements Domain {
+	
+	public static final String RULE_ID = "ruleId";
+	
+	public static final String USAGE_GROUP = "group";
+	public static final String USAGE_FILTER = "filter";
 
 	private Long id;
 	private String name;
@@ -52,6 +70,7 @@ public class HealthRule implements Domain {
 	private Integer version;
 	private boolean canReply;
 	private List<HealthRuleReply> replys;
+	private Set<User> users;
  	
 	
 	
@@ -74,6 +93,11 @@ public class HealthRule implements Domain {
 	@PreUpdate
 	public void onUpdate() {
 		this.lastUpdated = new Date();
+	}
+	@PreRemove
+	public void onDelete() {
+		HealthRuleService healthRuleService = (HealthRuleService)ServiceUtils.getService(HealthRuleService.class);
+		healthRuleService.deleteByGroup(this.id);	
 	}
 	
 	@Id
@@ -115,6 +139,18 @@ public class HealthRule implements Domain {
 	public void setEmployeeId(Long employeeId) {
 		this.employeeId = employeeId;
 	}
+	@Transient
+	public String getEmployeeName() {
+		//TODO  user the @Formula  replace the method
+		if (employeeId == null) {
+			return null;
+		}
+		EmployeeService employeeService = (EmployeeService)ServiceUtils.getService(EmployeeService.class);
+		Employee employee = employeeService.get(employeeId);
+		return employee == null ? null : employee.getName();
+	}
+	
+	
 	public String getType() {
 		return type;
 	}
@@ -197,15 +233,45 @@ public class HealthRule implements Domain {
 	public void setVersion(Integer version) {
 		this.version = version;
 	}
-	@Fetch(FetchMode.JOIN)
+	@JsonIgnore
+	@Fetch(FetchMode.SUBSELECT)
 	@OneToMany(orphanRemoval = true , targetEntity = HealthRuleReply.class)
 	@JoinColumn(name = "ruleId")
 	public List<HealthRuleReply> getReplys() {
 		return replys;
 	}
-	public void setReplys(List<HealthRuleReply> replys) {
+	private void setReplys(List<HealthRuleReply> replys) {
 		this.replys = replys;
 	}
+	
+	@JsonIgnore
+	@Fetch(FetchMode.JOIN)
+	@ManyToMany
+	@JoinTable(name="health_rule_user"  , joinColumns={@JoinColumn(name="rule_id")}  
+        						, inverseJoinColumns={@JoinColumn(name="user_id")}  
+    )  
+	public Set<User> getUsers() {
+		return users;
+	}
+	private void setUsers(Set<User> users) {
+		this.users = users;
+	}
+	@JsonIgnore
+	public void addUser(User user) {
+		if (users == null) {
+			users = new HashSet<User>();
+		}
+		users.add(user);
+	}
+	
+	@JsonIgnore
+	public void removeUser(User user) {
+		if (users == null) {
+			return;
+		}
+		users.remove(user);
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;

@@ -15,79 +15,83 @@ angular.module('ecgMessage', [])
         }
     };
 })
-.controller('MessageController', ['$scope', '$filter', 'MessageService', function ($scope, $filter, MessageService) {
+.controller('MessageController', ['$scope', '$filter', '$timeout', 'MessageService', function ($scope, $filter, $timeout, MessageService) {
     $scope.message = {};
     $scope.message.total = 0;
-    $scope.message.msgs = MessageService.all();
+    $scope.message.msgs = [];
+    $scope.message.currents = [];
+    $scope.message.current = null;
 
     // show the message
     $scope.message.show = function(message) {
-        var alertClass = 'alert-' + message.type || 'info', date = new Date(), timeout = 300000;
-        date.setTime(message.id);
-        $("#ecgMessage").append(
-            '<div id="message' + message.id + '" class="alert ' + alertClass + '">' +
-            '<button type="button" class="close" data-dismiss="alert">×</button>' +
-            '[' + $filter('date')(date, 'HH:mm:ss') + '] ' + message.text || '操作完成.' + 
-            '</div>'
-        );
-        if (message.type === 'success' || message.type === 'info') {
-            timeout = 5000;
-        }
-        setTimeout(function() {
-            $('#message' + message.id + ' button').trigger("click");
-        }, timeout);
+        message.id = (new Date()).getTime();
+        message.date = $filter('date')(message.id, 'HH:mm:ss');
 
+        $scope.message.current = message
+
+        $scope.message.currents.push(message);
+        $scope.message.msgs.push(message);
+        MessageService.create(message);
+
+        $timeout(function() {
+            $scope.message.close();
+        }, 5000);
     };
+    // close the message
+    $scope.message.close = function() {
+        $scope.message.currents.pop();
+        if ($scope.message.currents.length > 0) {
+            $scope.message.current = $scope.message.currents[$scope.message.currents.length - 1];
+        }
+    };
+    $scope.message.closeAll = function() {
+        $scope.message.currents = [];
+        $scope.message.current = null
+    }
     // show a success message
     $scope.message.success = function(msg) {
         var message = {
-            id: (new Date()).getTime(),
             type: 'success',
             text: msg,
             show: true
         };
-        MessageService.create(message);
         $scope.message.show(message);
     };
     // show a info message
     $scope.message.info = function(msg) {
         var message = {
-            id: (new Date()).getTime(),
             type: 'info',
             text: msg,
             show: true
         };
-        MessageService.create(message);
         $scope.message.show(message);
     };
     // show a error message
     $scope.message.error = function(msg) {
         var message = {
-            id: (new Date()).getTime(),
             type: 'error',
             text: msg,
             show: true
         };
-        MessageService.create(message);
         $scope.message.show(message);
     };
     // show a warn message
     $scope.message.warn = function(msg) {
         var message = {
-            id: (new Date()).getTime(),
             type: 'block',
             text: msg,
             show: true
         };
-        MessageService.create(message);
         $scope.message.show(message);
     };
+    
     /*
-    $scope.message.success(1111);
-    $scope.message.info(1111);
-    $scope.message.error(1111);
-    $scope.message.warn(1111);
+    $scope.message.success('success');
+    $scope.message.info('info');
+    $scope.message.error('error');
+    $scope.message.warn('warn');
     */
+    
 }])
 .directive("ecgMessage", ['$location', function ($location) {
     return {

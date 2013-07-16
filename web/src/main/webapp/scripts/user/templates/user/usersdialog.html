@@ -1,0 +1,24 @@
+<div id="ecgUsersDialog" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="ecgModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3>选择接线员</h3>
+  </div>
+  <div class="modal-body">
+    
+        <table at-table class="table table-bordered" pagination="usersDialogPagination">
+          <thead></thead>
+          <tbody>
+            <tr ng-click="item.selected = !item.selected" ng-class="{'active': item.selected}">
+                <td at-implicit sortable title="登录名" attribute="username"></td>
+                <td at-implicit sortable title="姓名" attribute="name"></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <at-pagination items-per-page="10" instance="usersDialogPagination" list="userdialog.data"></at-pagination>
+  </div>
+  <div class="modal-footer">
+    <button class="btn" ng-click="userdialog.execute()">选择</button>
+    <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+  </div>
+</div>

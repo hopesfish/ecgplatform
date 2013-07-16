@@ -1,3 +1,7 @@
-<div class="row-fluid" id="ecgMessage">
-    
+<div class="row-fluid" id="ecgMessage" ng-show="message.currents.length > 0">
+    <div id="message{{message.current.id}}'" class="alert alert-{{message.current.type}}">
+        <span class="pull-right" ng-click="message.close()">[关闭]</span>
+        <span class="pull-right" ng-click="message.closeAll()" ng-show="message.currents.length > 1">[关闭所有消息(共{{message.currents.length}}条)]</span>
+        [{{message.current.date}}] {{message.current.text || '操作完成'}}
+    </div>	
 </div>

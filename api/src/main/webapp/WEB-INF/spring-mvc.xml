@@ -26,6 +26,16 @@
 		
     <mvc:default-servlet-handler/>
 
+    <bean id="conversionService"
+          class="org.springframework.context.support.ConversionServiceFactoryBean">
+        <property name="converters">
+            <list>
+                <bean class="com.ainia.ecgApi.core.bean.converter.StringToDateConverter"/>
+                <bean class="com.ainia.ecgApi.core.bean.converter.StringToBooleanConverter"/>
+            </list>
+        </property>
+    </bean>
+	
 	<bean id="propertyEditorRegistrar" class="org.springframework.beans.factory.config.CustomEditorConfigurer">
 	  <property name="customEditors">
 	    <map>
@@ -34,16 +44,19 @@
 	  </property>
 	</bean>	
 	
+	<bean id="multipartResolver"  class="org.springframework.web.multipart.support.StandardServletMultipartResolver">
+	</bean>
+	
     <mvc:interceptors>  
 	  <mvc:interceptor>  
 	    <mvc:mapping path="/**" />  
 	    <bean class="com.ainia.ecgApi.core.security.RestTokenInterceptor">  
 	      <property name="excludes">  
 	        <list>  
-	          <value>/login</value>  
+	          <value>/api/auth</value>  
 	        </list>  
 	      </property> 
-	      <property name="enable" value="false"></property> 
+	      <property name="enable" value="true"></property> 
 	    </bean>  
 	  </mvc:interceptor>  
 	</mvc:interceptors>  

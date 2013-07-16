@@ -15,8 +15,21 @@ angular.module('ecgExpert', [])
     $scope.expert = {};
 
     // 表格展示
-    $scope.expert.data = ExpertService.queryAll();
-    $scope.expert.filteredData = $scope.expert.data;
+    $scope.expert.data = null;
+    $scope.expert.filteredData = null;
+    // 刷新功能
+    function refreshGrid() {
+        $scope.dialog.showLoading();
+        ExpertService.queryAll().then(function(experts) {
+            $scope.dialog.hideStandby();
+            $scope.expert.data = experts;
+            $scope.expert.filteredData = $scope.expert.data;
+        }, function() {
+            $scope.dialog.hideStandby();
+            $scope.message.error("无法加载专家数据!");
+        });
+    }
+    refreshGrid();
 
     // 显示label
     $scope.expert.getGenderLabel = function(expert) {
@@ -28,12 +41,6 @@ angular.module('ecgExpert', [])
 
     // 当前选中数据
     $scope.expert.selectedItem = null;
-
-    // 刷新功能
-    function refreshGrid() {
-        $scope.expert.data = ExpertService.queryAll();
-        $scope.expert.filteredData = $scope.expert.data;
-    }
 
     // 删除功能
     $scope.expert.confirmDelete = function() {
@@ -145,8 +152,13 @@ angular.module('ecgExpert', [])
 
     // 初始化界面,并获得最新version
     function refresh() {
+        $scope.dialog.showLoading();
         ExpertService.get($routeParams.id).then(function(expert) {
+            $scope.dialog.hideStandby();
             $scope.expert.updateobj = expert;
+        }, function() {
+            $scope.dialog.hideStandby();
+            $scope.message.error("加载专家数据失败!");
         });
     };
     refresh();

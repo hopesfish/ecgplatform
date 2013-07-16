@@ -61,10 +61,6 @@ public class TaskServiceImpl extends BaseServiceImpl<Task , Long> implements Tas
 	}
 
 	public Task pending(Task task) {
-		Long operatorId = task.getOperatorId();
-		if (operatorId == null) {
-			throw new ServiceException("task.error.operator.notNull");
-		}
 		List<Operator> operators = operatorService.findAll(new Query());
 		Operator selectedOperator = null;
 		int selectedOperatorTask = -1;

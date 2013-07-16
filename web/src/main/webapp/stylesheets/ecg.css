@@ -29,6 +29,10 @@ i {
 }
 
 /*消息提示*/
+#ecgMessage .pull-right {
+	cursor: pointer;
+	margin-right: 5px;
+}
 #ecgMessage .alert {
 	margin: 0px;
 }
@@ -41,25 +45,24 @@ i {
 	padding-right: 0px;
 }
 /*对主任不可见的菜单*/
-.sidebar-nav.chief .undone,
-.sidebar-nav.chief .done,
+.sidebar-nav.chief .todo,
 .sidebar-nav.chief .chief {
 	display: none
 }
 /*对专家不可见的菜单*/
+.sidebar-nav.expert .task,
 .sidebar-nav.expert .duplicated,
 .sidebar-nav.expert .overview,
 .sidebar-nav.expert #employees-menu-link,
 .sidebar-nav.expert #employees-menu,
 .sidebar-nav.expert #users-menu-link,
-.sidebar-nav.expert #users-menu,
-.sidebar-nav.expert #rules-menu-link,
-.sidebar-nav.expert #rules-menu {
+.sidebar-nav.expert #users-menu {
 	display: none
 }
 
 /*对接线员不可见的菜单*/
 .sidebar-nav.operator .overview,
+.sidebar-nav.operator .task,
 .sidebar-nav.operator #employees-menu-link,
 .sidebar-nav.operator #employees-menu,
 .sidebar-nav.operator #users-menu-link,
@@ -158,16 +161,16 @@ table tbody tr.active {
 }
 
 /* 回复设置*/
-.replyconfigs {
+.ruleconfigs {
 	height: 50px;
 }
-.replyconfigs .bar {
+.ruleconfigs .bar {
 	cursor: pointer;
 	height: 50px;
 	line-height: 20px;
 	padding-top: 5px;
 }
-.replyconfigs .bar-outside {
+.ruleconfigs .bar-outside {
 	background-color: #333;
 	background-image: none;
 }
@@ -196,7 +199,7 @@ table tbody tr.active {
 
 /* employee link*/
 .employeeLink {
-	float:left; width: 100px; margin-right: 10px;
+	float:left; width: 120px; margin-right: 10px;
 }
 .employeeLink input {
 	margin: 0px;

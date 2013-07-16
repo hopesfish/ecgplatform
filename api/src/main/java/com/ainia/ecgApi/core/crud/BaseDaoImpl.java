@@ -3,6 +3,7 @@ package com.ainia.ecgApi.core.crud;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -11,9 +12,14 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.persistence.metamodel.Attribute;
+import javax.persistence.metamodel.Attribute.PersistentAttributeType;
+import javax.persistence.metamodel.EntityType;
+import javax.persistence.metamodel.Metamodel;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,6 +74,18 @@ public abstract class BaseDaoImpl<T extends Domain , ID extends Serializable> im
 		CriteriaBuilder builder = em.getCriteriaBuilder();
 		CriteriaQuery criteria  = builder.createQuery();
 		Root<T> root = criteria.from(query.getClazz());
+		
+	    Metamodel metamodel   = em.getMetamodel();
+	    EntityType entityType =  metamodel.entity(clazz);
+	    //对一对多关联使用 left join  减少生成的sql语句
+	    for (Iterator<Attribute> iter = entityType.getAttributes().iterator();iter.hasNext();) {
+	    	Attribute attr = iter.next();
+	    	if (attr.getPersistentAttributeType().equals(PersistentAttributeType.MANY_TO_ONE) || 
+	    			attr.getPersistentAttributeType().equals(PersistentAttributeType.ONE_TO_ONE)) {
+	    		
+	    			root.fetch(attr.getName() , JoinType.LEFT);
+	    	}
+	    }
 		criteria.select(root);
 		generateCondition(query , builder , criteria , root);
 		//检查是否排序

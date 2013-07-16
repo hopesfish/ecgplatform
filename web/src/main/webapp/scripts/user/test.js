@@ -1,14 +1,15 @@
-'use strict';
+
 define(function(require, exports) {
 
+    'use strict';
+    
     exports.testUser = function(it, UserService) {
-
+        if (!runCase('user')) {
+            return;
+        }
         // User
-        it("the userService should be defined", function() {
-            expect(UserService).not.to.be(undefined);
-        });
-
         it("the user list should be retrieved", function(done) {
+            expect(UserService).not.to.be(undefined);
             UserService.queryAll().then(function(users) {
                 if (users.length > 0) {
                     var user = users[0];
@@ -26,11 +27,8 @@ define(function(require, exports) {
             });
         });
 
-        it("the getPlainObject method of UserService should be defined", function() {
-            expect(UserService.getPlainObject).not.to.be(undefined);
-        });
-
         it("the user should not be created without username and name", function(done) {
+            expect(UserService.getPlainObject).not.to.be(undefined);
             var invalid = UserService.getPlainObject();
             UserService.create(invalid).then(function(flag) {
                 if (flag) {

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import com.ainia.ecgApi.core.crud.BaseDao;
 import com.ainia.ecgApi.core.crud.BaseServiceImpl;
+import com.ainia.ecgApi.core.exception.ServiceException;
 import com.ainia.ecgApi.dao.health.HealthRuleDao;
 import com.ainia.ecgApi.domain.health.HealthRule;
 
@@ -31,4 +32,20 @@ public class HealthRuleServiceImpl extends BaseServiceImpl<HealthRule , Long> im
     public HealthRule findSimpleByCode(String code) {
     	return healthRuleDao.findByCode(code);
     }
+
+	public void addUser(Long ruleId, Long userId) {
+		HealthRule rule = this.get(ruleId);
+		if (!HealthRule.USAGE_GROUP.equals(rule.getUsage())) {
+			throw new ServiceException("healthRule.error.create.notGroup");
+		}
+		healthRuleDao.addUser(ruleId, userId);
+	}
+
+	public void removeUser(Long ruleId, Long userId) {
+		healthRuleDao.removeUser(ruleId, userId);
+	}
+
+	public void deleteByGroup(Long groupId) {
+		healthRuleDao.deleteByGroup(groupId);
+	}
 }

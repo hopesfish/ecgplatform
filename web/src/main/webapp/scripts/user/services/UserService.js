@@ -1,15 +1,17 @@
-'use strict';
 define(function(require, exports) {
 
+'use strict';
+    
 angular.module('ecgUserService', [])
     .factory("UserService", function($rootScope, $http) {
         var uri = PATH + "/api/user";
 
         return {
-            queryAll: function() {
+            queryAll: function(params) {
+                var params = params || {};
                 return $http({
                     method: 'GET',
-                    url: uri
+                    url: uri + '?' + $.param(params)
                 }).then(function(res) {
                     if (res.data.datas && res.data.datas.length > 0) {
                         return res.data.datas;

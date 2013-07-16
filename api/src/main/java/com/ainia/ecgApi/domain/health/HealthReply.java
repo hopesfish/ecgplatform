@@ -32,7 +32,7 @@ public class HealthReply implements Domain {
 
 	private Long id;
 	private String type;
-	private String title;
+	private String reason;
 	private String result;
 	private String content;
 	private Long employeeId;
@@ -68,12 +68,12 @@ public class HealthReply implements Domain {
 		this.type = type;
 	}
 	@NotBlank
-	public String getTitle() {
-		return title;
+	public String getReason() {
+		return reason;
 	}
 
-	public void setTitle(String title) {
-		this.title = title;
+	public void setReason(String reason) {
+		this.reason = reason;
 	}
 	@NotBlank
 	public String getResult() {

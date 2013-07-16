@@ -6,8 +6,10 @@ import java.util.List;
 
 import javax.validation.ConstraintViolationException;
 
+import org.dozer.Mapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.ainia.ecgApi.core.bean.Domain;
@@ -28,6 +30,8 @@ public abstract class BaseServiceImpl<T extends Domain, ID extends Serializable>
 	protected final Logger log = LoggerFactory.getLogger(this.getClass());
 	
 	public abstract BaseDao<T , ID> getBaseDao();
+	@Autowired
+	private Mapper  mapper;
 	
 	public List<T> findAll(Query<T> query) {
 		return this.getBaseDao().findAll(query);
@@ -70,6 +74,7 @@ public abstract class BaseServiceImpl<T extends Domain, ID extends Serializable>
 		try {
 			JpaRepository<T , ID> dao = ((JpaRepository<T , ID>)getBaseDao());
 			S old = (S) dao.findOne((ID)domain.getId());
+			//mapper.map(domain , old);
 			PropertyUtil.copyProperties(old , domain);
 			return dao.save(old);
 		}

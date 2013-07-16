@@ -5,19 +5,11 @@
 
 		<tr>
 		<td width="150px" valign="top"><label for="rule-type">设备类型:</label></td>
-		<td>
-			<input ng-model="rule.updateobj.type" class="input-xlarge" id="rule-type" ng-pattern="/^\d+$/"
-				   focus required placeholder="请输入设备类型" ng-change="rule.checkUnique()"></input>
-			<span class="required">*</span>
-		</tr>
+		<td>{{rule.updateobj.type}}</tr>
 
 		<tr>
 		<td><label for="rule-code">指标编码:</label></td>
-		<td>
-			<input ng-model="rule.updateobj.code" ng-pattern="/^\d+$/"
-			 class="input-xlarge" id="rule-code" required placeholder="请输入指标编码" ng-change="rule.checkUnique()" ng-readonly="true"></input>
-			<span class="required">*</span>
-		</td>
+		<td>{{rule.updateobj.code}}</td>
 		</tr>
 
 		<tr>
@@ -28,16 +20,13 @@
 		</td>
 		</tr>
 
-		<!--tr>
+		
 		<td ><label for="rule-min">范围设定:</label></td>
 		<td>
-			<button class="btn btn-small" type="button" ng-click="rule.updateobj.min = -1">无下限</button>
-			<input type="text" id="rule-min" ng-model="rule.updateobj.min" min="-1" class="input-mini"  ng-pattern="/^-?\d+$/" required></input>
-			<span>-</span>
-			<input type="text" ng-model="rule.updateobj.max" max="9999" class="input-mini" ng-pattern="/^\d+$/" required></input>
-			<button class="btn btn-small" type="button" ng-click="rule.updateobj.max = 9999">无上限</button>
+			{{rule.updateobj.min}} - {{rule.updateobj.max}}
+			<a ng-href="#{{PATH}}/rule/{{rule.updateobj.id}}/config">设置</a>
 		</td>
-		</tr-->
+		</tr>
 
 		<tr>
 		<td ><label for="rule-remark">说明:</label></td>
@@ -53,9 +42,9 @@
 <div class="row-fluid">
 	<div class="span12">
 		<button class="btn" type="button"
-				ng-class="{'btn-primary': updateRuleForm.$valid && rule.isUnique}" 
+				ng-class="{'btn-primary': updateRuleForm.$valid}" 
 				ng-click="rule.update()"
-				ng-disabled="!updateRuleForm.$valid || !rule.isUnique">
+				ng-disabled="!updateRuleForm.$valid">
 			<i class="icon-save"></i>保存
 		</button>
 		<a href="javascript:window.history.go(-1)" class="btn"><i class="icon-list"></i>返回</a>

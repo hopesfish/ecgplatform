@@ -1,5 +1,7 @@
 package com.ainia.ecgApi.controller.health;
 
+import java.io.IOException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -68,9 +70,9 @@ public class HealthExaminationController extends BaseController<HealthExaminatio
      * @return
      * ResponseEntity<AjaxResult>
      */
-	@RequestMapping(value = "/{id}/reply" , method = RequestMethod.POST , produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/{examinationId}/reply" , method = RequestMethod.POST , produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-    public ResponseEntity<AjaxResult> reply(@PathVariable("id") Long id , HealthReply reply) {
+    public ResponseEntity<AjaxResult> reply(@PathVariable("examinationId") Long id , HealthReply reply) {
     	HealthExamination examination = healthExaminationService.get(id);
     	if (examination == null) {
     		return new ResponseEntity<AjaxResult>(HttpStatus.NOT_FOUND);
@@ -108,9 +110,11 @@ public class HealthExaminationController extends BaseController<HealthExaminatio
      * @param file
      * @return
      * ResponseEntity
+     * @throws IOException 
      */
-    public ResponseEntity upload( @RequestParam("file") MultipartFile file) {
+    public ResponseEntity upload( @RequestParam("file") MultipartFile file) throws IOException {
     	
-    	return null;
+    	healthExaminationService.upload(file.getBytes());
+    	return new ResponseEntity(HttpStatus.OK);
     }
 }

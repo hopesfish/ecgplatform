@@ -1,12 +1,12 @@
 <br/>
 <ul class="nav nav-tabs" id="userTab">
   <li ng-class="{'active': user.tab == 1}" ng-click="user.tab = 1"><a href="javascript:void(0)" data-toggle="tab">基本信息</a></li>
-  <li ng-class="{'active': user.tab == 2}" ng-click="user.tab = 2"><a href="javascript:void(0)" data-toggle="tab">检测请求(2)</a></li>
-  <li ng-class="{'active': user.tab == 3}" ng-click="user.tab = 3"><a href="javascript:void(0)" data-toggle="tab">自定义规则</a></li>
+  <!--li ng-class="{'active': user.tab == 2}" ng-click="user.tab = 2"><a href="javascript:void(0)" data-toggle="tab">检测请求(2)</a></li>
+  <li ng-class="{'active': user.tab == 3}" ng-click="user.tab = 3"><a href="javascript:void(0)" data-toggle="tab">自定义规则</a></li-->
 </ul>
  
 <div class="tab-content">
   <div class="tab-pane" ng-class="{'active': user.tab == 1}"><div ecg-user-edit></div></div>
-  <div class="tab-pane" ng-class="{'active': user.tab == 2}">检测请求</div>
-  <div class="tab-pane" ng-class="{'active': user.tab == 3}">自定义规则</div>
+  <!--div class="tab-pane" ng-class="{'active': user.tab == 2}">检测请求</div>
+  <div class="tab-pane" ng-class="{'active': user.tab == 3}">自定义规则</div-->
 </div>

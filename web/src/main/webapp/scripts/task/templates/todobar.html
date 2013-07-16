@@ -1,0 +1,10 @@
+<div class="row-fluid" ng-show="todo.tasks && todo.tasks.length > 0 && todo.replyform != 'top' && todo.replyform != 'bottom'">
+    <div class="span12 buttons">
+        <button class="btn" type="button"
+                ng-show="todo.current && todo.current.status != 'completed'"
+                ng-click="todo.reply('bottom')" ng-disabled="todo.current == null || todo.current.examination == null">
+            <i class="icon-edit"></i>回复...
+        </button>
+        <a href="#/task" class="btn">工作清单</a>
+    </div>
+</div>

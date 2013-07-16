@@ -1,6 +1,6 @@
-'use strict';
 define(function(require) {
-
+'use strict';
+    
 require("./common/main");
 require("./task/main");
 require("./monitor/main");

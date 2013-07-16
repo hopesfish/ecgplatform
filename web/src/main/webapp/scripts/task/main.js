@@ -1,88 +1,192 @@
-'use strict';
 define(function(require, exports) {
 
+'use strict';
+    
 require("./services/TaskService");
-require("./directives/UndoneTaskList");
-require("./directives/UndoneTaskView");
-require("./directives/UserCard");
-require("./directives/ExaminationView");
-require("./directives/Plot");
-require("./directives/ReplyDialog");
-require("./directives/ForwardDialog");
-require("./directives/DoneTaskList");
-require("./directives/DoneTaskView");
-require("./directives/ExaminationReply");
+require("./directives/TaskView");
+require("./directives/ReplyForm");
 
-var undoneTemp = require("./templates/undone.html");
-var doneTemp = require("./templates/done.html");
+var todoTemp = require("./templates/todo.html");
+var todobarTemplate = require("./templates/todobar.html");
+var taskTemp = require("./templates/list.html");
 
-angular.module('ecgTask', ['ecgTaskService', 'ecgUndoneTaskList', 'ecgUndoneTaskView', 'ecgReplyDialog', 'ecgForwardDialog', 'ecgDoneTaskList', 'ecgDoneTaskView', 'ecgExaminationReply'])
-.controller('UndoneTaskController', ['$scope', 'TaskService', function ($scope, TaskService) {
-    $scope.undone = {};
+angular.module('ecgTask', ['ecgTaskService', 'ecgTaskView', 'ecgReplyForm'])
+.controller('TodoTaskController', ['$scope', '$routeParams', '$location', 'ProfileService', 'TaskService', function ($scope, $routeParams, $location, ProfileService, TaskService) {
     $scope.subheader.title = "待办工作";
 
-    // 回复
-    $scope.undone.reply = function() {
-        $scope.replydialog.show({examination: $scope.undone.selected.examination, handler: function(replys) {
-            var len = replys.length, count = 0;
-            $scope.replydialog.hide();
-            $scope.dialog.showStandby();
-            $(replys).each(function(i, reply) {
-                TaskService.reply($scope.undone.selected.examination, reply)
-                .then(function(flag) {
-                    $scope.dialog.hideStandby();
-                    if (flag) {
-                        count++;
-                    } else {
-                        $scope.message.error("无法处理该条记录，请联系管理员!");
-                    }
-                    if (count === len) {
-                        $scope.message.success("该检测请求已处理完毕，如需查询，请点击菜单已办工作!");
-                        $scope.undone.selected = null;
-                        // 刷新
-                        $scope.undone.refreshGrid();
-                    }
-                }, function() {
-                    $scope.dialog.hideStandby();
-                    $scope.message.error("无法处理该条记录，请联系管理员!");
-                });
-            });
-        }});
-    };
+    // 基本变量
+    $scope.todo = {};    
+    $scope.todo.tasks = null;
+    $scope.todo.current = null;
+    $scope.todo.replyform = 'hidden';
 
-    // 转发
-    $scope.undone.forward = function() {
-        TaskService.forward($scope.undone.selected)
-        .then(function(flag) {
+    // 加载未完成任务
+    function refreshGrid() {
+        var username = $.cookie("AiniaOpUsername");
+
+        $scope.dialog.showLoading();
+        ProfileService.get(username)
+        .then(function(user) {
             $scope.dialog.hideStandby();
-            if (flag) {
-                $scope.message.success("该检测请求已转交给专家处理!");
-                $scope.undone.selected = null;
-            } else {
-                $scope.message.error("无法转交该任务，请联系管理员!");
-            }
-            // 刷新
-            $scope.undone.refreshGrid();
+            return user;
         }, function() {
             $scope.dialog.hideStandby();
-            $scope.message.error("无法转交该任务，请联系管理员!");
+            return null;
+        })
+        .then(function(user) {
+            if (user) {
+                $scope.dialog.showLoading();
+                TaskService.queryAllTaskByEmployee(
+                    user, 
+                    {
+                        status: 'undone',
+                        id: $routeParams.id || ''
+                    }
+                ).then(function(tasks) {
+                    $scope.dialog.hideStandby();
+                    $scope.todo.tasks = tasks;
+                    selectTask();
+                });
+                // 查总数
+                TaskService.queryAllTaskByEmployee(
+                    user, 
+                    {status: 'undone'}
+                ).then(function(tasks) {
+                    $scope.subheader.title = "待办工作(共" + tasks.length + "条)";
+                });
+            } else {
+                $scope.message.error("无法加载用户数据");
+            }
         });
     };
+    refreshGrid();
+ 
+    // 将第一个作为当前选中view
+    function selectTask() {
+        var len = $scope.todo.tasks.length;
+        if (len == 0) { return; }
+        $scope.todo.current = $scope.todo.tasks[len - 1];
+    };
+
+    // 展开/收缩窗口
+    $scope.todo.reply = function(position) {
+        if ($scope.todo.replyform == position) {
+            $scope.todo.replyform = 'hidden';
+        } else {
+            $scope.todo.replyform = position;
+        }
+    };
+
+    // 移动到下一个
+    $scope.todo.shift = function() {
+        if ($routeParams.id) {
+            $location.path("todo");
+        } else {
+            var len = $scope.todo.tasks.length;
+            $scope.todo.current = null;
+            $scope.todo.tasks.splice(len - 1, 1);
+            $scope.todo.replyform = 'hidden';
+            if ($scope.todo.tasks.length > 0) {
+                selectTask();
+            } else {
+                refreshGrid();
+            }
+        }
+    };
+
+    // ignore
+    $scope.todo.ignore = function() {
+        if ($routeParams.id) {
+            $location.path("todo");
+        } else {
+            var len = $scope.todo.tasks.length;
+            
+            if (len == 1) {
+                refreshGrid();
+                return;
+            }
+
+            $scope.todo.current = null;
+            $scope.todo.tasks.splice(len - 1, 1);
+            $scope.todo.replyform = 'hidden';
+            selectTask();
+        }
+    };
 }])
-.controller('DoneTaskController', ['$scope', function ($scope) {
-    $scope.done = {};
-    $scope.subheader.title = "已办工作";
+.controller('TaskController', ['$scope', 'EnumService', 'ProfileService', 'TaskService', function ($scope, EnumService, ProfileService, TaskService) {
+    $scope.subheader.title = "工作清单";
+
+    $scope.task = {};
+    $scope.task.data = null;
+    $scope.task.selected = null;
+
+    // level名称
+    $scope.task.getLevelLabel = EnumService.getLevelLabel;
+    // level名称
+    $scope.task.getWorkStatusLabel = EnumService.getWorkStatusLabel;
+
+    $scope.task.translateLevel = EnumService.translateLevel;
+
+    function refreshGrid() {
+        var username = $.cookie("AiniaOpUsername");
+
+        $scope.dialog.showLoading();
+        ProfileService.get(username)
+        .then(function(user) {
+            $scope.dialog.hideStandby();
+            return user;
+        }, function() {
+            $scope.dialog.hideStandby();
+            return null;
+        })
+        .then(function(user) {
+            if (user) {
+                $scope.dialog.showLoading();
+                TaskService.queryAllTaskByEmployee(user).then(function(tasks) {
+                    $scope.dialog.hideStandby();
+                    $scope.task.data = tasks;
+                });
+            } else {
+                $scope.message.error("无法加载用户数据");
+            }
+        });
+    };
+    refreshGrid();
+
+    $scope.task.refreshGrid = refreshGrid;
+}])
+.controller('TodoBarController', ['$scope', '$attrs', 'TaskService', function($scope, $attrs, TaskService) {
+    if (!$scope.todo.replyformposition1) {
+        $scope.todo.replyformposition1 = $attrs['position'];
+    } else if ($scope.todo.replyformposition1) {
+        $scope.todo.replyformposition2 = $attrs['position'];
+    }
+    
+}])
+.directive("ecgTodoBar", [ '$location', function($location) {
+  return {
+      restrict : 'A',
+      replace : true,
+      template : todobarTemplate,
+      controller : "TodoBarController",
+      link : function($scope, $element, $attrs) {
+      }
+  };
 }])
 .config(['$routeProvider', function ($routeProvider) {
-    $routeProvider
-    .when('/undone', {
-        template: undoneTemp,
-        controller: 'UndoneTaskController'
-    })
-    .when('/done', {
-        template: doneTemp,
-        controller: 'DoneTaskController'
-    });
+$routeProvider
+.when('/todo', {
+    template: todoTemp,
+    controller: 'TodoTaskController'
+})
+.when('/todo/:id', {
+    template: todoTemp,
+    controller: 'TodoTaskController'
+})
+.when('/task', {
+    template: taskTemp,
+    controller: 'TaskController'
+});
 }]);
 
 });// end of define

@@ -5,10 +5,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ainia.ecgApi.core.exception.ServiceException;
 import com.ainia.ecgApi.core.utils.DigestUtils;
 import com.ainia.ecgApi.core.utils.EncodeUtils;
 import com.ainia.ecgApi.domain.sys.Employee;
+import com.ainia.ecgApi.domain.sys.User;
 import com.ainia.ecgApi.service.sys.EmployeeService;
+import com.ainia.ecgApi.service.sys.UserService;
 
 /**
  * <p>用户权限服务</p>
@@ -31,6 +34,8 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 	private ThreadLocal<AuthUser> currentUser = new ThreadLocal<AuthUser>();
 	@Autowired
 	private EmployeeService employeeService;
+	@Autowired
+	private UserService userService;
 
 	public String encodePassword(String password , byte[] salt) {
 		byte[] hashPassword = DigestUtils.sha1(password.getBytes() , salt, HASH_INTERATIONS);
@@ -47,13 +52,29 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 
 	public String generateToken(String username , String userType) {
 		//TODO 测试阶段 token 使用明文用户名
-		return username;
+		return username + "_" + userType;
 	}
 	
 	public AuthUser loadUserByToken(String token) {
-		//TODO 测试阶段 token 使用明文用户名 且固定为employee 用户
-		Employee employee = employeeService.findByUsername(token);
-		return new AuthUserImpl(employee.getId() , employee.getUsername() , Employee.class.getSimpleName() , employee.getRolesArray());
+		//TODO 测试阶段 token
+		String[] value = token.split("_");
+		String username = value[0];
+		String userType = value[1];
+		AuthUser authUser = null;
+		if (User.class.getSimpleName().equals(userType)) {
+			User user = userService.findByUsername(username);
+			if (user != null) {
+				new AuthUserImpl(user.getId() , user.getUsername() , User.class.getSimpleName() , null);
+			}
+		}
+		else if (Employee.class.getSimpleName().equals(userType)) {
+			Employee employee = employeeService.findByUsername(username);
+			return new AuthUserImpl(employee.getId() , employee.getUsername() , Employee.class.getSimpleName() , employee.getRolesArray());
+		}
+		if (authUser == null) {
+			throw new ServiceException("auth.error.unknown");
+		}
+		return authUser;
 	}
 
 	public void setCurrentUser(AuthUser authUser) {
