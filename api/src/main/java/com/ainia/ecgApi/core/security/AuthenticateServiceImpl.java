@@ -64,7 +64,7 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 		if (User.class.getSimpleName().equals(userType)) {
 			User user = userService.findByUsername(username);
 			if (user != null) {
-				new AuthUserImpl(user.getId() , user.getUsername() , User.class.getSimpleName() , null);
+				return new AuthUserImpl(user.getId() , user.getUsername() , User.class.getSimpleName() , null);
 			}
 		}
 		else if (Employee.class.getSimpleName().equals(userType)) {
