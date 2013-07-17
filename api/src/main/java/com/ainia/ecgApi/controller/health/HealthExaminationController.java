@@ -22,8 +22,10 @@ import com.ainia.ecgApi.core.security.AuthenticateService;
 import com.ainia.ecgApi.core.web.AjaxResult;
 import com.ainia.ecgApi.domain.health.HealthExamination;
 import com.ainia.ecgApi.domain.health.HealthReply;
+import com.ainia.ecgApi.service.health.DataProcessor;
 import com.ainia.ecgApi.service.health.HealthExaminationService;
 import com.ainia.ecgApi.service.health.HealthReplyService;
+import com.ainia.ecgApi.service.health.ProcessData;
 
 /**
  * <p>HealthExamination controller</p>
@@ -112,9 +114,17 @@ public class HealthExaminationController extends BaseController<HealthExaminatio
      * ResponseEntity
      * @throws IOException 
      */
+	@RequestMapping(value = "upload" , method = RequestMethod.POST , produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
     public ResponseEntity upload( @RequestParam("file") MultipartFile file) throws IOException {
-    	
-    	healthExaminationService.upload(file.getBytes());
+    	if (file.getBytes().length == 0) {
+    		return new ResponseEntity(HttpStatus.BAD_REQUEST);
+    	}
+    	//TODO 测试文件解析
+    	DataProcessor processor = new DataProcessor();
+    	ProcessData processData = processor.process(file.getBytes() , file.getBytes().length);
+    	System.out.println("============== " + processData.floatArrayList_ecg_1);
+    	//healthExaminationService.upload(file.getBytes());
     	return new ResponseEntity(HttpStatus.OK);
     }
 }

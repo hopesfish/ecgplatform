@@ -49,6 +49,19 @@ public class UploadServiceImpl implements UploadService {
 		FileUtils.writeByteArrayToFile(new File(path), content);
 		return UPLOAD_URI + type.name() + "/" + relativePath;
 	}
+	
+	public byte[] load(Type type , String relativePath) throws IOException {
+		if (Type.heart_img.equals(type)) {
+			return loadHeartImg(type ,  relativePath);
+		}
+		throw new ServiceException("upload.error.unknown");		
+	}
+	
+	public byte[] loadHeartImg(Type  type , String relativePath) throws IOException {
+		String rootPath     = systemConfigService.findByKey(ROOT_PATH_KEY);
+		String path  = rootPath + "/" + type.name() + "/" + relativePath;
+		return FileUtils.readFileToByteArray(new File(path));
+	}
 			
 	
 	public enum Type {

@@ -14,6 +14,7 @@ import com.ainia.ecgApi.core.security.AuthUser;
 import com.ainia.ecgApi.core.security.AuthenticateService;
 import com.ainia.ecgApi.core.utils.PropertyUtil;
 import com.ainia.ecgApi.dao.sys.EmployeeDao;
+import com.ainia.ecgApi.domain.sys.Chief;
 import com.ainia.ecgApi.domain.sys.Employee;
 
 /**
@@ -97,7 +98,7 @@ public class EmployeeServiceImpl extends BaseServiceImpl<Employee , Long> implem
 		if (employee == null) {
 			throw new ServiceException("exception.notFound");
 		}
-		if (!currentUser.isSuperAdmin() && !employee.getUsername().equals(currentUser.getUsername())) {
+		if (!currentUser.isSuperAdmin() || !Chief.class.getSimpleName().equals(currentUser.getType())) {
 			throw new ServiceException("exception.password.cannotChange");
 		}
 		employee.setPassword(authenticateService.encodePassword(employee.getUsername() , null));

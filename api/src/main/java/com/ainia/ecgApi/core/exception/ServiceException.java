@@ -20,6 +20,7 @@ public class ServiceException extends RuntimeException {
 	}
 	
 	public ServiceException(String message , Object... objects) {
+		super(message);
 		this.errorMessage = message;
 		this.arguments = objects;
 	}
