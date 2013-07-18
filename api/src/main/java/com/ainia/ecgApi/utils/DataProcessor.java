@@ -1,4 +1,4 @@
-package com.ainia.ecgApi.service.health;
+package com.ainia.ecgApi.utils;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.ainia.ecgApi.dto.health.DataRecord;
+import com.ainia.ecgApi.dto.health.ProcessData;
 
 public class DataProcessor {
 	private static final int BREATHING_TYPE = 0x21;

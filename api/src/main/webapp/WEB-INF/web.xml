@@ -64,7 +64,16 @@
        <filter-name>etagFilter</filter-name>  
        <url-pattern>/*</url-pattern> 
     </filter-mapping>  
-    
+    <!-- upload load servlet -->
+     <servlet>
+        <servlet-name>uploadServlet</servlet-name>
+        <servlet-class>com.ainia.ecgApi.UploadServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>uploadServlet</servlet-name>
+        <url-pattern>/upload/*</url-pattern>
+    </servlet-mapping>   
     <!-- Spring MVC Servlet -->
     <servlet>
         <servlet-name>springServlet</servlet-name>

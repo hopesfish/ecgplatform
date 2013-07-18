@@ -1,12 +1,6 @@
 package com.ainia.ecgApi.service.common;
 
-import java.io.File;
 import java.io.IOException;
-
-import org.apache.commons.io.FileUtils;
-
-import com.ainia.ecgApi.core.exception.ServiceException;
-import com.ainia.ecgApi.service.common.UploadServiceImpl.Type;
 
 /**
  * <p>文件上传服务</p>
@@ -18,6 +12,13 @@ import com.ainia.ecgApi.service.common.UploadServiceImpl.Type;
  * @version
  */
 public interface UploadService {
+	
+	
+	public enum Type {
+		heart_img //心电图文件
+	}
+	
+	public static final String UPLOAD_URI = "/upload/";
 
 	/**
 	 * <p>保存上传文件</p>
@@ -27,7 +28,7 @@ public interface UploadService {
 	 * @return
 	 * String
 	 */
-	public String save(Type type , String key , byte[] content) throws IOException;
+	public String save(Type type , String relativePath , byte[] content) throws IOException;
 	/**
 	 * <p>读取上传文件</p>
 	 * @param type

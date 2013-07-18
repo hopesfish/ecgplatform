@@ -2,8 +2,6 @@ package com.ainia.ecgApi.service.common;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,22 +28,22 @@ public class UploadServiceImpl implements UploadService {
 	//TODO 暂时固定
 	//public static final String rootPath = "d:/upload/";
 	public static final String ROOT_PATH_KEY = "upload.rootPath";
-	public static final String UPLOAD_URI = "/upload/";
 	
-	public String save(Type type , String key , byte[] content) throws IOException{
-		//TODO 暂时采用固定方式生成文件名及路径 后续进行替换
+	public String getPath(Type type , String relativePath) {
+		String rootPath     = systemConfigService.findByKey(ROOT_PATH_KEY);
+		String path = rootPath + "/"  + type.name()  + "/" + relativePath;
+		return path;
+	}
+	
+	public String save(Type type , String relativePath , byte[] content) throws IOException{
 		if (Type.heart_img.equals(type)) {
-			return saveHeartImg(type , key , content);
+			return saveHeartImg(type , relativePath , content);
 		}
 		throw new ServiceException("upload.error.unknown");
 	}
 	
-	public String saveHeartImg(Type type , String key , byte[] content) throws IOException {
-		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH");
-		String rootPath     = systemConfigService.findByKey(ROOT_PATH_KEY);
-		String relativePath = format.format(new Date()) + "/" + key + ".jpg";
-		//TODO 后缀名暂时固定
-		String path = rootPath + relativePath;
+	public String saveHeartImg(Type type , String relativePath , byte[] content) throws IOException {
+		String path = getPath(type , relativePath);
 		FileUtils.writeByteArrayToFile(new File(path), content);
 		return UPLOAD_URI + type.name() + "/" + relativePath;
 	}
@@ -58,14 +56,9 @@ public class UploadServiceImpl implements UploadService {
 	}
 	
 	public byte[] loadHeartImg(Type  type , String relativePath) throws IOException {
-		String rootPath     = systemConfigService.findByKey(ROOT_PATH_KEY);
-		String path  = rootPath + "/" + type.name() + "/" + relativePath;
+		String path = getPath(type , relativePath);
 		return FileUtils.readFileToByteArray(new File(path));
 	}
 			
-	
-	public enum Type {
-		heart_img //心电图文件
-	}
 	
 }

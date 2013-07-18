@@ -7,13 +7,12 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.ainia.ecgApi.service.common.UploadService;
-import com.ainia.ecgApi.service.common.UploadServiceImpl.Type;
+import com.ainia.ecgApi.service.common.UploadService.Type;
 
 /**
  * <p>上传附件controller</p>
@@ -24,8 +23,6 @@ import com.ainia.ecgApi.service.common.UploadServiceImpl.Type;
  * @createdDate 2013-7-18
  * @version
  */
-@Controller
-@RequestMapping("upload")
 public class UploadController {
 	
 	
@@ -37,7 +34,6 @@ public class UploadController {
 	public void accessFile(@PathVariable("type") Type type , HttpServletRequest request ,
 								HttpServletResponse response) throws IOException {
 		String accessUri = request.getRequestURI();
-		System.out.println("================  " + accessUri);
 		response.setStatus(HttpStatus.OK.value());
 //		String accessUri = request.getRequestURI();
 //		String relativePath = accessUri.substring((UPLOAD_URI + type.name()).length());

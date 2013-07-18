@@ -25,6 +25,9 @@ public interface HealthExaminationService extends BaseService<HealthExamination 
 	
 	/**
 	 * <p>上传健康监测数据</p>
+	 * <pre>
+	 *  文件生成规则为 rootPath/{type}/{userId}/{now|yyyy-MM-dd}-{examinationId}
+	 * </pre>
 	 * @param uploadData
 	 * void
 	 */

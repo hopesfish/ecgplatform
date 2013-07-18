@@ -1,4 +1,4 @@
-package com.ainia.ecgApi.service.health;
+package com.ainia.ecgApi.dto.health;
 
 import java.util.Arrays;
 

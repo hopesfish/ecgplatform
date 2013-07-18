@@ -32,7 +32,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <jdk.version>1.6</jdk.version>
   </properties>
-  
+
    <dependencies>
        <!-- spring start -->
     <dependency>
@@ -292,6 +292,13 @@
         <version>${spring.version}</version>
         <scope>test</scope>
     </dependency>
+    <!-- jfreechart start-->
+    <dependency>
+		<groupId>org.jfree</groupId>
+		<artifactId>jfreechart</artifactId>
+		<version>1.0.15</version>
+    </dependency> 
+    <!-- jfreechart end -->
  </dependencies>
 
 
