@@ -98,7 +98,7 @@ public class EmployeeServiceImpl extends BaseServiceImpl<Employee , Long> implem
 		if (employee == null) {
 			throw new ServiceException("exception.notFound");
 		}
-		if (!currentUser.isSuperAdmin() || !Chief.class.getSimpleName().equals(currentUser.getType())) {
+		if (!currentUser.isSuperAdmin() && !employee.getUsername().equals(currentUser.getUsername())) {
 			throw new ServiceException("exception.password.cannotChange");
 		}
 		employee.setPassword(authenticateService.encodePassword(employee.getUsername() , null));

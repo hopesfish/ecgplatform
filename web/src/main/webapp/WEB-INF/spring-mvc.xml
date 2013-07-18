@@ -45,7 +45,7 @@
 	</bean>	
 	
     <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>
-    
+	
     <mvc:interceptors>  
 	  <mvc:interceptor>  
 	    <mvc:mapping path="/**" />  

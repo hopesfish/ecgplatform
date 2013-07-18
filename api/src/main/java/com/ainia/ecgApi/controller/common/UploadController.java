@@ -3,17 +3,27 @@ package com.ainia.ecgApi.controller.common;
 import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ainia.ecgApi.service.common.UploadService;
 import com.ainia.ecgApi.service.common.UploadServiceImpl.Type;
 
+/**
+ * <p>上传附件controller</p>
+ * Copyright: Copyright (c) 2013
+ * Company:   
+ * UploadController.java
+ * @author pq
+ * @createdDate 2013-7-18
+ * @version
+ */
 @Controller
 @RequestMapping("upload")
 public class UploadController {
@@ -23,13 +33,14 @@ public class UploadController {
 	@Autowired
 	private UploadService uploadService;
 	
-	@RequestMapping(value = "/{type}/**/*.*" , method = RequestMethod.GET)
-	@ResponseBody
-	public byte[] accessFile(@PathVariable("type") Type type , HttpServletRequest request) throws IOException {
+	@RequestMapping(value = "/{type}/**" , method = RequestMethod.GET)
+	public void accessFile(@PathVariable("type") Type type , HttpServletRequest request ,
+								HttpServletResponse response) throws IOException {
 		String accessUri = request.getRequestURI();
-		System.out.println("=============== " + accessUri);
-		String relativePath = accessUri.substring((UPLOAD_URI + type.name()).length());
-		System.out.println("=============== " + relativePath);
-		return uploadService.load(type , relativePath );
+		System.out.println("================  " + accessUri);
+		response.setStatus(HttpStatus.OK.value());
+//		String accessUri = request.getRequestURI();
+//		String relativePath = accessUri.substring((UPLOAD_URI + type.name()).length());
+//		return uploadService.load(type , relativePath );
 	}
 }
