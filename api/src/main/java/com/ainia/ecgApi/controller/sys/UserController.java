@@ -85,25 +85,24 @@ public class UserController extends BaseController<User , Long> {
     	return new ResponseEntity(HttpStatus.CREATED);
     }
     
-//TODO 暂时屏蔽
-//	/**
-//	 * <p>获取用户相关任务</p>
-//	 * @param expertId
-//	 * @param query
-//	 * @return
-//	 * ResponseEntity<Page<Task>>
-//	 */
-//	@RequestMapping(value = "{id}/task" , method = RequestMethod.GET ,produces = MediaType.APPLICATION_JSON_VALUE)
-//	@ResponseBody
-//	public ResponseEntity<Page<Task>> findTask(@PathVariable("id") Long operatorId , Query<Task> query) {
-//		query.eq(Task.OPERATOR_ID  , operatorId)
-//			 .isNull(Task.EXPERT_ID);
-//		query.addOrder(Task.CREATED_DATE , OrderType.desc);
-//		long total = taskService.count(query);
-//		query.getPage().setTotal(total);
-//		query.getPage().setDatas(taskService.findAll(query));
-//		return new ResponseEntity(query.getPage() ,HttpStatus.OK);
-//	}    
+	/**
+	 * <p>获取用户相关任务</p>
+	 * @param expertId
+	 * @param query
+	 * @return
+	 * ResponseEntity<Page<Task>>
+	 */
+	@RequestMapping(value = "{id}/task" , method = RequestMethod.GET ,produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public ResponseEntity<Page<Task>> findTask(@PathVariable("id") Long operatorId , Query<Task> query) {
+		query.eq(Task.OPERATOR_ID  , operatorId)
+			 .isNull(Task.EXPERT_ID);
+		query.addOrder(Task.CREATED_DATE , OrderType.desc);
+		long total = taskService.count(query);
+		query.getPage().setTotal(total);
+		query.getPage().setDatas(taskService.findAll(query));
+		return new ResponseEntity(query.getPage() ,HttpStatus.OK);
+	}    
     
     /**
      * <p>将规则与用户解除</p>

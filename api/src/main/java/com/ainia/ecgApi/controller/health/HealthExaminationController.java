@@ -26,6 +26,7 @@ import com.ainia.ecgApi.core.security.AuthenticateService;
 import com.ainia.ecgApi.core.web.AjaxResult;
 import com.ainia.ecgApi.domain.health.HealthExamination;
 import com.ainia.ecgApi.domain.health.HealthReply;
+import com.ainia.ecgApi.domain.sys.User;
 import com.ainia.ecgApi.service.common.UploadService;
 import com.ainia.ecgApi.service.common.UploadService.Type;
 import com.ainia.ecgApi.service.health.HealthExaminationService;
@@ -123,11 +124,19 @@ public class HealthExaminationController extends BaseController<HealthExaminatio
 	@RequestMapping(value = "upload" , method = RequestMethod.POST , produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
     public ResponseEntity upload( @RequestParam("file") MultipartFile file) throws IOException {
+		ResponseEntity entity = new ResponseEntity(HttpStatus.OK);
     	if (file.getBytes().length == 0) {
-    		return new ResponseEntity(HttpStatus.BAD_REQUEST);
+    		entity =  new ResponseEntity(HttpStatus.BAD_REQUEST);
     	}
+		AuthUser authUser = authenticateService.getCurrentUser();	
+		if (authUser == null) {
+			entity = new ResponseEntity(HttpStatus.FORBIDDEN);
+		}
+		if (!User.class.getSimpleName().equals(authUser.getType())) {
+			entity = new ResponseEntity(HttpStatus.FORBIDDEN);
+		}
     	healthExaminationService.upload(file.getBytes());
-    	return new ResponseEntity(HttpStatus.OK);
+    	return entity;
     }
 	
 	/**
