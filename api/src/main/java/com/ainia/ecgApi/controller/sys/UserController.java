@@ -95,10 +95,12 @@ public class UserController extends BaseController<User , Long> {
 	@RequestMapping(value = "{id}/task" , method = RequestMethod.GET ,produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public ResponseEntity<Page<Task>> findTask(@PathVariable("id") Long id , Query<Task> query) {
+		System.out.println("=============================");
 		query.eq(Task.USER_ID  , id);
 		query.addOrder(Task.CREATED_DATE , OrderType.desc);
 		long total = taskService.count(query);
 		query.getPage().setTotal(total);
+		System.out.println("=============================" + total);
 		query.getPage().setDatas(taskService.findAll(query));
 		return new ResponseEntity(query.getPage() ,HttpStatus.OK);
 	}    

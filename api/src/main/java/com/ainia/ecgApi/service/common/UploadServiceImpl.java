@@ -31,7 +31,7 @@ public class UploadServiceImpl implements UploadService {
 	
 	public String getPath(Type type , String relativePath) {
 		String rootPath     = systemConfigService.findByKey(ROOT_PATH_KEY);
-		String path = rootPath + "/"  + type.name()  + "/" + relativePath;
+		String path = rootPath + relativePath;
 		return path;
 	}
 	
@@ -45,7 +45,7 @@ public class UploadServiceImpl implements UploadService {
 	public String saveHeartImg(Type type , String relativePath , byte[] content) throws IOException {
 		String path = getPath(type , relativePath);
 		FileUtils.writeByteArrayToFile(new File(path), content);
-		return UPLOAD_URI + type.name() + "/" + relativePath;
+		return UPLOAD_URI + relativePath;
 	}
 	
 	public byte[] load(Type type , String relativePath) throws IOException {

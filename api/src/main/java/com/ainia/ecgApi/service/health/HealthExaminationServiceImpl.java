@@ -67,7 +67,7 @@ public class HealthExaminationServiceImpl extends BaseServiceImpl<HealthExaminat
 	public void upload(final byte[] uploadData) {
 		final HealthExamination examination = new HealthExamination();
 
-		AuthUser authUser = authenticateService.getCurrentUser();	
+		final AuthUser authUser = authenticateService.getCurrentUser();	
 		if (authUser == null) {
 			throw new ServiceException("authUser.error.notFound");
 		}
@@ -101,38 +101,37 @@ public class HealthExaminationServiceImpl extends BaseServiceImpl<HealthExaminat
 			    	DataProcessor processor = new DataProcessor();
 			    	processor.process(uploadData , uploadData.length);
 					//生成文件相对路径
-					String dateStr = new SimpleDateFormat("yyyyMMdd").format(new Date());
 					//TODO 文件后缀名固定
-					String ecg1Path = String.valueOf(2L) + "/" + dateStr + "-" + examination.getId() + "/ecg1.jpg";
+					String ecg1Path = "user/" + String.valueOf(authUser.getId()) + "/examination/" + examination.getId() + "/ecg1.jpg";
 					byte[] ecg1 = ECGChart.createChart( processor.getDaolian_i() , 0 ,  processor.getDaolian_i().length  ,0.1f);
 					String ecg1Uri = uploadService.save(Type.heart_img , ecg1Path , ecg1);
 					
-					String ecg2Path = String.valueOf(2L) + "/" + dateStr + "-" + examination.getId() + "/ecg2.jpg";
+					String ecg2Path =  "user/" + String.valueOf(authUser.getId()) + "/examination/" + examination.getId() + "/ecg2.jpg";
 					byte[] ecg2 = ECGChart.createChart( processor.getDaolian_ii() , 0 ,  processor.getDaolian_ii().length , 0.1f);
 					String ecg2Uri = uploadService.save(Type.heart_img , ecg2Path , ecg2);
 					
-					String ecg3Path = String.valueOf(2L) + "/" + dateStr + "-" + examination.getId() + "/ecg3.jpg";
+					String ecg3Path = "user/" + String.valueOf(authUser.getId()) + "/examination/" + examination.getId() + "/ecg3.jpg";
 					byte[] ecg3 = ECGChart.createChart( processor.getDaolian_iii() , 0 ,  processor.getDaolian_iii().length , 0.1f);
 					String ecg3Uri = uploadService.save(Type.heart_img , ecg3Path , ecg3);
 					
-					String ecg4Path = String.valueOf(2L) + "/" + dateStr + "-" + examination.getId() + "/ecg4.jpg";
+					String ecg4Path = "user/" + String.valueOf(authUser.getId()) + "/examination/" + examination.getId() + "/ecg4.jpg";
 					byte[] ecg4 = ECGChart.createChart( processor.getDaolian_avr() , 0 ,  processor.getDaolian_avr().length , 0.1f);
 					String ecg4Uri = uploadService.save(Type.heart_img , ecg4Path , ecg4);
 					
-					String ecg5Path = String.valueOf(2L) + "/" + dateStr + "-" + examination.getId() + "/ecg5.jpg";
+					String ecg5Path = "user/" + String.valueOf(authUser.getId()) + "/examination/" + examination.getId() + "/ecg5.jpg";
 					byte[] ecg5 = ECGChart.createChart( processor.getDaolian_avl(), 0 ,  processor.getDaolian_avl().length , 0.1f);
 					String ecg5Uri = uploadService.save(Type.heart_img , ecg5Path , ecg5);
 					
-					String ecg6Path = String.valueOf(2L) + "/" + dateStr + "-" + examination.getId() + "/ecg6.jpg";
+					String ecg6Path = "user/" + String.valueOf(authUser.getId()) + "/examination/" + examination.getId() + "/ecg6.jpg";
 					byte[] ecg6 = ECGChart.createChart( processor.getDaolian_avf() , 0 , processor.getDaolian_avf().length , 0.1f);
 					String ecg6Uri = uploadService.save(Type.heart_img , ecg6Path , ecg6);
 					
-					String ecg7Path = String.valueOf(2L) + "/" + dateStr + "-" + examination.getId() + "/ecg7.jpg";
+					String ecg7Path = "user/" + String.valueOf(authUser.getId()) + "/examination/" + examination.getId() + "/ecg7.jpg";
 					byte[] ecg7 = ECGChart.createChart( processor.getDaolian_v() , 0 ,   processor.getDaolian_v().length , 0.1f);
 					String ecg7Uri = uploadService.save(Type.heart_img , ecg7Path , ecg7);
 					
 					//存储原始文件
-					String rawPath = String.valueOf(2L) + "/" + dateStr + "-" + examination.getId() + "/raw";
+					String rawPath = "user/" +  String.valueOf(authUser.getId()) + "/examination/" + examination.getId() + "/raw";
 					String rawUri = uploadService.save(Type.heart_img , rawPath , uploadData);
 					
 					

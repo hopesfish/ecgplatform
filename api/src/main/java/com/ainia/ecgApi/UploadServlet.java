@@ -44,7 +44,7 @@ public class UploadServlet implements Servlet {
 											UploadService.UPLOAD_URI.length()));
 		try {
 			Type type = Type.valueOf(typeStr);
-			String relativePath = accessUri.substring((UploadService.UPLOAD_URI + type.name()).length());
+			String relativePath = accessUri.substring((UploadService.UPLOAD_URI + typeStr).length());
 			UploadService uploadService =(UploadService) ServiceUtils.getService(UploadService.class);
 			response.getOutputStream().write(uploadService.load(type , relativePath));
 			response.getOutputStream().flush();
