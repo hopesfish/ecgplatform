@@ -10,11 +10,8 @@ i {
 .noscroll {
 	overflow: hidden;
 }
-
-/*平台名字*/
-.brand .second {
-    color: #fff;
-    font-weight: bold;
+.msging {
+	margin-top: 43px;
 }
 
 /*应用加载界面*/
@@ -28,7 +25,17 @@ i {
 	margin: auto;
 }
 
+/*工作状态*/
+#workstatus { margin: 0 auto; padding-top: 40px; }
+#workstatus button { margin-right: 5px;}
+#workstatus .btn-link { padding: 0px 5px; }
+
 /*消息提示*/
+#ecgMessage {
+	position: fixed;
+	top: 0px;
+	left: 0px;
+}
 #ecgMessage .pull-right {
 	cursor: pointer;
 	margin-right: 5px;
@@ -37,68 +44,41 @@ i {
 	margin: 0px;
 }
 /*菜单*/
-.sidebar-nav {
-	width: 160px;
-}
-.sidebar-nav i { 
-	padding-left: 5px;
-	padding-right: 0px;
-}
-.sidebar-nav #my-examination,
-.sidebar-nav .sysconfig {
+.navbar .examination,
+.navbar .sysconfig {
 	display: none;
 }
 
 /*对主任不可见的菜单*/
-.sidebar-nav.chief .todo,
-.sidebar-nav.chief .chief {
+.navbar.chief .todo,
+.navbar.chief .chief {
 	display: none
 }
 /*对专家不可见的菜单*/
-.sidebar-nav.expert .task,
-.sidebar-nav.expert .duplicated,
-.sidebar-nav.expert .overview,
-.sidebar-nav.expert #employees-menu-link,
-.sidebar-nav.expert #employees-menu,
-.sidebar-nav.expert #users-menu-link,
-.sidebar-nav.expert #users-menu {
+.navbar.expert .duplicated,
+.navbar.expert .overview,
+.navbar.expert #employees-menu {
 	display: none
 }
 
 /*对接线员不可见的菜单*/
-.sidebar-nav.operator .overview,
-.sidebar-nav.operator .task,
-.sidebar-nav.operator #employees-menu-link,
-.sidebar-nav.operator #employees-menu,
-.sidebar-nav.operator #users-menu-link,
-.sidebar-nav.operator #users-menu,
-.sidebar-nav.operator #rules-menu-link,
-.sidebar-nav.operator #rules-menu {
+.navbar.operator .overview,
+.navbar.operator #employees-menu,
+.navbar.operator #rules-menu {
 	display: none
 }
 
 /*对接线员不可见的菜单*/
-.sidebar-nav.user .overview,
-.sidebar-nav.user #dashboard-menu-link,
-.sidebar-nav.user #dashboard-menu,
-.sidebar-nav.user .task,
-.sidebar-nav.user #employees-menu-link,
-.sidebar-nav.user #employees-menu,
-.sidebar-nav.user #users-menu-link,
-.sidebar-nav.user #users-menu,
-.sidebar-nav.user #rules-menu-link,
-.sidebar-nav.user #rules-menu {
+.navbar.user .overview,
+.navbar.user #dashboard-menu,
+.navbar.user .task,
+.navbar.user #employees-menu,
+.navbar.user #rules-menu {
 	display: none
 }
-.sidebar-nav.admin .sysconfig,
-.sidebar-nav.user #my-examination {
+.navbar.admin .sysconfig,
+.navbar.user .examination {
 	display: block;
-}
-
-/*内容区*/
-.content {
-	margin-left: 160px;
-	min-height: 95%;
 }
 
 /*Pane头*/
@@ -128,9 +108,14 @@ i {
 	border: none;
 }
 
+.label {
+	height: 14px;
+	display: inline;
+}
+
 /*按钮区域*/
 .buttons {
-	margin-top: 10px;
+	margin: 10px 0px;
 }
 .buttons input { margin: 0px; }
 
@@ -212,7 +197,7 @@ table tbody tr.active {
 
 /* employee link*/
 .employeeLink {
-	float:left; width: 120px; margin-right: 10px;
+	float: left; margin: 0px; margin-right: 10px; display: inline-block;
 }
 .employeeLink input {
 	margin: 0px;

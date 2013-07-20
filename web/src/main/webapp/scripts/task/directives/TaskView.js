@@ -14,8 +14,6 @@ define(function(require, exports) {
     function($scope, EnumService) {
         $scope.taskview = {};
         $scope.taskview.id = '';
-        $scope.taskview.getLevelLabel = EnumService.getLevelLabel;
-        $scope.taskview.translateLevel = EnumService.translateLevel;
 
         // 监听未完成
        $scope.$watch("todo.current", function() {
@@ -104,6 +102,7 @@ define(function(require, exports) {
         $scope.examinationview.examination = null;
 
         $scope.examinationview.getLevelLabel = EnumService.getLevelLabel;
+        $scope.examinationview.translateLevel = EnumService.translateLevel;
         // level名称
         $scope.examinationview.getWorkStatusLabel = EnumService.getWorkStatusLabel;
 

@@ -1,4 +1,4 @@
-<a class="block-heading">专家任务处理统计 <div class="pull-right" style="margin: 6px 5px 0px 0px;" ecg-range-selector></div></a>
+<h5 class="ecgHd">专家任务处理统计 <div class="pull-right" ecg-range-selector></div></h5>
 <div class="block-body collapse in" ng-show="overview.expertreport.experts">
 	<table class="ecgprops">
 		<tr ng-repeat="expert in overview.expertreport.experts">
@@ -9,10 +9,10 @@
 			</div>
 			</td>
 			<td width="30px;" style="padding-left:20px;">
-				<span class="label label-success prop pull-right">{{expert.completed}}</span>
+				<span class="label label-success pull-right">{{expert.completed}}</span>
 			</td>
 			<td width="30px;">
-				<span class="label label-warning prop pull-right">{{expert.proceeding}}</span>
+				<span class="label label-warning pull-right">{{expert.proceeding}}</span>
 			</td>
 		</tr>
 	</table>

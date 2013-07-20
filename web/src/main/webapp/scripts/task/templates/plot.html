@@ -8,7 +8,19 @@
 <div class="plot-c" ng-show="examinationplot.examinationId">
 <img ng-src="{{PATH}}/api/examination/{{examinationplot.examinationId}}/ecg3" class="plot"></img>
 </div>
+<div class="plot-c" ng-show="examinationplot.examinationId">
+<img ng-src="{{PATH}}/api/examination/{{examinationplot.examinationId}}/ecg4" class="plot"></img>
+</div>
+<div class="plot-c" ng-show="examinationplot.examinationId">
+<img ng-src="{{PATH}}/api/examination/{{examinationplot.examinationId}}/ecg5" class="plot"></img>
+</div>
+<div class="plot-c" ng-show="examinationplot.examinationId">
+<img ng-src="{{PATH}}/api/examination/{{examinationplot.examinationId}}/ecg6" class="plot"></img>
+</div>
+<div class="plot-c" ng-show="examinationplot.examinationId">
+<img ng-src="{{PATH}}/api/examination/{{examinationplot.examinationId}}/ecg7" class="plot"></img>
+</div>
 <p class="buttons" ng-show="examinationplot.examinationId">
-<a ng-href="{{PATH}}/api/examination/{{examinationplot.examinationId}}/raw" target="_blank" class="btn btn-small" type="button">下载数据</a>
-<button class="btn btn-small" type="button">打印数据</button>
+<a ng-href="{{PATH}}/api/examination/{{examinationplot.examinationId}}/raw" target="_blank" class="btn btn-small btn-inverse" type="button">下载数据</a>
+<button class="btn btn-small btn-inverse" type="button">打印数据</button>
 </p>

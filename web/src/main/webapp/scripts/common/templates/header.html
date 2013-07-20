@@ -1,34 +1,25 @@
-<div class="navbar">
-    <div class="navbar-inner">
-            <ul class="nav pull-right">
-                
-                <li id="stats-menu" class="dropdown" ng-show="header.status">
-                    <a href="javascript:void(0)" role="button" class="dropdown-toggle" data-toggle="dropdown">
-                        <i class="icon-eye-open"></i> {{header.getEmployeeStatusLabel(header.status)}}
-                        <i class="icon-caret-down"></i>
-                    </a>
-
-                    <ul class="dropdown-menu">
-                        <li ng-repeat="status in header.statuses" ng-click="header.setStatus(status.key)">
-                        <a tabindex="-1" href="javascript:void(0)">
-                            <i class="icon-white" ng-class="{'icon-ok': status.key == header.status}"></i>{{status.label}}
-                        </a>
-                        </li>
-                    </ul>
-                </li>
-
-                <li id="fat-menu" class="dropdown">
-                    <a href="javascript:void(0)" role="button" class="dropdown-toggle" data-toggle="dropdown">
-                        <i class="icon-user"></i> {{session.user.name}}
-                        <i class="icon-caret-down"></i>
-                    </a>
-
-                    <ul class="dropdown-menu">
-                        <li ng-click="logout()"><a tabindex="-1" href="javascript:void(0)">退出</a></li>
-                    </ul>
-                </li>
-                
-            </ul>
-            <a class="brand" href="index.html"><span class="first"></span> <span class="second">AINIA健康中心运营平台</span></a>
+<header>
+  <div class="container">
+    <div class="row">
+      <div class="span6">
+        <div class="logo">
+          <h1><a href="javascript:void(0)">AINIA <span class="color">用户中心</span></a></h1>
+          <div class="hmeta">健康管家，呵护全家</div>
+        </div>
+      </div>
+      <div class="span4">
+        <div id="workstatus" ng-show="header.status">
+            <button class="btn" ng-repeat="status in header.statuses" 
+                    ng-class="{'btn-primary': header.status == status.key, 'btn-inverse': header.status != status.key}"
+                    ng-click="header.setStatus(status.key)" type="button">{{status.label}}</button>
+        </div>
+      </div>
+      <div class="span2">
+        <div id="workstatus">
+            <button class="btn btn-link" ng-click="profile()">{{session.user.name}}</button>
+            <button class="btn btn-link" ng-click="logout()">退出</button>
+        </div>
+      </div>
     </div>
-</div>
+  </div>
+</header>

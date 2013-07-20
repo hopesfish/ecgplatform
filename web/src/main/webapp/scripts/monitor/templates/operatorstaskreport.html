@@ -1,4 +1,4 @@
-<a class="block-heading">接线员任务处理统计 <div class="pull-right" style="margin: 6px 5px 0px 0px;" ecg-range-selector></div></a>
+<h5 class="ecgHd">接线员任务处理统计</h5>
 <div class="block-body collapse in" ng-show="overview.operatorreport.operators">
 	<table class="ecgprops">
 		<tr ng-repeat="operator in overview.operatorreport.operators">
@@ -9,10 +9,10 @@
 			</div>
 			</td>
 			<td width="30px;" style="padding-left:20px;">
-				<span class="label label-success prop pull-right">{{operator.completed}}</span>
+				<span class="label label-success pull-right">{{operator.completed}}</span>
 			</td>
 			<td width="30px;">
-				<span class="label label-warning prop pull-right">{{operator.pending}}</span>
+				<span class="label label-warning pull-right">{{operator.pending}}</span>
 			</td>
 		</tr>
 	</table>

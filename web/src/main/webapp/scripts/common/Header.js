@@ -4,7 +4,14 @@ var headerTemplate = require("./templates/header.html");
 var subheaderTemplate = require("./templates/subheader.html");
 
 angular.module('ecgHeader', [])
-.controller('HeaderController', ['$scope', '$timeout', 'EnumService', 'ProfileService', function ($scope, $timeout, EnumService, ProfileService) {
+.controller('HeaderController', ['$scope', '$location', '$timeout', 'EnumService', 'ProfileService',
+    function ($scope, $location, $timeout, EnumService, ProfileService) {
+
+    $scope.profile = function() {
+        $location.path("profile");
+    };
+
+
     $scope.logout = function() {
         window.logout();
     };
@@ -17,6 +24,9 @@ angular.module('ecgHeader', [])
     $scope.$watch("session.user", function() {
         if (!$scope.session.user.id) { return; }
         if (!$scope.session.user.isEmployee) { return; };
+        if ($scope.session.user.isEmployee) {
+            $(".logo .color").text("运营中心");
+        }
         $scope.header.status = $scope.session.user.status;
         if ($scope.header.status === 'OFFLINE') {
             $scope.dialog.confirm({

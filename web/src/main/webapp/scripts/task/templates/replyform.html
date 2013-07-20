@@ -1,4 +1,4 @@
-<a class="block-heading" data-toggle="collapse">填写回复</a>
+<h5 class="ecgHd">填写回复</h5>
 <div  class="block-body collapse in">
 
 <!-- 当前回复 -->
@@ -6,23 +6,17 @@
     正在加载回复数据......
 </div>
 
-<table class="table table-hover" ng-show="replyform.replys && replyform.replys.length > 0">
-    <thead>
-        <tr>
-        <th >回复</th>
-        <th width="15%">操作</th>
-        </tr>
-    </thead>
+<table class="table" ng-show="replyform.replys && replyform.replys.length > 0">
     <tbody>
         <tr ng-repeat="reply in replyform.replys" ng-show="!reply.removed">
         <td>
-            <p style="width:600px; word-wrap: break-word;">
+            <p style="word-wrap: break-word;">
                 <strong>检测结果：</strong> <span class="label label-{{replyform.translateLevel(reply.level)}}">{{reply.result}} </span><br/>
                 <strong>检测建议：</strong> {{reply.content}} <br/>
                 <strong>判断依据：</strong> {{reply.reason}}
             </p>
         </td>
-        <td>
+        <td width="15%">
             <button class="btn btn-small" type="button" ng-click="replyform.edit(reply)">编辑</button>
             <button class="btn btn-small btn-danger" type="button" ng-click="replyform.remove($index)">删除</button>
         </td>

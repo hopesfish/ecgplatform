@@ -1,11 +1,12 @@
 <div class="row-fluid" ng-show="!session.user.isOperator()">
 	<div class="span12 buttons">
-		<button class="btn" type="button"
+		<button class="btn btn-primary" type="button"
 				ng-show="ruleconfig.editable"
 				ng-click="ruleconfig.newRule()">
 			<i class="icon-plus"></i>创建区间
 		</button>
 		<button class="btn" type="button"
+				ng-class="{'btn-danger': ruleconfig.selectedRule != null && ruleconfig.selectedRule.level != 'outside' && ruleconfig.rules.length > 3}"
 				ng-click="ruleconfig.confirmDeleteRule()"
 				ng-show="ruleconfig.editable"
 				ng-disabled="ruleconfig.selectedRule == null || ruleconfig.selectedRule.level == 'outside' || ruleconfig.rules.length == 3">

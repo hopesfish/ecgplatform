@@ -1,7 +1,7 @@
 <div class="row-fluid" ng-show="operator.experts && operator.experts.length != 0">
     <div class="span12">
         <div ng-repeat="expert in operator.experts" class="employeeLink" ng-click="operator.check(expert)">
-            <div class="alert alert-info">
+            <div class="alert alert-success employeeLink">
             <input type="checkbox" ng-checked="expert.removed"> <strong>{{expert.name}}</strong>
             </div>
         </div>

@@ -33,7 +33,9 @@ angular.module('ecgMessage', [])
         $scope.message.msgs.push(message);
         MessageService.create(message);
 
+        $(document.body).addClass("msging");
         $timeout(function() {
+            $(document.body).removeClass("msging");
             $scope.message.close();
         }, 5000);
     };
@@ -45,6 +47,7 @@ angular.module('ecgMessage', [])
         }
     };
     $scope.message.closeAll = function() {
+        $(document.body).removeClass("msging");
         $scope.message.currents = [];
         $scope.message.current = null;
     };

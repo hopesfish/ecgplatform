@@ -1,43 +1,41 @@
-<div class="sidebar-nav {{nav.getRoles()}}">
-<a href="#/welcome" class="nav-header" ><i class="icon-home"></i>系统首页</a>
-<a id="my-examination" href="#/task" class="nav-header" data-toggle="collapse"><i class="icon-th-list"></i>我的请求</a>
+<div class="navbar {{nav.getRoles()}}">
+<div class="navbar-inner">
+<div class="container">
+    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+    <span>Menu</span>
+    </a>
+    <div class="nav-collapse collapse">
+        <ul class="nav">
+            <li><a href="#/welcome" class="nav-header" ><i class="icon-home"></i>系统首页</a></li>
+            <li class="examination"><a href="#/examination" class="nav-header" ><i class="icon-list"></i>体验记录</a></li>
 
-<a id="dashboard-menu-link"href="#dashboard-menu" class="nav-header" data-toggle="collapse"><i class="icon-th-list"></i>日常工作</a>
-<ul id="dashboard-menu" class="nav nav-list collapse in">
-    <li class="todo"><a href="#/todo">待办工作</a></li>
-    <li class="task"><a href="#/task">工作清单</a></li>
-    <!--li class="duplicated"><a href="javascript:void(0)">处理重复手机号码</a></li-->
-    <li class="overview"><a href="#/overview">工作巡查</a></li>
-</ul>
+            <li id="dashboard-menu" class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">日常工作<b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                    <li class="todo"><a href="#/todo">待办工作</a></li>
+                    <li><a href="#/task">工作清单</a></li>
+                    <li class="overview"><a href="#/overview">工作巡查</a></li>
+                </ul>
+            </li>                   
 
-<a id="employees-menu-link" href="#employees-menu" class="nav-header" data-toggle="collapse"><i class="icon-list-alt"></i>员工管理</a>
-<ul id="employees-menu" class="nav nav-list collapse in">
-    <li class="chief"><a href="#/chief">健康管理中心主任</a></li>
-    <li ><a href="#/expert">专家</a></li>
-    <li ><a href="#/operator">接线员</a></li>
-</ul>
+            <li id="employees-menu" class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">员工管理<b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                    <li class="chief"><a href="#/chief">健康管理中心主任</a></li>
+                    <li><a href="#/expert">专家</a></li>
+                    <li><a href="#/operator">接线员</a></li>
+                </ul>
+            </li>
 
-<a id="users-menu-link" href="#users-menu" class="nav-header" data-toggle="collapse"><i class="icon-list-alt"></i>用户管理</a>
-<ul id="users-menu" class="nav nav-list collapse in">
-    <li ><a href="#/user">用户</a></li>
-</ul>
-
-<a id="rules-menu-link" href="#rules-menu" class="nav-header" data-toggle="collapse"><i class="icon-list-alt"></i>系统设置</a>
-<ul id="rules-menu" class="nav nav-list collapse in">
-    <li ><a href="#/rule">规则设置</a></li>
-    <li class="sysconfig"><a href="#/sysconfig">系统参数</a></li>
-</ul>
-
-<!--
-<a href="#apks-menu" class="nav-header" data-toggle="collapse"><i class="icon-list-alt"></i>APK管理</a>
-<ul id="apks-menu" class="nav nav-list collapse in">
-    <li ><a href="#/apk/test">APK测试软件存档</a></li>
-    <li ><a href="#/apk/build">APK测试软件存档</a></li>
-</ul>
-
-<a href="javascript:void(0)" class="nav-header" ><i class="icon-th"></i>系统设置</a>
--->
-<a href="#/profile" class="nav-header" ><i class="icon-user"></i>个人设置</a>
-<a href="#/help" class="nav-header" ><i class="icon-question-sign"></i>使用帮助</a>
-<a href="#/faq" class="nav-header" ><i class="icon-comment"></i>常见问题</a>
+            <li id="rules-menu" class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">系统设置 <b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                <li><a href="#/rule">规则设置</a></li>
+                <li class="sysconfig"><a href="#/sysconfig">系统参数</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>
+</div>
 </div>

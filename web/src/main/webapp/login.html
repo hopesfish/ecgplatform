@@ -2,22 +2,24 @@
 <html lang="zh-cn">
   <head>
     <meta charset="utf-8">
-    <title>AINIA健康管理中心-登录界面</title>
+    <title>AINIA个人中心登录界面</title>
     <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
 
     <link rel="stylesheet" type="text/css" href="lib/bootstrap/css/bootstrap.css">
-    
-    <link rel="stylesheet" type="text/css" href="stylesheets/theme.css">
-    <link rel="stylesheet" href="lib/font-awesome/css/font-awesome.css">
-    <link rel="stylesheet" type="text/css" href="stylesheets/ecg.css">
+    <link rel="stylesheet" type="text/css" href="lib/bootstrap/css/bootstrap-responsive.css">
 
+    <link rel="stylesheet" href="lib/font-awesome/css/font-awesome.css">
     <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
+    
+    <link rel="stylesheet" type="text/css" href="stylesheets/style.css">
+
+    <link rel="stylesheet" type="text/css" href="stylesheets/lblue.css">
 
     <!-- Le fav and touch icons -->
     <link rel="shortcut icon" href="../assets/ico/favicon.ico">
@@ -35,78 +37,121 @@
   <body class=""> 
   <!--<![endif]-->
     
-    <div class="navbar">
-        <div class="navbar-inner">
-            <a class="brand" href="index.html"><span class="first"></span> <span class="second">AINIA健康中心运营平台</span></a>
+    <!-- Header Starts -->
+    <header>
+      <div class="container">
+        <div class="row">
+          <div class="span12">
+            <div class="logo">
+              <h1><a href="#">AINIA <span class="color">用户中心</span></a></h1>
+              <div class="hmeta">健康管家，呵护全家</div>
+            </div>
+          </div>
         </div>
+      </div>
+    </header>
+
+    <div class="content">
+    <div class="container">
+    <div class="row">
+      <div class="span12">
+        <div class="lrform">
+        <h5>用户登录</h5>
+        <div class="form">
+          <form class="form-horizontal">
+          <!-- Username -->
+            <div class="control-group">
+              <label class="control-label" for="username">用户名：</label>
+              <div class="controls">
+              <input type="text" class="input-large" id="username" placeholder="请输入用户名" style="height: 30px">
+              </div>
+            </div>
+            <!-- Password -->
+            <div class="control-group">
+              <label class="control-label" for="email">密码：</label>
+              <div class="controls">
+              <input type="password" class="input-large" id="password" placeholder="请输入密码" style="height: 30px">
+              </div>
+            </div>
+          <!-- Buttons -->
+          <div class="form-actions">
+            <!-- Buttons -->
+            <span id="loading" style="display:none">正在登录...</span>
+            <button id="loginBtn" type="submit" class="btn btn-primary">Login</button>
+          </div>
+          </form>
+        </div> 
+        </div>
+      </div>
+    </div>
+    </div>
     </div>
 
-    <div class="row-fluid">
-    <div class="dialog">
-        <div class="block">
-            <p class="block-heading">登录</p>
-            <div class="block-body">
-                <form>
-                    <label>用户名</label>
-                    <input id="username" type="text" class="span12" placeholder="请输入用户名">
-                    <label>密码</label>
-                    <input id="password" type="password" class="span12" placeholder="请输入密码">
-                    <a id="loginBtn" href="javascript:void(0)" class="btn btn-primary">登录</a>
-                    <span id="loading" style="display:none">正在登录...</span>
-                    <label class="remember-me" style="display:none"><input type="checkbox" >下次自动登录</label>
-                    <div class="clearfix"></div>
-                </form>
+    <footer>
+      <div class="container">
+        <div class="row">
+
+          <div class="widgets">
+
+            <div class="span3">
+              <div class="fwidget">
+                <h6>下载</h6>
+                <ul>
+                  <li><a href="#">使用手册</a></li>
+                  <li><a href="#">客户端软件</a></li>
+                </ul>
+              </div>
             </div>
-            <p><a href="reset-password.html" style="display:none">忘记密码?</a></p>
+
+            <div class="span3">
+              <div class="fwidget">
+                <h6>走进AINIA</h6>
+                <ul>
+                  <li><a href="#">远程健康管理</a></li>
+                  <li><a href="#">在线购物</a></li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="span3">
+              <div class="fwidget">
+                <h6>服务与支持</h6>
+                <ul>
+                  <li><a href="#">客户服务</a></li>
+                  <li><a href="#">代理商支持</a></li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="span3">
+              <div class="fwidget">
+                <h6>最新信息</h6>
+                <ul>
+                  <li><a href="#">客户端2.1发布</a></li>
+                  <li><a href="#">用户中心改版</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="span12">
+              <div class="copy">
+                <h6>AINIA <span class="color">用户中心</span></h6>
+                <p>Copyright © AINIA - 
+                  <a href="http://www.ainia.com.cn/">官方主页</a> | 
+                  <a href="http://www.ainia.com.cn/into-ainia/ceo-speaking.html">走进AINIA</a> |
+                  <a href="http://www.ainia.com.cn/into-ainia/contact-us.html">联系我们</a>
+                </p>
+              </div>
+          </div>
         </div>
-    </div>
-    </div>
+      <div class="clearfix"></div>
+      </div>
+    </footer>
 
     <script src="lib/jquery-1.8.1.min.js" type="text/javascript"></script>
     <script src="lib/jquery.cookie.js" type="text/javascript"></script>
-    <script type="text/javascript">
-    $(function() {
-        var PATH = window.location.pathname.slice(0, window.location.pathname.lastIndexOf("/"));
-        function login() {
-           var username = $("#username").val(),
-                password = $("#password").val();
-            if (!username || !password) {
-                alert('请输入用户名或者密码');
-                return;
-            }
-            $.cookie('AiniaOpUsername', encodeURI(username), { expires: 7, path: '/' });
-
-            $('#loginBtn').hide();
-            $('#loading').show();
-            $.ajax({
-                url: PATH + '/api/auth',
-                data: {
-                    'username': username,
-                    'password': password
-                },
-                type: 'POST',
-                dataType: 'json'
-            }).then(function(res) {
-                $.cookie('AiniaOpAuthToken', encodeURI(res.token), { expires: 1, path: '/' });
-                window.location.href = "index.html";
-            }, function() {
-                alert('用户名或密码不对,请重新尝试!');
-                $('#loginBtn').show();
-                $('#loading').hide();
-            });
-        }
-        $("#password").keydown(function(e) {
-            if(e.keyCode==13){
-                login();
-            }
-        });
-        $("#loginBtn").click(function() {
-            login();
-        });
-        // restore the cookie
-        $("#username").val($.cookie('AiniaOpUsername') || '');
-    });
-    </script>
+    <script src="scripts/login.js" type="text/javascript"></script>
     <!--[if lte IE  6]>
     <script type="text/javascript" src="http://www.webrebuild.org/webrebuild_api.js"></script>
     <![endif]-->
