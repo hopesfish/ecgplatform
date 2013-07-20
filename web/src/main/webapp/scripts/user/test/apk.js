@@ -89,7 +89,7 @@ define(function(require, exports) {
             $.ajax({
                 url: PATH + '/api/user?mobile=' + user.mobile,
                 dataType: 'json',
-                header: {Authorization: 'invalid'}
+                headers: {Authorization: 'invalid'}
             }).then(function(res) {
                 throw new Error('should not retrieved with invalid token.');
             }, function() {
@@ -103,7 +103,7 @@ define(function(require, exports) {
             $.ajax({
                 url: PATH + '/api/user?username=' + user.mobile,
                 dataType: 'json',
-                header: {Authorization: token}
+                headers: {Authorization: token}
             }).then(function(res) {
                 expect(res).not.to.be(undefined);
                 expect(res.datas).not.to.be(undefined);
@@ -133,7 +133,7 @@ define(function(require, exports) {
             $.ajax({
                 url: PATH + '/api/user/' + userId,
                 dataType: 'json',
-                header: {Authorization: 'invalid'}
+                headers: {Authorization: 'invalid'}
             }).then(function(res) {
                 throw new Error('should not retrieved with invalid token.');
             }, function() {
@@ -146,7 +146,7 @@ define(function(require, exports) {
             $.ajax({
                 url: PATH + '/api/user/' + userId,
                 dataType: 'json',
-                header: {Authorization: token}
+                headers: {Authorization: token}
             }).then(function(res) {
                 done()
             }, function() {
@@ -173,7 +173,7 @@ define(function(require, exports) {
                 url: PATH + '/api/user/' + userId,
                 type: 'PUT',
                 data: user,
-                header: {Authorization: 'invalid'}
+                headers: {Authorization: 'invalid'}
             }).then(function(res) {
                 throw new Error('should not updated with invalid token.');
             }, function() {
@@ -187,7 +187,7 @@ define(function(require, exports) {
                 url: PATH + '/api/user/' + userId,
                 type: 'PUT',
                 data: user,
-                header: {Authorization: token}
+                headers: {Authorization: token}
             }).then(function(res) {
                 done()
             }, function() {
@@ -214,7 +214,7 @@ define(function(require, exports) {
                 url: PATH + '/api/user/' + userId + '/password',
                 type: 'PUT',
                 data: {oldPassword: user.password, newPassword: user.password},
-                header: {Authorization: 'invalid'}
+                headers: {Authorization: 'invalid'}
             }).then(function(res) {
                 throw new Error('should not updated with invalid token.');
             }, function() {
@@ -228,7 +228,7 @@ define(function(require, exports) {
                 url: PATH + '/api/user/' + userId + '/password',
                 type: 'PUT',
                 data: {oldPassword: user.password, newPassword: user.password},
-                header: {Authorization: token}
+                headers: {Authorization: token}
             }).then(function(res) {
                 done()
             }, function() {
@@ -253,7 +253,7 @@ define(function(require, exports) {
             $.ajax({
                 url: PATH + '/api/user/' + userId + '/task',
                 type: 'GET',
-                header: {Authorization: 'invalid'}
+                headers: {Authorization: 'invalid'}
             }).then(function(res) {
                 throw new Error('should not retrieved task with invalid token.');
             }, function() {
@@ -266,7 +266,7 @@ define(function(require, exports) {
             $.ajax({
                 url: PATH + '/api/user/' + userId + '/task',
                 type: 'GET',
-                header: {Authorization: token}
+                headers: {Authorization: token}
             }).then(function(res) {
                 done()
             }, function() {
@@ -291,7 +291,7 @@ define(function(require, exports) {
             $.ajax({
                 url: PATH + '/api/user/' + userId + '/password',
                 type: 'DELETE',
-                header: {Authorization: 'invalid'}
+                headers: {Authorization: 'invalid'}
             }).then(function(res) {
                 throw new Error('should not deleted with invalid token.');
             }, function() {
@@ -304,7 +304,7 @@ define(function(require, exports) {
             $.ajax({
                 url: PATH + '/api/user/' + userId + '/password',
                 type: 'DELETE',
-                header: {Authorization: token}
+                headers: {Authorization: token}
             }).then(function(res) {
                 throw new Error('should to deleted by myself.');
             }, function() {

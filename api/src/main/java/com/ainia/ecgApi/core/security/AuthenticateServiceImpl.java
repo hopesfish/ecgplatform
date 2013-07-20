@@ -28,6 +28,7 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 	public static final String HASH_ALGORITHM = "SHA-1";
 	public static final int HASH_INTERATIONS = 1024;
 	private static final int SALT_SIZE = 8;
+	private static final String TOKEN_SPLAT = "_";
 	
 	protected final Logger log = LoggerFactory.getLogger("com.ainia.ecgApi.core.security");
 	
@@ -57,7 +58,10 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 	
 	public AuthUser loadUserByToken(String token) {
 		//TODO 测试阶段 token
-		String[] value = token.split("_");
+		if (token.indexOf(TOKEN_SPLAT) == -1) {
+			throw new ServiceException("exception.token.invalid");
+		}
+		String[] value = token.split(TOKEN_SPLAT);
 		String username = value[0];
 		String userType = value[1];
 		AuthUser authUser = null;

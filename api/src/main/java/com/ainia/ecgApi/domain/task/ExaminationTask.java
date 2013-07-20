@@ -41,15 +41,6 @@ public class ExaminationTask extends Task {
 		this.examinationId = examinationId;
 	}
 	@Transient
-	public Long getUserId() {
-		return examination.getUserId();
-	}
-	@Transient
-	public String getUserName() {
-		return examination.getUserName();
-	}
-	
-	@Transient
 	public Level getLevel() {
 		return examination.getLevel();
 	}

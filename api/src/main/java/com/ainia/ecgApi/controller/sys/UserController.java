@@ -87,16 +87,15 @@ public class UserController extends BaseController<User , Long> {
     
 	/**
 	 * <p>获取用户相关任务</p>
-	 * @param expertId
+	 * @param id
 	 * @param query
 	 * @return
 	 * ResponseEntity<Page<Task>>
 	 */
 	@RequestMapping(value = "{id}/task" , method = RequestMethod.GET ,produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public ResponseEntity<Page<Task>> findTask(@PathVariable("id") Long operatorId , Query<Task> query) {
-		query.eq(Task.OPERATOR_ID  , operatorId)
-			 .isNull(Task.EXPERT_ID);
+	public ResponseEntity<Page<Task>> findTask(@PathVariable("id") Long id , Query<Task> query) {
+		query.eq(Task.USER_ID  , id);
 		query.addOrder(Task.CREATED_DATE , OrderType.desc);
 		long total = taskService.count(query);
 		query.getPage().setTotal(total);

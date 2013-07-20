@@ -44,6 +44,7 @@ public class HealthExamination implements Domain {
 	private Integer breath;
 	private Float bodyTemp;
 	private Integer pulserate;
+	private Boolean hasDataError;
 	private String heartData;
 	private Double  latitude;
 	private Integer  altitude;
@@ -97,7 +98,12 @@ public class HealthExamination implements Domain {
 		return level;
 	}
 
-
+	public Boolean getHasDataError() {
+		return hasDataError;
+	}
+	public void setHasDataError(Boolean hasDataError) {
+		this.hasDataError = hasDataError;
+	}
 
 	public void setLevel(Level level) {
 		this.level = level;

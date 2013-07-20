@@ -145,60 +145,19 @@ public class HealthExaminationController extends BaseController<HealthExaminatio
 	 * byte[]
 	 * @throws IOException 
 	 */
-	@RequestMapping(value = "{id}/ecg1" , method = RequestMethod.GET)
-	public void loadEcg1(@PathVariable("id") Long id , HttpServletResponse response)  {
+	@RequestMapping(value = "{id}/ecg{index}" , method = RequestMethod.GET)
+	public void loadEcg(@PathVariable("id") Long id ,@PathVariable("index") int index, HttpServletResponse response)  {
 		HealthExamination examination = healthExaminationService.get(id);
 		String dateStr = new SimpleDateFormat("yyyyMMdd").format(examination.getCreatedDate());
 		//TODO 文件后缀名固定
-		String ecg1Path = String.valueOf(examination.getUserId()) + "/" + dateStr + "-" + examination.getId() + "/ecg1.jpg";
+		String ecgPath = String.valueOf(examination.getUserId()) + "/" + dateStr + "-" + examination.getId() + "/ecg" + index + ".jpg";
 		try {
 			response.setContentType("image/jpeg");
-			response.getOutputStream().write(uploadService.load(Type.heart_img , ecg1Path));
+			response.getOutputStream().write(uploadService.load(Type.heart_img , ecgPath));
 			response.getOutputStream().flush();
 		} catch (IOException e) {
-			throw new ServiceException("examination.ecg1Path.notFound");
+			throw new ServiceException("examination.ecgPath.notFound");
 		}
 	}
 
-	/**
-	 * <p>获取心电图1</p>
-	 * @return
-	 * byte[]
-	 * @throws IOException 
-	 */
-	@RequestMapping(value = "{id}/ecg2" , method = RequestMethod.GET)
-	public void loadEcg2(@PathVariable("id") Long id , HttpServletResponse response)  {
-		HealthExamination examination = healthExaminationService.get(id);
-		String dateStr = new SimpleDateFormat("yyyyMMdd").format(examination.getCreatedDate());
-		//TODO 文件后缀名固定
-		String ecg1Path = String.valueOf(examination.getUserId()) + "/" + dateStr + "-" + examination.getId() + "/ecg2.jpg";
-		try {
-			response.setContentType("image/jpeg");
-			response.getOutputStream().write(uploadService.load(Type.heart_img , ecg1Path));
-			response.getOutputStream().flush();
-		} catch (IOException e) {
-			throw new ServiceException("examination.ecg1Path.notFound");
-		}
-	}
-	
-	/**
-	 * <p>获取心电图1</p>
-	 * @return
-	 * byte[]
-	 * @throws IOException 
-	 */
-	@RequestMapping(value = "{id}/ecg3" , method = RequestMethod.GET)
-	public void loadEcg3(@PathVariable("id") Long id , HttpServletResponse response)  {
-		HealthExamination examination = healthExaminationService.get(id);
-		String dateStr = new SimpleDateFormat("yyyyMMdd").format(examination.getCreatedDate());
-		//TODO 文件后缀名固定
-		String ecg1Path = String.valueOf(examination.getUserId()) + "/" + dateStr + "-" + examination.getId() + "/ecg3.jpg";
-		try {
-			response.setContentType("image/jpeg");
-			response.getOutputStream().write(uploadService.load(Type.heart_img , ecg1Path));
-			response.getOutputStream().flush();
-		} catch (IOException e) {
-			throw new ServiceException("examination.ecg1Path.notFound");
-		}
-	}
 }

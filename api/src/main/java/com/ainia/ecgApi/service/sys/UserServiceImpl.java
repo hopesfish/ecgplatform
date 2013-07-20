@@ -3,6 +3,7 @@ package com.ainia.ecgApi.service.sys;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,6 +37,15 @@ public class UserServiceImpl extends BaseServiceImpl<User , Long> implements Use
     public BaseDao<User , Long> getBaseDao() {
         return userDao;
     }
+    
+
+	@Override
+	public User create(User user) {
+		if (StringUtils.isNotBlank(user.getPassword())) {
+			user.setPassword(authenticateService.encodePassword(user.getPassword() , null));
+		}
+		return super.create(user);
+	}
 
 	@Override
 	public User update(User user) {

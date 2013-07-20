@@ -27,6 +27,7 @@ import com.ainia.ecgApi.core.web.AjaxResult;
 public class RestTokenInterceptor implements HandlerInterceptor {
 	
 	public static final String SECURE_KEY = "secure";
+	public static final String SPLIT_KEY = ":";
 	
 	protected final Logger log = LoggerFactory.getLogger(this.getClass());
 	
@@ -57,23 +58,34 @@ public class RestTokenInterceptor implements HandlerInterceptor {
 	    if (log.isDebugEnabled()) {
 	    	log.debug(" interceptor the url " + requestUri);
 	    }
-	    for (String url : excludes) {  
-	      if (requestUri.endsWith(url)) {  
-	        return true;  
+	    boolean isExclude =false;
+	    for (String key : excludes) {
+	      String url = key;
+	      String method = null;
+	      if (key.indexOf(SPLIT_KEY) != -1) {
+	    	  String[] keyValues = StringUtils.split(key , SPLIT_KEY);
+	    	  url = keyValues[0];
+	    	  method = keyValues[1];
+	      }
+	      //TODO 将来需要支持ant 表达式
+	      if (requestUri.endsWith(url) && (method == null || request.getMethod().equalsIgnoreCase(method))) {  
+	        isExclude = true;  
 	      }  
 	    }  
 	    String token = request.getHeader(AjaxResult.AUTH_HEADER);
-        if (requestUri.startsWith(SECURE_KEY)) {
-    	    if (StringUtils.isBlank(token)) {
-    	    	response.setStatus(HttpStatus.UNAUTHORIZED.value());
-    	    	return false;
-    	    }        	
-        }
-	    //TODO 此处获取用户信息 只针对employee 用户
-	    if (StringUtils.isNotBlank(token)) {
+	    if (StringUtils.isBlank(token)) {
+	    	if (isExclude) {
+	    		return true;
+	    	}
+	    	else {
+		    	response.setStatus(HttpStatus.UNAUTHORIZED.value());
+		    	return false;	
+	    	}
+	    }        	
+	    else {
 	    	authenticateService.setCurrentUser(authenticateService.loadUserByToken(token));
+	    	return true;
 	    }
-		return true;
 	}
 
 	public void setExcludes(List<String> excludes) {

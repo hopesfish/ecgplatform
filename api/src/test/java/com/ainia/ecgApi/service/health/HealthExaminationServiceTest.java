@@ -1,20 +1,33 @@
 package com.ainia.ecgApi.service.health;
 
+import static org.mockito.Mockito.when;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
-import org.joda.time.DateTime;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
+
 import com.ainia.ecgApi.core.crud.Query;
+import com.ainia.ecgApi.core.security.AuthUserImpl;
+import com.ainia.ecgApi.core.security.AuthenticateService;
 import com.ainia.ecgApi.domain.health.HealthExamination;
 import com.ainia.ecgApi.domain.health.HealthRule.Level;
+import com.ainia.ecgApi.domain.sys.User;
+import com.ainia.ecgApi.utils.DataException;
 
 /**
  * <p>HealthExamination Service test</p>
@@ -33,17 +46,18 @@ public class HealthExaminationServiceTest {
 
     @Autowired
     private HealthExaminationService healthExaminationService;
-
+    @Mock
+    private AuthenticateService authenticateService;
+    
     private static HealthExamination healthExamination;
     
     public void setHealthExaminationService(HealthExaminationService healthExaminationService) {
         this.healthExaminationService = healthExaminationService;
     }
     
-    
-    
     @Before
     public void setUp() {
+    	MockitoAnnotations.initMocks(this);
         healthExamination = new HealthExamination();
         healthExamination.setUserId(1L);
         healthExamination.setTestItem("PHONE");
@@ -100,6 +114,22 @@ public class HealthExaminationServiceTest {
         
         healthExaminationService.delete(_healthExamination);
     }
-    
+    @Test
+    public void testUpload() throws IOException, DataException, InterruptedException {
+    	when(authenticateService.getCurrentUser()).thenReturn(new AuthUserImpl(2L , "13700230001" , User.class.getSimpleName() , null));
+    	Resource resource = new ClassPathResource("health/sample2");
+    	ByteArrayOutputStream out = new ByteArrayOutputStream();
+    	int b = -1;
+    	InputStream input = resource.getInputStream();
+    	while ((b = input.read()) != -1) {
+    		out.write(b);
+    	}
+    	byte[] bytes = out.toByteArray();
+    	((HealthExaminationServiceImpl)healthExaminationService).setAuthenticateService(authenticateService);
+    	healthExaminationService.upload(bytes);
+    	Thread.sleep(5000);
+    	input.close();
+    	out.close();
+    }
     
 }

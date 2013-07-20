@@ -50,6 +50,7 @@ import javax.imageio.ImageIO;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.axis.NumberTickUnit;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
@@ -76,36 +77,27 @@ public class ECGChart {
 	 *            data length
 	 * @param path
 	 *            output path
+	 * @throws IOException 
 	 */
-	public static void createChart(Float[] data, int start, int length, String path) {
+	public static byte[] createChart(float[] data, int start, int length , float tickUnit) throws IOException {
 		final XYDataset dataset = createDataset(data, start, length);
-		final JFreeChart chart = createChart(dataset);
-
-		writeFile(chart, path);
-	}
-	
-	public static byte[] createChart(Float[] data, int start, int length) throws IOException {
-		final XYDataset dataset = createDataset(data, start, length);
-		final JFreeChart chart = createChart(dataset);	
-		
+		final JFreeChart chart = createChart(dataset, tickUnit);
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		try {
 			BufferedImage chartImage = chart.createBufferedImage(1600, 300, 1,
 					null);
-			ImageIO.write(chartImage, "JPEG" , out);
+			ImageIO.write(chartImage, "JPEG", out);
 			return out.toByteArray();
 		}
 		finally {
-			if (out != null) {
-				try {
-					out.close();
-				} catch (IOException e) {
-				}
+			try {
+				out.close();
+			} catch (IOException e) {
 			}
 		}
 	}
 
-	private static XYDataset createDataset(Float[] data, int start, int length) {
+	private static XYDataset createDataset(float[] data, int start, int length) {
 		XYSeriesCollection xySeriesCollection = new XYSeriesCollection();
 		XYSeries series = new XYSeries("");
 		for (int i = start; i < start + length; i++) {
@@ -115,7 +107,7 @@ public class ECGChart {
 		return xySeriesCollection;
 	}
 
-	private static JFreeChart createChart(final XYDataset dataset) {
+	private static JFreeChart createChart(final XYDataset dataset, float tickUnit) {
 
 		// create the chart...
 		final JFreeChart chart = ChartFactory.createXYLineChart(
@@ -140,7 +132,8 @@ public class ECGChart {
 		plot.setRenderer(renderer);
 
 		final NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
-		rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
+//		rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
+		rangeAxis.setTickUnit(new NumberTickUnit(tickUnit));
 
 		return chart;
 

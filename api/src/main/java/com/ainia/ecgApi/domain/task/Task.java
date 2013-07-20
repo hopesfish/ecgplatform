@@ -18,6 +18,8 @@ import javax.persistence.Transient;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 import com.ainia.ecgApi.core.bean.Domain;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -27,6 +29,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 @DiscriminatorValue("task")
 public class Task implements Domain {
 	
+	public static final String USER_ID   = "userId";
 	public static final String EXPERT_ID = "expertId";
 	public static final String OPERATOR_ID = "operatorId";
 	public static final String AUTO = "auto";
@@ -35,6 +38,8 @@ public class Task implements Domain {
 	
 	private Long id;
 	private Status status;
+	private Long userId;
+	private String userName;
 	private Long expertId;
 	private Long operatorId;
 	private Boolean auto;
@@ -122,5 +127,47 @@ public class Task implements Domain {
 	public void setVersion(Integer version) {
 		this.version = version;
 	}
+	public Long getUserId() {
+		return userId;
+	}
+	public void setUserId(Long userId) {
+		this.userId = userId;
+	}
+	public String getUserName() {
+		return userName;
+	}
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		return result;
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Task other = (Task) obj;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		return true;
+	}
+	
+	@Override
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this);
+	}
+	
+	
 	
 }
