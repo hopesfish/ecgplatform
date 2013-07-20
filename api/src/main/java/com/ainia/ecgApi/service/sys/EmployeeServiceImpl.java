@@ -14,6 +14,7 @@ import com.ainia.ecgApi.core.security.AuthUser;
 import com.ainia.ecgApi.core.security.AuthenticateService;
 import com.ainia.ecgApi.core.utils.PropertyUtil;
 import com.ainia.ecgApi.dao.sys.EmployeeDao;
+import com.ainia.ecgApi.domain.sys.Chief;
 import com.ainia.ecgApi.domain.sys.Employee;
 
 /**

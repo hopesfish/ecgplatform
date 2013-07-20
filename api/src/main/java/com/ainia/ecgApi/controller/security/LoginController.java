@@ -63,7 +63,6 @@ public class LoginController {
 		}
 		else {
 			ajaxResult.setStatus(HttpStatus.OK.value());
-			//TODO 用户类型暂时硬编码为 员工
 			result.put(AjaxResult.AUTH_TOKEN , authenticateService.generateToken(username , Employee.class.getSimpleName()));
 		}
 		return new ResponseEntity<Map<String , String>>(result, HttpStatus.valueOf(ajaxResult.getStatus()));

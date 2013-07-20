@@ -6,5 +6,5 @@ public class DataRecord {
 	public byte[] ecg1; // ecg1
 	public byte[] ecg2; // ecg2
 	public byte[] ecg3; // ecg3
-	public byte[] others; // other data
+//	public byte[] others; // other data
 }

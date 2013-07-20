@@ -9,15 +9,15 @@
 </tr>
 <tr>
 <td><label>专家</label></td>
-<td><span class="prop pull-right">40</span></td>
-<td><span class="prop pull-right">5</span></td>
-<td><span class="prop pull-right">45</span></td>
+<td><span class="prop pull-right">{{employeestatus.expert.online}}</span></td>
+<td><span class="prop pull-right">{{employeestatus.expert.away}}</span></td>
+<td><span class="prop pull-right">{{employeestatus.expert.online + employeestatus.expert.away}}</span></td>
 </tr>
 <tr>
 <td><label>接线员</label></td>
-<td><span class="prop pull-right">50</span></td>
-<td><span class="prop pull-right">5</span></td>
-<td><span class="prop pull-right">55</span></td>
+<td><span class="prop pull-right">{{employeestatus.operator.online}}</span></td>
+<td><span class="prop pull-right">{{employeestatus.operator.away}}</span></td>
+<td><span class="prop pull-right">{{employeestatus.operator.online + employeestatus.operator.away}}</span></td>
 </tr>
 </table>
 </div>

@@ -1,6 +1,8 @@
 <div class="sidebar-nav {{nav.getRoles()}}">
 <a href="#/welcome" class="nav-header" ><i class="icon-home"></i>系统首页</a>
-<a href="#dashboard-menu" class="nav-header" data-toggle="collapse"><i class="icon-th-list"></i>日常工作</a>
+<a id="my-examination" href="#/task" class="nav-header" data-toggle="collapse"><i class="icon-th-list"></i>我的请求</a>
+
+<a id="dashboard-menu-link"href="#dashboard-menu" class="nav-header" data-toggle="collapse"><i class="icon-th-list"></i>日常工作</a>
 <ul id="dashboard-menu" class="nav nav-list collapse in">
     <li class="todo"><a href="#/todo">待办工作</a></li>
     <li class="task"><a href="#/task">工作清单</a></li>
@@ -23,6 +25,7 @@
 <a id="rules-menu-link" href="#rules-menu" class="nav-header" data-toggle="collapse"><i class="icon-list-alt"></i>系统设置</a>
 <ul id="rules-menu" class="nav nav-list collapse in">
     <li ><a href="#/rule">规则设置</a></li>
+    <li class="sysconfig"><a href="#/sysconfig">系统参数</a></li>
 </ul>
 
 <!--

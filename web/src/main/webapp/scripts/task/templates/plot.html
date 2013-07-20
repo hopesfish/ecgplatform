@@ -1,8 +1,14 @@
 <h5 class="ecgHd">心电图</h5>
-<div id="ecgplot" style='width: 100%; min-width: 500px; height: 300px;overflow:auto;'>
-<img ng-src="{{PATH}}/images/ecg.jpg" style="width:1600px;height:300px;max-wdith:1600px !important;"></img>
+<div class="plot-c" ng-show="examinationplot.examinationId">
+<img ng-src="{{PATH}}/api/examination/{{examinationplot.examinationId}}/ecg1" class="plot"></img>
 </div>
-<p class="buttons">
-<button class="btn btn-small" type="button">下载数据</button>
+<div class="plot-c" ng-show="examinationplot.examinationId">
+<img ng-src="{{PATH}}/api/examination/{{examinationplot.examinationId}}/ecg2" class="plot"></img>
+</div>
+<div class="plot-c" ng-show="examinationplot.examinationId">
+<img ng-src="{{PATH}}/api/examination/{{examinationplot.examinationId}}/ecg3" class="plot"></img>
+</div>
+<p class="buttons" ng-show="examinationplot.examinationId">
+<a ng-href="{{PATH}}/api/examination/{{examinationplot.examinationId}}/raw" target="_blank" class="btn btn-small" type="button">下载数据</a>
 <button class="btn btn-small" type="button">打印数据</button>
 </p>

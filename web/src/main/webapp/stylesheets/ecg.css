@@ -44,6 +44,11 @@ i {
 	padding-left: 5px;
 	padding-right: 0px;
 }
+.sidebar-nav #my-examination,
+.sidebar-nav .sysconfig {
+	display: none;
+}
+
 /*对主任不可见的菜单*/
 .sidebar-nav.chief .todo,
 .sidebar-nav.chief .chief {
@@ -70,6 +75,24 @@ i {
 .sidebar-nav.operator #rules-menu-link,
 .sidebar-nav.operator #rules-menu {
 	display: none
+}
+
+/*对接线员不可见的菜单*/
+.sidebar-nav.user .overview,
+.sidebar-nav.user #dashboard-menu-link,
+.sidebar-nav.user #dashboard-menu,
+.sidebar-nav.user .task,
+.sidebar-nav.user #employees-menu-link,
+.sidebar-nav.user #employees-menu,
+.sidebar-nav.user #users-menu-link,
+.sidebar-nav.user #users-menu,
+.sidebar-nav.user #rules-menu-link,
+.sidebar-nav.user #rules-menu {
+	display: none
+}
+.sidebar-nav.admin .sysconfig,
+.sidebar-nav.user #my-examination {
+	display: block;
 }
 
 /*内容区*/
@@ -187,20 +210,19 @@ table tbody tr.active {
 	max-width: 1600px;
 }
 
-#ecgReplyDialog .label {
-	display: inline-block;
-	width: 30px;
-	text-align: right;
-}
-#ecgReplyDialog .label-outside {
-	background-image: none;
-	background-color: #333;
-}
-
 /* employee link*/
 .employeeLink {
 	float:left; width: 120px; margin-right: 10px;
 }
 .employeeLink input {
 	margin: 0px;
+}
+
+/* ecg plot */
+.plot-c {
+	width: 100%; min-width: 500px; height: 300px;overflow:auto;
+	margin: 10px 0px;
+}
+.plot-c .plot {
+	width:1600px;height:300px;max-wdith:1600px !important;
 }

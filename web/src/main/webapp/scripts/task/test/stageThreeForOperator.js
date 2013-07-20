@@ -7,12 +7,13 @@ define(function(require, exports) {
             user = mocha.user,
             httpProvider = angluarjs.httpProvider,
             ProfileService = services.ProfileService,
+            OperatorService = services.OperatorService,
             TaskService = services.TaskService;
 
         var token = null;
 
         // 登录
-        it("the operator should authenciated in task test module.", function(done) {
+        it("stage 3 for operator:the operator should authenciated in task test module.", function(done) {
             $.ajax({
                 url: PATH + '/api/auth',
                 data: {
@@ -31,7 +32,7 @@ define(function(require, exports) {
             });
         });
 
-        it("the profile of the opearator should be retrieved", function(done) {
+        it("stage 3 for operator:the profile of the opearator should be retrieved", function(done) {
             ProfileService.get(user.username)
             .then(function(persistedUser) {
                 expect(persistedUser).not.to.be(null);
@@ -44,7 +45,7 @@ define(function(require, exports) {
         });
 
         var task, undones;
-        it("the undone task list for operator should be retrieved", function(done) {
+        it("stage 3 for operator:the undone task list for operator should be retrieved", function(done) {
             TaskService.queryAllTaskByEmployee(
                 user, 
                 {status: 'undone'}
@@ -62,7 +63,7 @@ define(function(require, exports) {
         });
 
         var examination;
-        it("the examination of a specific undone task should be retrieved", function(done) {
+        it("stage 3 for operator:the examination of a specific undone task should be retrieved", function(done) {
             expect(task).not.to.be(undefined);
             TaskService.getExamination(task.id)
             .then(function(pesistedExamination) {
@@ -74,14 +75,14 @@ define(function(require, exports) {
         });
 
         var replys;
-        it("two replies of the examination be created", function(done) {
+        it("stage 3 for operator:two replies of the examination be created", function(done) {
             expect(task).not.to.be(undefined);
             expect(examination).not.to.be(undefined);
 
             var len = 0, count = 0;
             replys = []
-            replys.push({result: "结果4", content: "建议4"});
-            replys.push({result: "结果5", content: "建议5"});
+            replys.push({result: "结果4", content: "建议4", reason: "reason4", level: "success"});
+            replys.push({result: "结果5", content: "建议5", reason: "reason5", level: "success"});
             len = replys.length;
 
             $(replys).each(function(i, reply) {
@@ -99,7 +100,16 @@ define(function(require, exports) {
             });
         });
 
-        it("the task cloud be forwarded", function(done) {
+        it("stage 3 for operator:the operator can be forward task to some experts", function(done) {
+            OperatorService.getExperts(user).then(function(experts) {
+                expect(experts.length).not.to.be(0);
+                done();
+            }, function() {
+                throw new Error("no expert can forward to.");
+            });
+        });
+
+        it("stage 3 for operator:the task cloud be forwarded", function(done) {
             TaskService.forward(task)
             .then(function() {
                 done();
@@ -109,7 +119,7 @@ define(function(require, exports) {
         });
 
         var task;
-        it("the undone task count should be decreased with 1", function(done) {
+        it("stage 3 for operator:the undone task count should be decreased with 1", function(done) {
             TaskService.queryAllTaskByEmployee(
                 user, 
                 {status: 'undone'}

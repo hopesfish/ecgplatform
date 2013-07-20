@@ -1,17 +1,17 @@
-<a class="block-heading">今日任务完成情况</a>
+<a class="block-heading">任务完成统计 <div class="pull-right" style="margin: 6px 5px 0px 0px;" ecg-range-selector></div></a>
 <div class="block-body collapse in">
 <table class="ecgprops">
 <tr>
-<td><label>等待处理:</label></td>
-<td><span class="label prop pull-right">40</span></td>
+<td><label>等待接线员处理:</label></td>
+<td><span class="label label-warning prop pull-right">{{overview.currentreport.pending}}</span></td>
 </tr>
 <tr>
-<td><label>正在处理:</label></td>
-<td><span class="label label-warning prop pull-right">18</span></td>
+<td><label>等待专家处理:</label></td>
+<td><span class="label label-warning prop pull-right">{{overview.currentreport.proceeding}}</span></td>
 </tr>
 <tr>
 <td><label>已处理:</label></td>
-<td><span class="label label-success prop pull-right">2300</span></td>
+<td><span class="label label-success prop pull-right">{{overview.currentreport.completed}}</span></td>
 </tr>
 </table>
 </div>

@@ -47,6 +47,7 @@ import javax.imageio.ImageIO;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.axis.NumberTickUnit;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
@@ -74,9 +75,9 @@ public class ECGChart {
 	 * @param path
 	 *            output path
 	 */
-	public void createChart(float[] data, int start, int length, String path) {
+	public void createChart(float[] data, int start, int length, String path, float tickUnit) {
 		final XYDataset dataset = createDataset(data, start, length);
-		final JFreeChart chart = createChart(dataset);
+		final JFreeChart chart = createChart(dataset, tickUnit);
 
 		writeFile(chart, path);
 	}
@@ -91,7 +92,7 @@ public class ECGChart {
 		return xySeriesCollection;
 	}
 
-	private JFreeChart createChart(final XYDataset dataset) {
+	private JFreeChart createChart(final XYDataset dataset, float tickUnit) {
 
 		// create the chart...
 		final JFreeChart chart = ChartFactory.createXYLineChart(
@@ -116,7 +117,8 @@ public class ECGChart {
 		plot.setRenderer(renderer);
 
 		final NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
-		rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
+//		rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
+		rangeAxis.setTickUnit(new NumberTickUnit(tickUnit));
 
 		return chart;
 
@@ -137,9 +139,9 @@ public class ECGChart {
 		}
 	}
 
-	public static void main(final String[] args) {
-		final ECGChart demo = new ECGChart();
-		float[] data = { 1.0f, 2.0f, 13.0f, 4.0f, 15.0f, 6.0f, 7.0f };
-		demo.createChart(data, 0, data.length, "./output/1.png");
-	}
+//	public static void main(final String[] args) {
+//		final ECGChart demo = new ECGChart();
+//		float[] data = { 1.0f, 2.0f, 13.0f, 4.0f, 15.0f, 6.0f, 7.0f };
+//		demo.createChart(data, 0, data.length, "./output/1.png");
+//	}
 }

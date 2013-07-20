@@ -4,7 +4,7 @@ package com.ainia.ecgApi.controller.sys;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
+import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -20,8 +20,10 @@ import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
+import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.util.Assert;
+import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 
@@ -37,11 +39,15 @@ import com.ainia.ecgApi.core.bean.Domain;
  * @version
  */
 @RunWith(SpringJUnit4ClassRunner.class)
+@WebAppConfiguration
 @ContextConfiguration(locations = {"classpath:applicationContext.xml",   "classpath:spring-mvc.xml"})
 @ActiveProfiles("test")
 @TestExecutionListeners({DependencyInjectionTestExecutionListener.class,  
 			TransactionalTestExecutionListener.class}) 
 public class ChiefControllerTest {
+
+	@Autowired
+	private WebApplicationContext wac;
 
     @Autowired
     public RequestMappingHandlerAdapter handlerAdapter;
@@ -59,8 +65,9 @@ public class ChiefControllerTest {
         request = new MockHttpServletRequest();
         request.setCharacterEncoding("UTF-8");
         response = new MockHttpServletResponse();
-        
-        mockMvc = standaloneSetup(chiefController).build();
+        this.mockMvc = webAppContextSetup(this.wac).build();
+
+      //  mockMvc = standaloneSetup(chiefController).build();
     }
     
     @Test
@@ -92,16 +99,16 @@ public class ChiefControllerTest {
     }
     
     public void testUpdate() throws NoSuchMethodException, Exception {
-//        request.setRequestURI("/api/chief/1");
+//        request.setRequestURI("/api/chief/{id}");
 //        request.setMethod(HttpMethod.PUT.name());
 //        request.addParameter("status" , "ONLINE");
-////        HashMap pathvars = new HashMap();
-////        pathvars.put("id", "1");
-////        request.setAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE, pathvars);
-//        handlerAdapter.handle(request, response, new HandlerMethod(chiefController, "update" , Serializable.class , Domain.class));
+//        HashMap pathvars = new HashMap();
+//        pathvars.put("id", "1");
+//        request.setAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE, pathvars);
+//        handlerAdapter.handle(request, response, new HandlerMethod(chiefController, "update" ,Serializable.class ,  Domain.class));
 //        System.out.println("=========== " + response.getStatus());
- //       Assert.isTrue(200 == response.getStatus());
-        mockMvc.perform(put("api/chief/1").contentType(MediaType.APPLICATION_FORM_URLENCODED)
+//        Assert.isTrue(200 == response.getStatus());
+        mockMvc.perform(put("/api/chief/1").contentType(MediaType.APPLICATION_FORM_URLENCODED)
         	   .param("status" , "ONLINE")
          	   .accept(MediaType.APPLICATION_JSON))
          	   .andExpect(status().isOk());

@@ -13,7 +13,7 @@ define(function(require, exports) {
         var token = null;
 
         // 登录
-        it("the user should authenciated in task test module.", function(done) {
+        it("stage 1:the user should authenciated in task test module.", function(done) {
             $.ajax({
                 url: PATH + '/api/auth',
                 data: {
@@ -32,7 +32,7 @@ define(function(require, exports) {
             });
         });
 
-        it("the profile of the user should be retrieved", function(done) {
+        it("stage 1:the profile of the user should be retrieved", function(done) {
             ProfileService.get(user.username)
             .then(function(persistedUser) {
                 expect(persistedUser).not.to.be(null);
@@ -40,12 +40,12 @@ define(function(require, exports) {
                 user = persistedUser;
                 done();
             }, function() {
-                return null
+                return null;
             });
         });
 
         var task;
-        it("the undone task list should be retrieved", function(done) {
+        it("stage 1:the undone task list should be retrieved", function(done) {
             TaskService.queryAllTaskByEmployee(
                 user, 
                 {status: 'undone'}
@@ -61,7 +61,7 @@ define(function(require, exports) {
         });
 
         var examination;
-        it("the examination of a specific undone task should be retrieved", function(done) {
+        it("stage 1:the examination of a specific undone task should be retrieved", function(done) {
             expect(task).not.to.be(undefined);
 
             TaskService.getExamination(task.id)
@@ -73,7 +73,7 @@ define(function(require, exports) {
             });
         });
 
-        it("empty reply of the examination be retrieved", function(done) {
+        it("stage 1:empty reply of the examination be retrieved", function(done) {
             expect(task).not.to.be(undefined);
             expect(examination).not.to.be(undefined);
 
@@ -86,7 +86,7 @@ define(function(require, exports) {
             });
         });
 
-        it("the done task list should be retrieved", function(done) {
+        it("stage 1:the done task list should be retrieved", function(done) {
             TaskService.queryAllTaskByEmployee(
                 user, 
                 {status: 'done'}

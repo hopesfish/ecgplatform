@@ -1,41 +1,22 @@
-<a class="block-heading">专家今日任务处理概况</a>
-<div class="block-body collapse in">
+<a class="block-heading">专家任务处理统计 <div class="pull-right" style="margin: 6px 5px 0px 0px;" ecg-range-selector></div></a>
+<div class="block-body collapse in" ng-show="overview.expertreport.experts">
 	<table class="ecgprops">
-		<tr>
-			<td width="100px"><span class="prop">专家1</span></td>
+		<tr ng-repeat="expert in overview.expertreport.experts">
+			<td width="100px"><span class="prop">{{expert.name}}</span></td>
 			<td >
 			<div class="progress">
-			  <div class="bar bar-success" style="width: 35%;"></div>
-			  <div class="bar bar-warning" style="width: 20%;"></div>
+			  <div class="bar bar-success" ng-style="{width: expert.percent + '%'}"></div>
 			</div>
 			</td>
 			<td width="30px;" style="padding-left:20px;">
-				<span class="label label-success prop pull-right">300</span>
+				<span class="label label-success prop pull-right">{{expert.completed}}</span>
 			</td>
 			<td width="30px;">
-				<span class="label label-warning prop pull-right">15</span>
-			</td>
-			<td width="30px;">
-				<span class="label prop pull-right">10</span>
-			</td>
-		</tr>
-		<tr>
-			<td width="100px"><span class="prop">专家2</span></td>
-			<td>
-			<div class="progress">
-			  <div class="bar bar-success" style="width: 35%;"></div>
-			  <div class="bar bar-warning" style="width: 20%;"></div>
-			</div>
-			</td>
-			<td width="30px;" style="padding-left:20px;">
-				<span class="label label-success prop pull-right">30</span>
-			</td>
-			<td width="30px;">
-				<span class="label label-warning prop pull-right">15</span>
-			</td>
-			<td width="30px;">
-				<span class="label prop pull-right">10</span>
+				<span class="label label-warning prop pull-right">{{expert.proceeding}}</span>
 			</td>
 		</tr>
 	</table>
+</div>
+<div class="block-body collapse in" ng-show="!overview.expertreport.experts">
+	正在加载数据，请稍候......
 </div>

@@ -29,7 +29,7 @@
 
     TESTCONFIGS.user = {};
     TESTCONFIGS.user.mobile = "13911111111";
-    TESTCONFIGS.user.username = "user";
+    TESTCONFIGS.user.username = "13911111111";
     TESTCONFIGS.user.password = "passw0rd";
 
 })();

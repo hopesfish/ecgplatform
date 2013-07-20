@@ -1,6 +1,9 @@
 package com.ainia.ecgApi.controller.health;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,11 +20,15 @@ import org.springframework.web.multipart.MultipartFile;
 import com.ainia.ecgApi.core.crud.BaseController;
 import com.ainia.ecgApi.core.crud.BaseService;
 import com.ainia.ecgApi.core.crud.Query;
+import com.ainia.ecgApi.core.exception.ServiceException;
 import com.ainia.ecgApi.core.security.AuthUser;
 import com.ainia.ecgApi.core.security.AuthenticateService;
 import com.ainia.ecgApi.core.web.AjaxResult;
 import com.ainia.ecgApi.domain.health.HealthExamination;
 import com.ainia.ecgApi.domain.health.HealthReply;
+import com.ainia.ecgApi.domain.sys.User;
+import com.ainia.ecgApi.service.common.UploadService;
+import com.ainia.ecgApi.service.common.UploadService.Type;
 import com.ainia.ecgApi.service.health.HealthExaminationService;
 import com.ainia.ecgApi.service.health.HealthReplyService;
 
@@ -44,6 +51,8 @@ public class HealthExaminationController extends BaseController<HealthExaminatio
     private HealthReplyService healthReplyService;
     @Autowired
     private AuthenticateService authenticateService;
+    @Autowired
+    private UploadService uploadService;
     
     @Override
     public BaseService<HealthExamination , Long> getBaseService() {
@@ -112,9 +121,84 @@ public class HealthExaminationController extends BaseController<HealthExaminatio
      * ResponseEntity
      * @throws IOException 
      */
+	@RequestMapping(value = "upload" , method = RequestMethod.POST , produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
     public ResponseEntity upload( @RequestParam("file") MultipartFile file) throws IOException {
-    	
+		ResponseEntity entity = new ResponseEntity(HttpStatus.OK);
+    	if (file.getBytes().length == 0) {
+    		entity =  new ResponseEntity(HttpStatus.BAD_REQUEST);
+    	}
+		AuthUser authUser = authenticateService.getCurrentUser();	
+		if (authUser == null) {
+			entity = new ResponseEntity(HttpStatus.FORBIDDEN);
+		}
+		if (!User.class.getSimpleName().equals(authUser.getType())) {
+			entity = new ResponseEntity(HttpStatus.FORBIDDEN);
+		}
     	healthExaminationService.upload(file.getBytes());
-    	return new ResponseEntity(HttpStatus.OK);
+    	return entity;
     }
+	
+	/**
+	 * <p>获取心电图1</p>
+	 * @return
+	 * byte[]
+	 * @throws IOException 
+	 */
+	@RequestMapping(value = "{id}/ecg1" , method = RequestMethod.GET)
+	public void loadEcg1(@PathVariable("id") Long id , HttpServletResponse response)  {
+		HealthExamination examination = healthExaminationService.get(id);
+		String dateStr = new SimpleDateFormat("yyyyMMdd").format(examination.getCreatedDate());
+		//TODO 文件后缀名固定
+		String ecg1Path = String.valueOf(examination.getUserId()) + "/" + dateStr + "-" + examination.getId() + "/ecg1.jpg";
+		try {
+			response.setContentType("image/jpeg");
+			response.getOutputStream().write(uploadService.load(Type.heart_img , ecg1Path));
+			response.getOutputStream().flush();
+		} catch (IOException e) {
+			throw new ServiceException("examination.ecg1Path.notFound");
+		}
+	}
+
+	/**
+	 * <p>获取心电图1</p>
+	 * @return
+	 * byte[]
+	 * @throws IOException 
+	 */
+	@RequestMapping(value = "{id}/ecg2" , method = RequestMethod.GET)
+	public void loadEcg2(@PathVariable("id") Long id , HttpServletResponse response)  {
+		HealthExamination examination = healthExaminationService.get(id);
+		String dateStr = new SimpleDateFormat("yyyyMMdd").format(examination.getCreatedDate());
+		//TODO 文件后缀名固定
+		String ecg1Path = String.valueOf(examination.getUserId()) + "/" + dateStr + "-" + examination.getId() + "/ecg2.jpg";
+		try {
+			response.setContentType("image/jpeg");
+			response.getOutputStream().write(uploadService.load(Type.heart_img , ecg1Path));
+			response.getOutputStream().flush();
+		} catch (IOException e) {
+			throw new ServiceException("examination.ecg1Path.notFound");
+		}
+	}
+	
+	/**
+	 * <p>获取心电图1</p>
+	 * @return
+	 * byte[]
+	 * @throws IOException 
+	 */
+	@RequestMapping(value = "{id}/ecg3" , method = RequestMethod.GET)
+	public void loadEcg3(@PathVariable("id") Long id , HttpServletResponse response)  {
+		HealthExamination examination = healthExaminationService.get(id);
+		String dateStr = new SimpleDateFormat("yyyyMMdd").format(examination.getCreatedDate());
+		//TODO 文件后缀名固定
+		String ecg1Path = String.valueOf(examination.getUserId()) + "/" + dateStr + "-" + examination.getId() + "/ecg3.jpg";
+		try {
+			response.setContentType("image/jpeg");
+			response.getOutputStream().write(uploadService.load(Type.heart_img , ecg1Path));
+			response.getOutputStream().flush();
+		} catch (IOException e) {
+			throw new ServiceException("examination.ecg1Path.notFound");
+		}
+	}
 }

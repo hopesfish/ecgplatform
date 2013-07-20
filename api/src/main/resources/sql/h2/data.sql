@@ -1,30 +1,31 @@
 insert into user (id, mobile , username, name, password, gender, id_card , type ,birthday,address,stature,weight,city,em_contact1,em_contact1_tel,em_contact2,em_contact2_tel , bad_habits , anamnesis , created_date , last_updated , remark ,is_free , version)
-values (1,'13911111111' ,'测试用户1','测试用户1','691b14d79bf0fa2215f155235df5e670b64394cc',1 ,'430203198502011218', 'SIMPLE','1983-06-04 01:00:00','地址1',1.72,72,'','','','','','','','2012-06-04 01:00:00','2012-06-04 01:00:00','',1,1);
+values (1,'13911111111' ,'13911111111','测试用户1','2e8ec7d18a6e108fce3af34044c661ffa56b084f',1 ,'430203198502011218', 'SIMPLE','1983-06-04 01:00:00','地址1',1.72,72,'','','','','','','','2012-06-04 01:00:00','2012-06-04 01:00:00','',1,1);
 insert into user (id, mobile , username, name, password, gender, id_card , type ,birthday,address,stature,weight,city,em_contact1,em_contact1_tel,em_contact2,em_contact2_tel , bad_habits , anamnesis , created_date , last_updated , remark ,is_free , version)
-values (2,'13922222222' ,'测试用户2','测试用户2','691b14d79bf0fa2215f155235df5e670b64394cc',1 ,'430203198502011218', 'SIMPLE','1983-06-04 01:00:00','地址2',1.72,72,'','','','','','','','2012-06-04 01:00:00','2012-06-04 01:00:00','',1,1);
-
+values (2,'13922222222' ,'13922222222','测试用户2','2e8ec7d18a6e108fce3af34044c661ffa56b084f',1 ,'430203198502011218', 'SIMPLE','1983-06-04 01:00:00','地址2',1.72,72,'','','','','','','','2012-06-04 01:00:00','2012-06-04 01:00:00','',1,1);
+insert into user (id, mobile , username, name, password, gender, id_card , type ,birthday,address,stature,weight,city,em_contact1,em_contact1_tel,em_contact2,em_contact2_tel , bad_habits , anamnesis , created_date , last_updated , remark ,is_free , version)
+values (3,'13912345678' ,'13912345678','上传用户','2e8ec7d18a6e108fce3af34044c661ffa56b084f',1 ,'430203198502011218', 'SIMPLE','1983-06-04 01:00:00','地址2',1.72,72,'','','','','','','','2012-06-04 01:00:00','2012-06-04 01:00:00','',1,1);
 
 --employee start
 insert into employee (id ,type, name , username , password , roles , status,enabled,dismissed,gender,expire,birthday,id_card , mobile ,created_date,last_updated,version) values 
-(1,'employee' ,'管理员','admin','2e8ec7d18a6e108fce3af34044c661ffa56b084f', 'admin' ,'INLINE',1,0,1,null,'1983-06-04 01:00:00','430203198602031218','13028339212','2012-06-04 01:00:00','2012-06-04 01:00:00',1);
+(1,'employee' ,'管理员','admin','2e8ec7d18a6e108fce3af34044c661ffa56b084f', 'admin' ,'ONLINE',1,0,1,null,'1983-06-04 01:00:00','430203198602031218','13028339212','2012-06-04 01:00:00','2012-06-04 01:00:00',1);
 insert into employee (id ,type, name , username , password , roles , status,enabled,dismissed,gender,expire,birthday,id_card , mobile ,created_date,last_updated,version) values 
-(2,'chief' ,'主任','chief','2e8ec7d18a6e108fce3af34044c661ffa56b084f', 'chief' ,'INLINE',1,0,1,null,'1983-06-04 01:00:00','430203198602031218','13028339212','2012-06-04 01:00:00','2012-06-04 01:00:00',1);
+(2,'chief' ,'主任','chief','2e8ec7d18a6e108fce3af34044c661ffa56b084f', 'chief' ,'ONLINE',1,0,1,null,'1983-06-04 01:00:00','430203198602031218','13028339212','2012-06-04 01:00:00','2012-06-04 01:00:00',1);
 insert into employee (id ,type, name , username , password , roles , status,enabled,dismissed,gender,expire,birthday,id_card , mobile ,created_date,last_updated,version) values 
-(3,'chief' ,'主任1','chief1','2e8ec7d18a6e108fce3af34044c661ffa56b084f', 'chief' ,'INLINE',1,0,1,null,'1983-06-04 01:00:00','430203198602031218','13028339212','2012-06-04 01:00:00','2012-06-04 01:00:00',1);
+(3,'chief' ,'主任1','chief1','2e8ec7d18a6e108fce3af34044c661ffa56b084f', 'chief' ,'ONLINE',1,0,1,null,'1983-06-04 01:00:00','430203198602031218','13028339212','2012-06-04 01:00:00','2012-06-04 01:00:00',1);
 insert into employee (id ,type, name , username , password , roles , status,enabled,dismissed,gender,expire,birthday,id_card , mobile ,created_date,last_updated,version) values 
-(4,'chief' ,'主任2','chief2','2e8ec7d18a6e108fce3af34044c661ffa56b084f', 'chief' ,'INLINE',1,0,1,null,'1983-06-04 01:00:00','430203198602031218','13028339212','2012-06-04 01:00:00','2012-06-04 01:00:00',1);
+(4,'chief' ,'主任2','chief2','2e8ec7d18a6e108fce3af34044c661ffa56b084f', 'chief' ,'ONLINE',1,0,1,null,'1983-06-04 01:00:00','430203198602031218','13028339212','2012-06-04 01:00:00','2012-06-04 01:00:00',1);
 insert into employee (id ,type, name , username , password , roles , status,enabled,dismissed,gender,expire,birthday,id_card , mobile ,created_date,last_updated,version) values 
-(5,'expert' ,'专家','expert','2e8ec7d18a6e108fce3af34044c661ffa56b084f', 'expert' ,'INLINE',1,0,1,null,'1983-06-04 01:00:00','430203198602031218','13028339212','2012-06-04 01:00:00','2012-06-04 01:00:00',1);
+(5,'expert' ,'专家','expert','2e8ec7d18a6e108fce3af34044c661ffa56b084f', 'expert' ,'ONLINE',1,0,1,null,'1983-06-04 01:00:00','430203198602031218','13028339212','2012-06-04 01:00:00','2012-06-04 01:00:00',1);
 insert into employee (id ,type, name , username , password , roles , status,enabled,dismissed,gender,expire,birthday,id_card , mobile ,created_date,last_updated,version) values 
-(6,'expert' ,'专家1','expert1','2e8ec7d18a6e108fce3af34044c661ffa56b084f', 'expert' ,'INLINE',1,0,1,null,'1983-06-04 01:00:00','430203198602031218','13028339212','2012-06-04 01:00:00','2012-06-04 01:00:00',1);
+(6,'expert' ,'专家1','expert1','2e8ec7d18a6e108fce3af34044c661ffa56b084f', 'expert' ,'ONLINE',1,0,1,null,'1983-06-04 01:00:00','430203198602031218','13028339212','2012-06-04 01:00:00','2012-06-04 01:00:00',1);
 insert into employee (id ,type, name , username , password , roles , status,enabled,dismissed,gender,expire,birthday,id_card , mobile ,created_date,last_updated,version) values 
-(7,'expert' ,'专家2','expert2','2e8ec7d18a6e108fce3af34044c661ffa56b084f', 'expert' ,'INLINE',1,0,1,null,'1983-06-04 01:00:00','430203198602031218','13028339212','2012-06-04 01:00:00','2012-06-04 01:00:00',1);
+(7,'expert' ,'专家2','expert2','2e8ec7d18a6e108fce3af34044c661ffa56b084f', 'expert' ,'ONLINE',1,0,1,null,'1983-06-04 01:00:00','430203198602031218','13028339212','2012-06-04 01:00:00','2012-06-04 01:00:00',1);
 insert into employee (id ,type, name , username , password , roles , status,enabled,dismissed,gender,expire,birthday,id_card , mobile ,created_date,last_updated,version) values 
-(8,'operator' ,'接线员','operator','2e8ec7d18a6e108fce3af34044c661ffa56b084f', 'operator' ,'INLINE',1,0,1,null,'1983-06-04 01:00:00','430203198602031218','13028339212','2012-06-04 01:00:00','2012-06-04 01:00:00',1);
+(8,'operator' ,'接线员','operator','2e8ec7d18a6e108fce3af34044c661ffa56b084f', 'operator' ,'ONLINE',1,0,1,null,'1983-06-04 01:00:00','430203198602031218','13028339212','2012-06-04 01:00:00','2012-06-04 01:00:00',1);
 insert into employee (id ,type, name , username , password , roles , status,enabled,dismissed,gender,expire,birthday,id_card , mobile ,created_date,last_updated,version) values 
-(9,'operator' ,'接线员1','operator1','2e8ec7d18a6e108fce3af34044c661ffa56b084f', 'operator' ,'INLINE',1,0,1,null,'1983-06-04 01:00:00','430203198602031218','13028339212','2012-06-04 01:00:00','2012-06-04 01:00:00',1);
+(9,'operator' ,'接线员1','operator1','2e8ec7d18a6e108fce3af34044c661ffa56b084f', 'operator' ,'ONLINE',1,0,1,null,'1983-06-04 01:00:00','430203198602031218','13028339212','2012-06-04 01:00:00','2012-06-04 01:00:00',1);
 insert into employee (id ,type, name , username , password , roles , status,enabled,dismissed,gender,expire,birthday,id_card , mobile ,created_date,last_updated,version) values 
-(10,'operator' ,'接线员2','operator2','2e8ec7d18a6e108fce3af34044c661ffa56b084f', 'operator' ,'INLINE',1,0,1,null,'1983-06-04 01:00:00','430203198602031218','13028339212','2012-06-04 01:00:00','2012-06-04 01:00:00',1);
+(10,'operator' ,'接线员2','operator2','2e8ec7d18a6e108fce3af34044c661ffa56b084f', 'operator' ,'ONLINE',1,0,1,null,'1983-06-04 01:00:00','430203198602031218','13028339212','2012-06-04 01:00:00','2012-06-04 01:00:00',1);
 
 insert into expert_operator (expert_id, operator_id) values
 (5, 8);
@@ -161,4 +162,7 @@ values (11,'examinationTask' , 11 ,'pending',null,9,0,'2013-07-11 01:00:00',null
 insert into task (id , type ,examination_id , status,expert_id,operator_id,auto , created_date , completed_date,version)
 values (12,'examinationTask' , 12 ,'pending',null,9,0,'2013-07-12 01:00:00',null,1);
 -- task end
+-- system_config start
+insert into system_config (id , type , key , value ) values (1 , 'basic' , 'upload.rootPath' , 'c:/upload');
+-- system_config end
 commit;

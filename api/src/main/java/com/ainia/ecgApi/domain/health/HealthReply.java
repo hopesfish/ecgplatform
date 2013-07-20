@@ -1,6 +1,5 @@
 package com.ainia.ecgApi.domain.health;
 
-import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Entity;
@@ -14,6 +13,7 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.ainia.ecgApi.core.bean.Domain;
+import com.ainia.ecgApi.domain.health.HealthRule.Level;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 /**
@@ -35,6 +35,7 @@ public class HealthReply implements Domain {
 	private String reason;
 	private String result;
 	private String content;
+	private Level  level;
 	private Long employeeId;
 	private Long examinationId;
 	private Date createdDate;
@@ -134,6 +135,12 @@ public class HealthReply implements Domain {
 
 	public void setVersion(Integer version) {
 		this.version = version;
+	}
+	public Level getLevel() {
+		return level;
+	}
+	public void setLevel(Level level) {
+		this.level = level;
 	}
 
 }

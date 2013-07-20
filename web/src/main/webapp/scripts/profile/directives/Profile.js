@@ -4,7 +4,7 @@ define(function(require, exports) {
 var profileEditTemp = require("../templates/profile/edit.html");
 var profilePasswordTemp = require("../templates/profile/password.html");
 
-angular.module('ecgProfile', [])
+angular.module('ecgProfileDirectives', [])
 .controller('ProfileController', ['$scope', '$routeParams', '$timeout', '$location', 'EnumService', 'ProfileService',
     function ($scope, $routeParams, $timeout, $location, EnumService, ProfileService) {
     $scope.subheader.title = "个人设置";
@@ -18,13 +18,24 @@ angular.module('ecgProfile', [])
     function ($scope, $routeParams, $timeout, $location, EnumService, ProfileService) {
 
    	$scope.profile.user = null;
+    $scope.profile.showMobile = false;
 
     function refresh() {
-        ProfileService.get().then(function(user) {
-            $scope.profile.user = user;
-        });
+        var isEmployee = $scope.session.user.isEmployee;
+        if (isEmployee && isEmployee()) {
+            $scope.profile.showMobile = true;
+            ProfileService.get($scope.session.user.username).then(function(user) {
+                $scope.profile.user = user;
+            });
+        } else {
+            $scope.profile.user = $scope.session.user;
+        }
     }
-    refresh();
+
+    $scope.$watch("session.user", function() {
+        if (!$scope.session.user.id) { return; }
+        refresh();
+    });
 
     $scope.profile.genders = EnumService.getGenders();
     $scope.profile.dismissedStates = EnumService.getDismissedStates();
@@ -42,17 +53,25 @@ angular.module('ecgProfile', [])
     };
 
     $scope.profile.update = function() {
-        $scope.dialog.showStandby();
+        var isEmployee = $scope.session.user.isEmployee, promise;
+        
         $scope.profile.user.birthday = $('#profile-birthday input').val();
-        ProfileService.update($scope.profile.user)
-        .then(function(result) {
+        
+        if (isEmployee && isEmployee()) {
+            promise = ProfileService.update($scope.profile.user);
+        } else {
+            promise = ProfileService.updateUser($scope.profile.user);
+        }
+        
+        $scope.dialog.showStandby();
+        promise.then(function(result) {
             $scope.dialog.hideStandby();
             $scope.message.success("编辑成功!");
             refresh();
         }, function() {
             $scope.dialog.hideStandby();
             $scope.message.error("编辑失败!");
-        });;
+        });
     };
 }])
 .directive("ecgProfileEdit", [ '$location', function($location) {
@@ -72,11 +91,20 @@ angular.module('ecgProfile', [])
    	$scope.profile.user = null;
 
     function refresh() {
-        ProfileService.get().then(function(user) {
-            $scope.profile.user = user;
-        });
+        var isEmployee = $scope.session.user.isEmployee;
+        if (isEmployee && isEmployee()) {
+            ProfileService.get($scope.session.user.username).then(function(user) {
+                $scope.profile.user = user;
+            });
+        } else {
+            $scope.profile.user = $scope.session.user;
+        }
     }
-    refresh();
+
+    $scope.$watch("session.user", function() {
+        if (!$scope.session.user.id) { return; }
+        refresh();
+    });
 
     $scope.profile.passwordIsEuqal = false;
     $scope.profile.compare = function() {
@@ -84,9 +112,18 @@ angular.module('ecgProfile', [])
     };
 
     $scope.profile.updatePassword = function() {
+        var isEmployee = $scope.session.user.isEmployee, promise;
+        
+        $scope.profile.user.birthday = $('#profile-birthday input').val();
+        
+        if (isEmployee && isEmployee()) {
+            promise = ProfileService.updatePassword($scope.profile.user.id, $scope.profile.user.oldPassword, $scope.profile.user.newPassword);
+        } else {
+            promise = ProfileService.updateUserPassword($scope.profile.user.id, $scope.profile.user.oldPassword, $scope.profile.user.newPassword);
+        }
+
         $scope.dialog.showStandby();
-        ProfileService.updatePassword($scope.profile.user.id, $scope.profile.user.oldPassword, $scope.profile.user.newPassword)
-        .then(function(result) {
+        promise.then(function(result) {
             $scope.dialog.hideStandby();
             $scope.message.success("修改密码成功!");
             refresh();

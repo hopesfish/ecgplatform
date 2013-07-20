@@ -9,14 +9,20 @@ define(function(require, exports) {
             return;
         }
 
-        mocha.user = {username: TESTCONFIGS.admin.username, password: TESTCONFIGS.admin.password};
-        runCaseAs('admin') ? testAsAdminOrChiefOrExpert(mocha, angluarjs, services) : null;
+        runCaseAs('admin') ? testAsAdminOrChiefOrExpert({
+            it: mocha.it,
+            user: {username: TESTCONFIGS.admin.username, password: TESTCONFIGS.admin.password}
+        }, angluarjs, services) : null;
         
-        mocha.user = {username: TESTCONFIGS.chief.username, password: TESTCONFIGS.chief.password};
-        runCaseAs('chief') ? testAsAdminOrChiefOrExpert(mocha, angluarjs, services) : null;
+        runCaseAs('chief') ? testAsAdminOrChiefOrExpert({
+            it: mocha.it,
+            user: {username: TESTCONFIGS.chief.username, password: TESTCONFIGS.chief.password}
+        }, angluarjs, services) : null;
 
-        mocha.user = {username: TESTCONFIGS.expert.username, password: TESTCONFIGS.expert.password};
-        runCaseAs('expert') ? testAsAdminOrChiefOrExpert(mocha, angluarjs, services) : null;
+        runCaseAs('expert') ? testAsAdminOrChiefOrExpert({
+            it: mocha.it,
+            user: {username: TESTCONFIGS.expert.username, password: TESTCONFIGS.expert.password}
+        }, angluarjs, services) : null;
 
         /*
          * TODO:

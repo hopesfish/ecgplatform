@@ -13,7 +13,7 @@ angular.module('ecgReplyForm', [])
     $scope.replyform = {};
 
     // 预设变量
-    $scope.replyform.replys = [];
+    $scope.replyform.replys = null;
 
     // level名称
     $scope.replyform.translateLevel = EnumService.translateLevel;
@@ -35,9 +35,9 @@ angular.module('ecgReplyForm', [])
             examination = $scope.todo.current.examination,
             rules = {};
 
-        $scope.replyform.replys = [];
         $q.all([RuleService.queryAllGroup(), RuleService.queryAllGroupByUser($scope.todo.current.userId)])
         .then(function(results) {
+            $scope.replyform.replys = [];
             var querys = [];
             $(results[0]).each(function(i, rule) {
                 if (!rule.employeeId) {
@@ -84,10 +84,10 @@ angular.module('ecgReplyForm', [])
 
     // 加载接线员的评价
     function loadReplies() {
-      TaskService.getReplyByExamination($scope.todo.current.examinationId)
-      .then(function(replys) {
-          $scope.replyform.replys = replys;
-      });
+        TaskService.getReplyByExamination($scope.todo.current.examinationId)
+        .then(function(replys) {
+            $scope.replyform.replys = replys;
+        });
     };
 
     // 监听未完成
@@ -228,6 +228,7 @@ angular.module('ecgReplyForm', [])
 
     // 表格展示
     $scope.replydialog.reply = null;
+    $scope.replydialog.getLevelLabel = EnumService.getLevelLabel;
 
     function reset() {
         $scope.replydialog.reply = TaskService.getPlainReply();
@@ -269,20 +270,3 @@ angular.module('ecgReplyForm', [])
 }]);
 
 });
-
-/*
-设备类型  指标编号  指标名称  正常下限  正常上限  指标说明
-11  1 舒张压 60  89  血压的舒张压（毫米汞柱）
-11  2 收缩压 89  139 血压的收缩压（毫米汞柱）
-11  3 心率  60  100 次/分钟
-11  4 血氧饱和度 94  100 百分比
-11  5 呼吸  16  20  次/分钟
-11  6 体温  36  37  ℃（腋下温度）
-11  7 脉率  60  100 次/分钟
-
-10-手机（内置检测硬件的手机）
-设备类型  指标编号  指标名称  正常下限  正常上限  指标说明
-10  3 心率  60  100 次/分钟
-10  6 体温  36  37  ℃（腋下温度）
-
-*/

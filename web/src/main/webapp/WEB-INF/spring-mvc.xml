@@ -44,8 +44,7 @@
 	  </property>
 	</bean>	
 	
-	<bean id="multipartResolver"  class="org.springframework.web.multipart.support.StandardServletMultipartResolver">
-	</bean>
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>
 	
     <mvc:interceptors>  
 	  <mvc:interceptor>  
@@ -54,6 +53,7 @@
 	      <property name="excludes">  
 	        <list>  
 	          <value>/api/auth</value>  
+	           <value>/api/user/auth</value>  
 	        </list>  
 	      </property> 
 	      <property name="enable" value="true"></property> 

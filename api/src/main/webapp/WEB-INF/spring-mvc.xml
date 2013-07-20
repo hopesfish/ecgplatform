@@ -44,8 +44,7 @@
 	  </property>
 	</bean>	
 	
-	<bean id="multipartResolver"  class="org.springframework.web.multipart.support.StandardServletMultipartResolver">
-	</bean>
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>
 	
     <mvc:interceptors>  
 	  <mvc:interceptor>  

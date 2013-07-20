@@ -88,35 +88,17 @@ angular.module('ecgRuleBaseDirectives', [])
         $scope.dialog.confirm({
             text: "请确认删除[" + selectedReplyConfig.name + "]的规则, 该操作无法恢复!",
             handler: function() {
-
                 $scope.dialog.showStandby();
-
-                var count = 0, len = 0;
-                RuleService.queryAll({code: selectedReplyConfig.code, usage: 'filter'})
-                .then(function(filters) {
-                    len = filters.length;
-                    $(filters).each(function(i, filter) {
-                        RuleService.remove(filter.id)
-                        .then(function() {
-                            count++;
-                        }, function() {
-                            $scope.dialog.hideStandby();
-                            $scope.message.error("无法删除该规则下的检测区间!");
-                        });
-                    });
-                })
+                RuleService.remove(selectedReplyConfig.id)
                 .then(function() {
                     $scope.dialog.hideStandby();
-                    RuleService.remove(selectedReplyConfig.id)
-                    .then(function() {
-                        $scope.rule.selectedItem = null;
-                        $scope.message.success("删除规则成功!");
-                        // 刷新
-                        refreshGrid();
-                    }, function() {
-                        $scope.dialog.hideStandby();
-                        $scope.message.error("无法删除该规则,可能是您的权限不足,请联系管理员!");
-                    });
+                    $scope.rule.selectedItem = null;
+                    $scope.message.success("删除规则成功!");
+                    // 刷新
+                    refreshGrid();
+                }, function() {
+                    $scope.dialog.hideStandby();
+                    $scope.message.error("无法删除该规则,可能是您的权限不足,请联系管理员!");
                 });
             }
         });

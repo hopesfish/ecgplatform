@@ -24,7 +24,9 @@
                 <td nowrap><span class="label label-{{task.translateLevel(item.level)}}">{{task.getLevelLabel(item.level)}}</span></td>
                 <td nowrap>
                     <span ng-show="item.status == 'completed'">{{task.getWorkStatusLabel(item.status)}}</span>
-                    <a href="#/todo/{{item.id}}" ng-show="item.status != 'completed'">{{task.getWorkStatusLabel(item.status)}}</a>
+                    <a ng-show="session.user.isEmployee() && item.status != 'completed'" 
+                       href="#/todo/{{item.id}}">{{task.getWorkStatusLabel(item.status)}}</a>
+                    <span ng-show="!session.user.isEmployee()">{{task.getWorkStatusLabel(item.status)}}</span>
                 </td>
             </tr>
         </tbody>

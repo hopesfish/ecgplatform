@@ -27,7 +27,7 @@ angular.module('ecgMessage', [])
         message.id = (new Date()).getTime();
         message.date = $filter('date')(message.id, 'HH:mm:ss');
 
-        $scope.message.current = message
+        $scope.message.current = message;
 
         $scope.message.currents.push(message);
         $scope.message.msgs.push(message);
@@ -46,8 +46,8 @@ angular.module('ecgMessage', [])
     };
     $scope.message.closeAll = function() {
         $scope.message.currents = [];
-        $scope.message.current = null
-    }
+        $scope.message.current = null;
+    };
     // show a success message
     $scope.message.success = function(msg) {
         var message = {

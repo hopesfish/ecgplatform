@@ -41,64 +41,99 @@ define(function(require, exports) {
         /**
          * 场景1,管理员、主任都可以查询未完成任务的信息,并将当前的环境信息保存
          */
-        mocha.user = {username: TESTCONFIGS.admin.username, password: TESTCONFIGS.admin.password};
-        testStageOneForAdminAndChief(mocha, angluarjs, services, adminRuntime);
+        testStageOneForAdminAndChief({
+            it: it,
+            user: {username: TESTCONFIGS.admin.username, password: TESTCONFIGS.admin.password}
+        }, angluarjs, services, adminRuntime);
         
-        mocha.user = {username: TESTCONFIGS.chief.username, password: TESTCONFIGS.chief.password};
-        testStageOneForAdminAndChief(mocha, angluarjs, services, chiefRuntime);
+        testStageOneForAdminAndChief({
+            it: it,
+            user: {username: TESTCONFIGS.chief.username, password: TESTCONFIGS.chief.password}
+        }, angluarjs, services, chiefRuntime);
         // 场景2 结束
 
         /**
          * 场景2,接线员自己回复，并将更改当前环境
          */
-        mocha.user = {username: TESTCONFIGS.operator.username, password: TESTCONFIGS.operator.password};
-        testStageTwoForOperator(mocha, angluarjs, services, operatorRuntime);
-        
-        mocha.user = {username: TESTCONFIGS.operator1.username, password: TESTCONFIGS.operator1.password};
-        testStageTwoForOperator(mocha, angluarjs, services, operator1Runtime);
+        testStageTwoForOperator({
+            it: it,
+            user: {username: TESTCONFIGS.operator.username, password: TESTCONFIGS.operator.password}
+        }, angluarjs, services, operatorRuntime);
+        testStageTwoForOperator({
+            it: it,
+            user: {username: TESTCONFIGS.operator.username, password: TESTCONFIGS.operator.password}
+        }, angluarjs, services, operator1Runtime);
         // 场景2 结束
 
         /**
-         * 场景3,主任配置接线员和专家的多对多关系，接线员发送回复并转交专家，专家回复
+         * 场景3
+         * 主任配置接线员和专家的多对多关系，接线员发送回复并转交专家，专家回复
          */
-        mocha.user = {username: TESTCONFIGS.chief.username, password: TESTCONFIGS.chief.password};
+        testStageThreeForAdminAndChief({
+            it: it,
+            user: {username: TESTCONFIGS.chief.username, password: TESTCONFIGS.chief.password},
+            operator: {username: TESTCONFIGS.operator.username, password: TESTCONFIGS.operator.password},
+            expert: {username: TESTCONFIGS.expert.username, password: TESTCONFIGS.expert.password}
+        }, angluarjs, services);
         
-        mocha.operator = {username: TESTCONFIGS.operator.username, password: TESTCONFIGS.operator.password};
-        mocha.expert = {username: TESTCONFIGS.expert.username, password: TESTCONFIGS.expert.password};
-        testStageThreeForAdminAndChief(mocha, angluarjs, services);
-        
-        mocha.operator = {username: TESTCONFIGS.operator.username, password: TESTCONFIGS.operator.password};
-        mocha.expert = {username: TESTCONFIGS.expert1.username, password: TESTCONFIGS.expert1.password};
-        testStageThreeForAdminAndChief(mocha, angluarjs, services);
+        testStageThreeForAdminAndChief({
+            it: it,
+            user: {username: TESTCONFIGS.chief.username, password: TESTCONFIGS.chief.password},
+            operator: {username: TESTCONFIGS.operator.username, password: TESTCONFIGS.operator.password},
+            expert: {username: TESTCONFIGS.expert1.username, password: TESTCONFIGS.expert1.password}
+        }, angluarjs, services);
 
-        mocha.operator = {username: TESTCONFIGS.operator1.username, password: TESTCONFIGS.operator1.password};
-        mocha.expert = {username: TESTCONFIGS.expert.username, password: TESTCONFIGS.expert.password};
-        testStageThreeForAdminAndChief(mocha, angluarjs, services);
+        testStageThreeForAdminAndChief({
+            it: it,
+            user: {username: TESTCONFIGS.chief.username, password: TESTCONFIGS.chief.password},
+            operator: {username: TESTCONFIGS.operator1.username, password: TESTCONFIGS.operator1.password},
+            expert: {username: TESTCONFIGS.expert.username, password: TESTCONFIGS.expert.password}
+        }, angluarjs, services);
 
-        mocha.operator = {username: TESTCONFIGS.operator.username, password: TESTCONFIGS.operator.password};
-        mocha.expert = {username: TESTCONFIGS.expert1.username, password: TESTCONFIGS.expert1.password};
-        testStageThreeForAdminAndChief(mocha, angluarjs, services);
-
-        // 接线员1 forward，专家1发现有新任务并处理，接线员1 forwar，专家2发现有新任务并处理
-        mocha.user = {username: TESTCONFIGS.operator.username, password: TESTCONFIGS.operator.password};
-        testStageThreeForOperator(mocha, angluarjs, services);
-        mocha.user = {username: TESTCONFIGS.expert.username, password: TESTCONFIGS.expert.password};
-        testStageThreeForExpert(mocha, angluarjs, services);
-
-        mocha.user = {username: TESTCONFIGS.operator.username, password: TESTCONFIGS.operator.password};
-        testStageThreeForOperator(mocha, angluarjs, services);
-        mocha.user = {username: TESTCONFIGS.expert1.username, password: TESTCONFIGS.expert1.password};
-        testStageThreeForExpert(mocha, angluarjs, services);
+        testStageThreeForAdminAndChief({
+            it: it,
+            user: {username: TESTCONFIGS.chief.username, password: TESTCONFIGS.chief.password},
+            operator: {username: TESTCONFIGS.operator1.username, password: TESTCONFIGS.operator1.password},
+            expert: {username: TESTCONFIGS.expert1.username, password: TESTCONFIGS.expert1.password}
+        }, angluarjs, services);
 
         // 接线员2 连续forward,专家1和专家2分别发现新任务并处理
-        mocha.user = {username: TESTCONFIGS.operator1.username, password: TESTCONFIGS.operator1.password};
-        testStageThreeForOperator(mocha, angluarjs, services);
-        testStageThreeForOperator(mocha, angluarjs, services);
+        testStageThreeForOperator({
+            it: it,
+            user: {username: TESTCONFIGS.operator1.username, password: TESTCONFIGS.operator1.password}
+        }, angluarjs, services);
+        testStageThreeForOperator({
+            it: it,
+            user: {username: TESTCONFIGS.operator1.username, password: TESTCONFIGS.operator1.password}
+        }, angluarjs, services);
+        testStageThreeForExpert({
+            it: it,
+            user: {username: TESTCONFIGS.expert.username, password: TESTCONFIGS.expert.password}
+        }, angluarjs, services);
+        testStageThreeForExpert({
+            it: it,
+            user: {username: TESTCONFIGS.expert1.username, password: TESTCONFIGS.expert1.password}
+        }, angluarjs, services);
 
-        mocha.user = {username: TESTCONFIGS.expert.username, password: TESTCONFIGS.expert.password};
-        testStageThreeForExpert(mocha, angluarjs, services);
-        mocha.user = {username: TESTCONFIGS.expert1.username, password: TESTCONFIGS.expert1.password};
-        testStageThreeForExpert(mocha, angluarjs, services);
+        // 接线员1 forward，专家1发现有新任务并处理，接线员1继续forward，专家2发现有新任务并处理
+        testStageThreeForOperator({
+            it: it,
+            user: {username: TESTCONFIGS.operator.username, password: TESTCONFIGS.operator.password}
+        }, angluarjs, services);
+        testStageThreeForExpert({
+            it: it,
+            user: {username: TESTCONFIGS.expert.username, password: TESTCONFIGS.expert.password}
+        }, angluarjs, services);
+
+        testStageThreeForOperator({
+            it: it,
+            user: {username: TESTCONFIGS.operator.username, password: TESTCONFIGS.operator.password}
+        }, angluarjs, services);
+        testStageThreeForExpert({
+            it: it,
+            user: {username: TESTCONFIGS.expert1.username, password: TESTCONFIGS.expert1.password}
+        }, angluarjs, services);
+        
         // 场景3结束
 
         it("the runtime should be updated as expectation", function() {

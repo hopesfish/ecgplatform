@@ -150,10 +150,10 @@ angular.module('ecgRuleService', [])
                     if (result) {
                         success++;
                     } else {
-                        error++
+                        error++;
                     }
                 }, function() {
-                    error++
+                    error++;
                 })
                 .then(function() {
                     return that.create(mid);
@@ -162,10 +162,10 @@ angular.module('ecgRuleService', [])
                     if (result) {
                         success++;
                     } else {
-                        error++
+                        error++;
                     }
                 }, function() {
-                    error++
+                    error++;
                 })
                 .then(function() {
                     return that.create(high);
@@ -174,17 +174,17 @@ angular.module('ecgRuleService', [])
                     if (result) {
                         success++;
                     } else {
-                        error++
+                        error++;
                     }
                 }, function() {
-                    error++
+                    error++;
                 })
                 .then(function() {
                     return {success: success, error: error};
                 });
             },
             sortRules: function(rules) {
-                var min = 999999, max = -999999, range = 100, that = this;
+                var min = 999999, max = -999999, range = 100;
                 $(rules).each(function(i, rule) {
                     if (rule.level !== 'outside') {
                         rule.min = parseFloat(rule.min);

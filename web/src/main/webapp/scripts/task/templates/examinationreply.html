@@ -1,7 +1,7 @@
 <div ng-show="examinationreply.replys && examinationreply.replys.length > 0">
 <h5 class="ecgHd">回复</h5>
-<div ng-repeat="reply in examinationreply.replys">
-	【{{reply.result}}】{{reply.content}}
+<div ng-repeat="reply in examinationreply.replys" style="margin: 5px 0px;">
+	<span class="label label-{{examinationreply.translateLevel(reply.level)}}">{{reply.result}}</span> {{reply.content}}
 </div>
 <div ng-show="examinationreply.replys.length == 0">
 	正在加载回复数据...

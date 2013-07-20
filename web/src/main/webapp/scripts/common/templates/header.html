@@ -2,21 +2,21 @@
     <div class="navbar-inner">
             <ul class="nav pull-right">
                 
-                <!--
-                <li id="stats-menu" class="dropdown">
+                <li id="stats-menu" class="dropdown" ng-show="header.status">
                     <a href="javascript:void(0)" role="button" class="dropdown-toggle" data-toggle="dropdown">
-                        <i class="icon-eye-open"></i> 正常工作
+                        <i class="icon-eye-open"></i> {{header.getEmployeeStatusLabel(header.status)}}
                         <i class="icon-caret-down"></i>
                     </a>
 
                     <ul class="dropdown-menu">
-                        <li><a tabindex="-1" href="javascript:void(0)"><i class="icon-ok"></i>正常工作</a></li>
-                        <li><a tabindex="-1" href="javascript:void(0)"><i class="icon-white"></i>暂离</a></li>
-                        <li><a tabindex="-1" href="javascript:void(0)"><i class="icon-white"></i>准备下班</a></li>
-                        <li><a tabindex="-1" href="javascript:void(0)"><i class="icon-white"></i>下班</a></li>
+                        <li ng-repeat="status in header.statuses" ng-click="header.setStatus(status.key)">
+                        <a tabindex="-1" href="javascript:void(0)">
+                            <i class="icon-white" ng-class="{'icon-ok': status.key == header.status}"></i>{{status.label}}
+                        </a>
+                        </li>
                     </ul>
                 </li>
-                -->
+
                 <li id="fat-menu" class="dropdown">
                     <a href="javascript:void(0)" role="button" class="dropdown-toggle" data-toggle="dropdown">
                         <i class="icon-user"></i> {{session.user.name}}

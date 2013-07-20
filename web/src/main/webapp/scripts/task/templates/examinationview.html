@@ -1,36 +1,43 @@
 <h5 class="ecgHd">检测简报</h5>
 <table class="ecgprops" ng-show="examinationview && examinationview.examination">
+
 <tr>
-<td><label>测试项目:</label></td>
-<td><span class="prop">{{examinationview.examination.testItem}}</span></td>
+<td width="15%"><label>测试项目:</label></td>
+<td width="30%"><span class="prop">{{examinationview.examination.testItem}}</span></td>
+<td width="15%"><label>测试时间:</label></td>
+<td><span class="prop">{{examinationview.examination.createdDate}}</span></td>
+</tr>
+
+<tr>
 <td><label>健康状态:</label></td>
 <td>
 <span class="prop">{{examinationview.getLevelLabel(examinationview.examination.level)}}
-<!--div class="btn-group">
-  <a class="btn btn-small dropdown-toggle" data-toggle="dropdown" href="#">正常<span class="caret"></span></a>
-  <ul class="dropdown-menu">
-    <li><a href="#">人工异常</a></li>
-  </ul>
-</div>
-</span-->
 </td>
 <td><label>处理状态:</label></td>
-<td cols="6"><span class="prop">{{examinationview.getWorkStatusLabel(undone.selected.status || done.selected.status)}}</span></td>
+<td><span class="prop">{{examinationview.getWorkStatusLabel(todo.current.status || task.selected.status)}}</span></td>
 </tr>
+
 <tr>
 <td><label>血压:</label></td>
-<td><span class="prop">低压-{{examinationview.examination.bloodPressureLow}} 高压-{{examinationview.examination.bloodPressureHigh}}</span></td>
+<td><span class="prop">低压-{{examinationview.examination.bloodPressureLow}} 毫米汞柱 高压-{{examinationview.examination.bloodPressureHigh}} 毫米汞柱</span></td>
 <td><label>心率:</label></td>
-<td><span class="prop">{{examinationview.examination.heartRhythm}}</span></td>
-<td><label>血氧:</label></td>
-<td><span class="prop">{{examinationview.examination.bloodOxygen}}</span></td>
-<td><label>呼吸:</label></td>
-<td><span class="prop">{{examinationview.examination.breath}}</span></td>
-<td><label>体温:</label></td>
-<td><span class="prop">{{examinationview.examination.temperature}}</span></td>
-<td><label>脉率:</label></td>
-<td><span class="prop">{{examinationview.examination.pulserate}}</span></td>
+<td><span class="prop">{{examinationview.examination.heartRhythm}} 次/分钟</span></td>
 </tr>
+
+<tr>
+<td><label>血氧饱和度:</label></td>
+<td><span class="prop">{{examinationview.examination.bloodOxygen}} 百分比</span></td>
+<td><label>呼吸:</label></td>
+<td><span class="prop">{{examinationview.examination.breath}} 次/分钟</span></td>
+</tr>
+
+<tr>
+<td><label>体温:</label></td>
+<td><span class="prop">{{examinationview.examination.bodyTemp}} ℃（腋下温度）</span></td>
+<td><label>脉率:</label></td>
+<td><span class="prop">{{examinationview.examination.pulserate}} 次/分钟</span></td>
+</tr>
+
 </table>
 
 <div ng-show="examinationview && !examinationview.examination">

@@ -7,6 +7,7 @@ require("./directives/EmployeeStatusReport");
 require("./directives/TaskProcessReport");
 require("./directives/ExpertsTaskReport");
 require("./directives/OperatorsTaskReport");
+require("./directives/RangeSelector");
 
 var overviewTemp = require("./templates/overview.html");
 
@@ -16,7 +17,8 @@ angular.module('ecgMonitor',
 	 'ecgEmployeeStatusReport',
 	 'ecgTaskProcessReport',
 	 'ecgExpertsTaskReport',
-	 'ecgOperatorsTaskReport'])
+	 'ecgOperatorsTaskReport',
+   'ecgRangeSelector'])
 .controller('OverviewController', ['$scope', function ($scope) {
     // register the inner namespace
     $scope.overview = {};

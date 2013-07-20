@@ -18,6 +18,24 @@
         </tr>
 
         <tr>
+        <td width="100px" valign="top"><label for="replydialog-result">级别:</label></td>
+        </tr>
+
+        <tr>
+        <td>
+            <span class="label label-success rulelevel"  ng-click="replydialog.reply.level = 'success'">
+                <i class="icon-ok" ng-show="replydialog.reply.level == 'success'"></i>{{replydialog.getLevelLabel('success')}}
+            </span>
+            <span class="label label-warning rulelevel"  ng-click="replydialog.reply.level = 'warning'">
+                <i class="icon-ok" ng-show="replydialog.reply.level == 'warning'"></i>{{replydialog.getLevelLabel('warning')}}
+            </span>
+            <span class="label label-important rulelevel"  ng-click="replydialog.reply.level = 'danger'">
+                <i class="icon-ok" ng-show="replydialog.reply.level == 'danger'"></i>{{replydialog.getLevelLabel('danger')}}
+            </span>
+        </td>
+        </tr>
+
+        <tr>
         <td valign="top"><label for="replydialog-content">回复内容:</label></td>
         </tr>
 

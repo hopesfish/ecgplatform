@@ -2,14 +2,14 @@
 define(function(require, exports) {
 
 angular.module('ecgOperatorService', [])
-    .factory("OperatorService", function($rootScope, $http) {
+    .factory("OperatorService", function($rootScope, $http, $q) {
         var uri = PATH + "/api/operator";
 
         return {
-            queryAll: function() {
+            queryAll: function(params) {
                 return $http({
                     method: 'GET',
-                    url: uri
+                    url: uri + '?' + $.param(params || {})
                 }).then(function(res) {
                     if (res.data.datas && res.data.datas.length > 0) {
                         return res.data.datas;
@@ -82,6 +82,22 @@ angular.module('ecgOperatorService', [])
             },
             getRules: function(id) {
                 return [];
+            },
+            linkExperts: function(operator, experts) {
+                var posts = [], that = this;
+                $(experts).each(function(i, expert) {
+                    posts.push(that.linkExpert(operator, expert));
+                });
+
+                return $q.all(posts).then(function(responses) {
+                    var allsuccess = true;
+                    $(responses).each(function(i, result){
+                        if (!result) {
+                            allsuccess = false;
+                        }
+                    });
+                    return allsuccess;
+                });
             },
             linkExpert: function(operator, expert) {
                 var id = operator.id || operator;

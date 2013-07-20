@@ -71,7 +71,6 @@ angular.module('ecgUserService', [])
                         return [];    
                     }
                 }, function() {
-                    $rootScope.message.error('服务器异常,无法获取数据');
                     return [];
                 });
             },

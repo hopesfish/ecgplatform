@@ -45,7 +45,7 @@
 			 class="input-xlarge" id="profile-idCard" placeholder="请输入18位身份证号码"></td>
 		</tr>
 
-		<tr>
+		<tr ng-show="profile.showMobile">
 		<td ><label for="profile-mobile">电话:</label></td>
 		<td>
 		<input ng-model="profile.user.mobile" ng-pattern="/^(\(\d{3,4}\)|\d{3,4}-|\s)?\d{7,14}$/"

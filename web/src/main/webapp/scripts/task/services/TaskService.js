@@ -9,6 +9,7 @@ angular.module('ecgTaskService', [])
                 var opts = opts || {}, url, params = '?';
 
                 url = "/api/task";
+                
                 if (user.roles === 'operator') {
                     url = "/api/operator/" + user.id + '/task';
                 } else if (user.roles === 'expert') {
@@ -25,6 +26,8 @@ angular.module('ecgTaskService', [])
                     }
                 } else if (opts.status === 'done') {
                     params += 'status=completed';
+                } else if (opts.status){
+                    params += 'status=' + opts.status;
                 }
 
                 if (opts.id) {
@@ -45,6 +48,29 @@ angular.module('ecgTaskService', [])
                     return [];
                 });
             },
+            queryAllTaskByUser: function(user, opts) {
+                var opts = opts || {}, url, params = '?', id;
+
+                id = user.id || user;
+
+                //url = "/api/user/" + id + "/task";
+                url = "/api/task";
+
+                //params += "userId=" + id;
+
+                return $http({
+                    method: 'GET',
+                    url: PATH + url + params
+                }).then(function(res) {
+                    if (res.data.datas && res.data.datas.length > 0) {
+                        return res.data.datas;
+                    } else {
+                        return [];    
+                    }
+                }, function() {
+                    return [];
+                });
+            },
             getExamination: function(id) {
                 return $http({
                     method: 'GET',
@@ -61,7 +87,8 @@ angular.module('ecgTaskService', [])
                 return {
                     result: "",
                     content: "",
-                    reason: "reason"
+                    reason: "reason",
+                    level: "success"
                 };
             },
             reply: function(examination, reply) {
@@ -70,6 +97,7 @@ angular.module('ecgTaskService', [])
                 newreply.result = reply.result;
                 newreply.content = reply.content;
                 newreply.reason = reply.reason;
+                newreply.level = reply.level;
 
                 if (!reply.id) {
                     promise = $http({
@@ -127,7 +155,7 @@ angular.module('ecgTaskService', [])
                 });
             },
             replyInBatch: function(examination, replies) {
-                var posts = [], len = 0, count = 0, that = this;
+                var posts = [], that = this;
                 $(replies).each(function(i, reply) {
                     posts.push(that.reply(examination, reply));
                 });

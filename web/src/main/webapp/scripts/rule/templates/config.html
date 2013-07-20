@@ -21,7 +21,8 @@
     	<br/>
 		<div class="progress ruleconfigs">
 			<div ng-repeat="rule in ruleconfig.rules" ng-click="ruleconfig.onselectrule(rule)"
-				 class="bar bar-{{rule.level}}" style="width:16.6%\9; width: {{rule.percent}}%;" title="设置了{{rule.replyconfigs.length}}条回复">
+				 class="bar bar-{{rule.level}}" ng-style="{width: rule.percent + '%'}"
+				 title="设置了{{rule.replyconfigs.length}}条回复">
 			{{ruleconfig.getRuleText(rule)}} <br> ({{rule.replyconfigs.length}})
 			</div>
 		</div>

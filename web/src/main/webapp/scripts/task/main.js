@@ -11,7 +11,9 @@ var todobarTemplate = require("./templates/todobar.html");
 var taskTemp = require("./templates/list.html");
 
 angular.module('ecgTask', ['ecgTaskService', 'ecgTaskView', 'ecgReplyForm'])
-.controller('TodoTaskController', ['$scope', '$routeParams', '$location', 'ProfileService', 'TaskService', function ($scope, $routeParams, $location, ProfileService, TaskService) {
+.controller('TodoTaskController',
+    ['$scope', '$routeParams', '$location', 'ProfileService', 'TaskService',
+    function ($scope, $routeParams, $location, ProfileService, TaskService) {
     $scope.subheader.title = "待办工作";
 
     // 基本变量
@@ -20,46 +22,37 @@ angular.module('ecgTask', ['ecgTaskService', 'ecgTaskView', 'ecgReplyForm'])
     $scope.todo.current = null;
     $scope.todo.replyform = 'hidden';
 
-    // 加载未完成任务
     function refreshGrid() {
-        var username = $.cookie("AiniaOpUsername");
+        var user = $scope.session.user, isEmployee = user.isEmployee;
+        if (isEmployee && isEmployee()) {
+            $scope.dialog.showLoading();
+            TaskService.queryAllTaskByEmployee(
+                user, 
+                {
+                    status: 'undone',
+                    id: $routeParams.id || ''
+                }
+            ).then(function(tasks) {
+                $scope.dialog.hideStandby();
+                $scope.todo.tasks = tasks;
+                selectTask();
+            });
+            // 查总数
+            TaskService.queryAllTaskByEmployee(
+                user, 
+                {status: 'undone'}
+            ).then(function(tasks) {
+                $scope.subheader.title = "待办工作(共" + tasks.length + "条)";
+            });
+        } else {
+            $location.path("/task");
+        }
+    }
 
-        $scope.dialog.showLoading();
-        ProfileService.get(username)
-        .then(function(user) {
-            $scope.dialog.hideStandby();
-            return user;
-        }, function() {
-            $scope.dialog.hideStandby();
-            return null;
-        })
-        .then(function(user) {
-            if (user) {
-                $scope.dialog.showLoading();
-                TaskService.queryAllTaskByEmployee(
-                    user, 
-                    {
-                        status: 'undone',
-                        id: $routeParams.id || ''
-                    }
-                ).then(function(tasks) {
-                    $scope.dialog.hideStandby();
-                    $scope.todo.tasks = tasks;
-                    selectTask();
-                });
-                // 查总数
-                TaskService.queryAllTaskByEmployee(
-                    user, 
-                    {status: 'undone'}
-                ).then(function(tasks) {
-                    $scope.subheader.title = "待办工作(共" + tasks.length + "条)";
-                });
-            } else {
-                $scope.message.error("无法加载用户数据");
-            }
-        });
-    };
-    refreshGrid();
+    $scope.$watch("session.user", function() {
+        if (!$scope.session.user.id) { return; }
+        refreshGrid();
+    });
  
     // 将第一个作为当前选中view
     function selectTask() {
@@ -128,30 +121,26 @@ angular.module('ecgTask', ['ecgTaskService', 'ecgTaskView', 'ecgReplyForm'])
     $scope.task.translateLevel = EnumService.translateLevel;
 
     function refreshGrid() {
-        var username = $.cookie("AiniaOpUsername");
+        var user = $scope.session.user, isEmployee = user.isEmployee;
+        if (isEmployee && isEmployee()) {
+            $scope.dialog.showLoading();
+            TaskService.queryAllTaskByEmployee(user).then(function(tasks) {
+                $scope.dialog.hideStandby();
+                $scope.task.data = tasks;
+            });
+        } else {
+            $scope.dialog.showLoading();
+            TaskService.queryAllTaskByUser(user).then(function(tasks) {
+                $scope.dialog.hideStandby();
+                $scope.task.data = tasks;
+            });
+        }
+    }
 
-        $scope.dialog.showLoading();
-        ProfileService.get(username)
-        .then(function(user) {
-            $scope.dialog.hideStandby();
-            return user;
-        }, function() {
-            $scope.dialog.hideStandby();
-            return null;
-        })
-        .then(function(user) {
-            if (user) {
-                $scope.dialog.showLoading();
-                TaskService.queryAllTaskByEmployee(user).then(function(tasks) {
-                    $scope.dialog.hideStandby();
-                    $scope.task.data = tasks;
-                });
-            } else {
-                $scope.message.error("无法加载用户数据");
-            }
-        });
-    };
-    refreshGrid();
+    $scope.$watch("session.user", function() {
+        if (!$scope.session.user.id) { return; }
+        refreshGrid();
+    });
 
     $scope.task.refreshGrid = refreshGrid;
 }])

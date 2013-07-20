@@ -1,16 +1,12 @@
 'use strict';
 define(function(require, exports) {
 
-require("./services/ProfileService");
 require("./services/ChiefService");
 require("./services/ExpertService");
 require("./services/OperatorService");
-require("./directives/Profile");
 require("./directives/Chief");
 require("./directives/Expert");
 require("./directives/Operator");
-
-var profileTemp = require("./templates/profile.html");
 
 var chiefTemp = require("./templates/chief.html");
 var chiefNewTemp = require("./templates/chief/new.html");
@@ -25,8 +21,8 @@ var operatorNewTemp = require("./templates/operator/new.html");
 var operatorViewTemp = require("./templates/operator/view.html");
 
 angular.module('ecgEmployee', 
-    ['ecgProfileService', 'ecgChiefService', 'ecgExpertService', 'ecgOperatorService',
-     'ecgProfile', 'ecgChief', 'ecgExpert', 'ecgOperator'])
+    ['ecgChiefService', 'ecgExpertService', 'ecgOperatorService',
+     'ecgChief', 'ecgExpert', 'ecgOperator'])
 .config(['$routeProvider', function ($routeProvider) {
     $routeProvider
     .when('/chief', {
@@ -64,10 +60,6 @@ angular.module('ecgEmployee',
     .when('/operator/:id', {
         template: operatorViewTemp,
         controller: 'OperatorViewController'
-    })
-    .when('/profile', {
-        template: profileTemp,
-        controller: 'ProfileController'
     });
 }]);
 
