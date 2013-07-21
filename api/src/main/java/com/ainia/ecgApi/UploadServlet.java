@@ -39,17 +39,18 @@ public class UploadServlet implements Servlet {
 			throws ServletException {
 		HttpServletRequest request =(HttpServletRequest)req;
 		HttpServletResponse response = (HttpServletResponse)res;
-		String accessUri = request.getRequestURI();
-		String typeStr =  accessUri.substring(UploadService.UPLOAD_URI.length() , accessUri.indexOf("/" , 
-											UploadService.UPLOAD_URI.length()));
 		try {
+			String accessUri = request.getRequestURI();
+			int index = accessUri.indexOf(UploadService.UPLOAD_URI) + UploadService.UPLOAD_URI.length();
+			String typeStr =  accessUri.substring(index , accessUri.indexOf("/" , index + 1));
+			
 			Type type = Type.valueOf(typeStr);
-			String relativePath = accessUri.substring((UploadService.UPLOAD_URI + typeStr).length());
+			String relativePath = accessUri.substring(accessUri.indexOf(typeStr) + typeStr.length() + 1);
 			UploadService uploadService =(UploadService) ServiceUtils.getService(UploadService.class);
 			response.getOutputStream().write(uploadService.load(type , relativePath));
 			response.getOutputStream().flush();
 		}
-		catch(IOException e) {
+		catch(Exception e) {
 			e.printStackTrace();
 			response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
 		}

@@ -54,9 +54,13 @@ public class RestTokenInterceptor implements HandlerInterceptor {
 		if (!enable) {
 			return true;
 		}
-	    String requestUri = request.getRequestURI();
+	    String uri = request.getRequestURI();
+	    String requestUri = uri.substring(uri.indexOf(request.getContextPath()) + request.getContextPath().length());
 	    if (log.isDebugEnabled()) {
 	    	log.debug(" interceptor the url " + requestUri);
+	    }
+	    if ("/".equals(requestUri)) {
+	    	return true;
 	    }
 	    boolean isExclude =false;
 	    for (String key : excludes) {
