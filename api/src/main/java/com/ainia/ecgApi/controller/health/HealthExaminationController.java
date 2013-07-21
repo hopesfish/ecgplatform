@@ -132,10 +132,12 @@ public class HealthExaminationController extends BaseController<HealthExaminatio
 		if (authUser == null) {
 			entity = new ResponseEntity(HttpStatus.FORBIDDEN);
 		}
-		if (!User.class.getSimpleName().equals(authUser.getType())) {
+		else if (!User.class.getSimpleName().equals(authUser.getType())) {
 			entity = new ResponseEntity(HttpStatus.FORBIDDEN);
 		}
-    	healthExaminationService.upload(file.getBytes());
+		else {
+			healthExaminationService.upload(file.getBytes());
+		}
     	return entity;
     }
 	

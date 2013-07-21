@@ -27,6 +27,7 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 	
 	public static final String HASH_ALGORITHM = "SHA-1";
 	public static final int HASH_INTERATIONS = 1024;
+
 	private static final int SALT_SIZE = 8;
 	private static final String TOKEN_SPLAT = "_";
 	
@@ -57,6 +58,7 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 	}
 	
 	public AuthUser loadUserByToken(String token) {
+		
 		//TODO 测试阶段 token
 		if (token.indexOf(TOKEN_SPLAT) == -1) {
 			throw new ServiceException("exception.token.invalid");
@@ -68,16 +70,20 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 		if (User.class.getSimpleName().equals(userType)) {
 			User user = userService.findByUsername(username);
 			if (user != null) {
-				return new AuthUserImpl(user.getId() , user.getUsername() , User.class.getSimpleName() , null);
+				authUser = new AuthUserImpl(user.getId() , user.getUsername() , User.class.getSimpleName() , null);
 			}
 		}
 		else if (Employee.class.getSimpleName().equals(userType)) {
 			Employee employee = employeeService.findByUsername(username);
-			return new AuthUserImpl(employee.getId() , employee.getUsername() , Employee.class.getSimpleName() , employee.getRolesArray());
+			authUser =  new AuthUserImpl(employee.getId() , employee.getUsername() , Employee.class.getSimpleName() , employee.getRolesArray());
 		}
 		if (authUser == null) {
 			throw new ServiceException("auth.error.unknown");
 		}
+		if (log.isDebugEnabled()) {
+			log.debug("load the user " + authUser + " by token " + token);
+		}
+		System.out.println("load the user " + authUser + " by token " + token);
 		return authUser;
 	}
 

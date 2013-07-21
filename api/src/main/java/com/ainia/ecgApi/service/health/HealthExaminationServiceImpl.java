@@ -92,13 +92,12 @@ public class HealthExaminationServiceImpl extends BaseServiceImpl<HealthExaminat
 		this.create(examination);
 		//判断是否自动回复
 		String config = systemConfigService.findByKey(SystemConfig.EXAMINATION_REPLY_AUTO);
-		boolean isAuto = config == null?false : true;
+		boolean isAuto = config == null?false : Boolean.valueOf(config);
 		
 		ExaminationTask task = new ExaminationTask();
 		task.setExaminationId(examination.getId());
 		task.setAuto(isAuto);
 		task.setUserId(authUser.getId());
-		
 		if (isAuto) {
 			Query ruleQuery = new Query();
 			ruleQuery.equals(HealthRule.USAGE.equals(HealthRule.Usage.filter));
@@ -112,6 +111,7 @@ public class HealthExaminationServiceImpl extends BaseServiceImpl<HealthExaminat
 						healthReplyService.create(reply);
 						task.setAuto(true);
 						taskService.complete(task);
+						break;
 					}
 				}
 			}

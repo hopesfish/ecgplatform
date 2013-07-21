@@ -51,8 +51,7 @@ public class UploadServlet implements Servlet {
 			response.getOutputStream().flush();
 		}
 		catch(Exception e) {
-			e.printStackTrace();
-			response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+			response.setStatus(HttpStatus.NOT_FOUND.value());
 		}
 	}
 

@@ -1,5 +1,6 @@
 package com.ainia.ecgApi.core.security;
 
+import java.util.Arrays;
 import java.util.List;
 /**
  * <p>default auth user</p>
@@ -51,4 +52,11 @@ public class AuthUserImpl implements AuthUser {
 		return new Long(1).equals(this.getId());
 	}
 
+	@Override
+	public String toString() {
+		return "AuthUserImpl [id=" + id + ", usernmame=" + usernmame
+				+ ", type=" + type + ", roles=" + Arrays.toString(roles) + "]";
+	}
+
+	
 }
