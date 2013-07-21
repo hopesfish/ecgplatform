@@ -54,6 +54,16 @@
 					<artifactId>jetty-maven-plugin</artifactId>
 					<version>${jetty.version}</version>
 					<configuration>
+			            <systemProperties>
+			              <systemProperty>
+			                <name>spring.profiles.active</name>
+			                <value>development</value>
+			              </systemProperty>       
+			              <systemProperty>
+			                 <name>log4j.debug.level</name>
+			                 <value>debug</value>
+			              </systemProperty>        
+			            </systemProperties>
 						<webAppConfig>
 							<contextPath>/</contextPath>
 							<defaultsDescriptor>

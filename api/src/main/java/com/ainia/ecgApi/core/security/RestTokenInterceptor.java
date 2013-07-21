@@ -59,7 +59,8 @@ public class RestTokenInterceptor implements HandlerInterceptor {
 	    if (log.isDebugEnabled()) {
 	    	log.debug(" interceptor the url " + requestUri);
 	    }
-	    if ("/".equals(requestUri)) {
+		//TODO 暂时将 lib , 固定屏蔽
+	    if ("/".equals(requestUri) || requestUri.startsWith("/lib")) {
 	    	return true;
 	    }
 	    boolean isExclude =false;
