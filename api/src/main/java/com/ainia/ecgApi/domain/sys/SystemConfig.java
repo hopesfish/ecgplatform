@@ -22,6 +22,10 @@ import com.ainia.ecgApi.core.bean.Domain;
  */
 @Entity
 public class SystemConfig implements Domain {
+	
+	public static final String KEY = "key";
+	
+	public static final String EXAMINATION_REPLY_AUTO = "examination.reply.isAuto";
 
 	private Long  id;
 	private Type type;

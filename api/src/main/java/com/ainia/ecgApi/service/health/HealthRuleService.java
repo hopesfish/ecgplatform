@@ -41,4 +41,6 @@ public interface HealthRuleService extends BaseService<HealthRule , Long> {
 	 * void
 	 */
 	public void deleteByGroup(Long groupId);
+	
+	
 }

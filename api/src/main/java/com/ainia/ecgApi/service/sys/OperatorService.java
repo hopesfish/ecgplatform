@@ -1,6 +1,9 @@
 package com.ainia.ecgApi.service.sys;
 
+import java.util.List;
+
 import com.ainia.ecgApi.core.crud.BaseService;
+import com.ainia.ecgApi.core.crud.Query;
 import com.ainia.ecgApi.domain.sys.Operator;
 
 /**
@@ -14,4 +17,10 @@ import com.ainia.ecgApi.domain.sys.Operator;
  */
 public interface OperatorService extends BaseService<Operator, Long> {
 
+	/**
+	 * <p>获得所有可以接受任务的</p>
+	 * @return
+	 * List<Operator>
+	 */
+	public List<Operator> findAllByWork(Query query);
 }

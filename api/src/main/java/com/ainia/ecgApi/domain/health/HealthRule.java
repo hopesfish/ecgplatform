@@ -24,10 +24,10 @@ import javax.persistence.Version;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
-import org.hibernate.annotations.Formula;
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.ainia.ecgApi.core.bean.Domain;
+import com.ainia.ecgApi.core.utils.PropertyUtil;
 import com.ainia.ecgApi.core.utils.ServiceUtils;
 import com.ainia.ecgApi.domain.sys.Employee;
 import com.ainia.ecgApi.domain.sys.User;
@@ -49,6 +49,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class HealthRule implements Domain {
 	
 	public static final String RULE_ID = "ruleId";
+	public static final String USAGE = "usage";
 	
 	public static final String USAGE_GROUP = "group";
 	public static final String USAGE_FILTER = "filter";
@@ -75,6 +76,7 @@ public class HealthRule implements Domain {
 	
 	
 	public enum Usage {
+		group,
 		filter ,
 		reply
 	}
@@ -98,6 +100,36 @@ public class HealthRule implements Domain {
 	public void onDelete() {
 		HealthRuleService healthRuleService = (HealthRuleService)ServiceUtils.getService(HealthRuleService.class);
 		healthRuleService.deleteByGroup(this.id);	
+	}
+	/**
+	 * <p>判断规则是否满足健康测试</p>
+	 * @param examination
+	 * @return
+	 * boolean
+	 */
+	@Transient
+	public boolean isMatch(HealthExamination examination) {
+		if (PropertyUtil.hasReadableProperty(examination,  this.code)) {
+			Float value = (Float)PropertyUtil.getProperty(examination, this.code);
+			if ((this.min == null || value > this.min) && (this.max == null || value < this.max)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	/**
+	 * <p>使用自动回复设置</p>
+	 * @param reply
+	 * void
+	 */
+	public void autoReply(HealthReply reply) {
+		List<HealthRuleReply> ruleReplys = this.getReplys();
+		if (ruleReplys != null && !ruleReplys.isEmpty()) {
+			HealthRuleReply ruleReply = ruleReplys.get(0);
+			reply.setResult(ruleReply.getResult());
+			reply.setReason(ruleReply.getTitle());
+			reply.setContent(ruleReply.getContent());
+		}
 	}
 	
 	@Id

@@ -7,8 +7,13 @@ import org.springframework.stereotype.Service;
 
 import com.ainia.ecgApi.core.crud.BaseDao;
 import com.ainia.ecgApi.core.crud.BaseServiceImpl;
+import com.ainia.ecgApi.core.crud.Condition;
+import com.ainia.ecgApi.core.crud.Query;
+import com.ainia.ecgApi.core.crud.Condition.Logic;
+import com.ainia.ecgApi.core.crud.Condition.Type;
 import com.ainia.ecgApi.dao.sys.OperatorDao;
-import com.ainia.ecgApi.domain.sys.Expert;
+import com.ainia.ecgApi.domain.sys.Employee;
+import com.ainia.ecgApi.domain.sys.Employee.Status;
 import com.ainia.ecgApi.domain.sys.Operator;
 
 /**
@@ -65,5 +70,10 @@ public class OperatorServiceImpl extends BaseServiceImpl<Operator, Long>
 	@Override
 	public List<Operator> patch(Iterable operators) {
 		return employeeService.patch(operators);
+	}
+	public List<Operator> findAllByWork(Query query) {
+		query.addCondition(new Condition(Condition.eq(Employee.STATUS ,  Status.ONLINE) ,
+						new Condition(Employee.STATUS ,  Type.eq , Status.ONLINE , Logic.or)));
+		return this.findAll(query);
 	} 
 }

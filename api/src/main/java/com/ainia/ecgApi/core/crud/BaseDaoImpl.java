@@ -76,6 +76,7 @@ public abstract class BaseDaoImpl<T extends Domain , ID extends Serializable> im
 		Root<T> root = criteria.from(query.getClazz());
 		
 	    Metamodel metamodel   = em.getMetamodel();
+	    
 	    EntityType entityType =  metamodel.entity(clazz);
 	    //对一对多关联使用 left join  减少生成的sql语句
 	    for (Iterator<Attribute> iter = entityType.getAttributes().iterator();iter.hasNext();) {
@@ -112,7 +113,7 @@ public abstract class BaseDaoImpl<T extends Domain , ID extends Serializable> im
 		int i =0;
 		for (Condition condition : query.getConds()) {
 			try {
-				if (condition.getValue() != null && !(condition.getValue() instanceof Collection)) {
+				if (!condition.isGroup() && condition.getValue() != null && !(condition.getValue() instanceof Collection)) {
 					Class targetClass = ReflectionUtils.findField(clazz , condition.getField()).getType();
 					Class sourceClass = condition.getValue().getClass();
 					if (targetClass != sourceClass && conversionService.canConvert(sourceClass, targetClass)) {

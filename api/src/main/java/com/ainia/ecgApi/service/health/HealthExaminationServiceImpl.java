@@ -1,8 +1,6 @@
 package com.ainia.ecgApi.service.health;
 
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -11,19 +9,22 @@ import org.springframework.stereotype.Service;
 
 import com.ainia.ecgApi.core.crud.BaseDao;
 import com.ainia.ecgApi.core.crud.BaseServiceImpl;
+import com.ainia.ecgApi.core.crud.Query;
 import com.ainia.ecgApi.core.exception.ServiceException;
 import com.ainia.ecgApi.core.security.AuthUser;
 import com.ainia.ecgApi.core.security.AuthenticateService;
 import com.ainia.ecgApi.dao.health.HealthExaminationDao;
 import com.ainia.ecgApi.domain.health.HealthExamination;
 import com.ainia.ecgApi.domain.health.HealthReply;
+import com.ainia.ecgApi.domain.health.HealthRule;
+import com.ainia.ecgApi.domain.sys.SystemConfig;
 import com.ainia.ecgApi.domain.sys.User;
 import com.ainia.ecgApi.domain.task.ExaminationTask;
 import com.ainia.ecgApi.service.common.UploadService;
 import com.ainia.ecgApi.service.common.UploadService.Type;
+import com.ainia.ecgApi.service.sys.SystemConfigService;
 import com.ainia.ecgApi.service.task.ExaminationTaskService;
 import com.ainia.ecgApi.service.task.TaskService;
-import com.ainia.ecgApi.utils.DataException;
 import com.ainia.ecgApi.utils.DataProcessor;
 import com.ainia.ecgApi.utils.ECGChart;
 
@@ -51,6 +52,10 @@ public class HealthExaminationServiceImpl extends BaseServiceImpl<HealthExaminat
     private AuthenticateService authenticateService;
     @Autowired
     private UploadService uploadService;
+    @Autowired
+    private SystemConfigService systemConfigService;
+    @Autowired
+    private HealthRuleService healthRuleService;
     
     private ExecutorService executorService = Executors.newFixedThreadPool(3);
     
@@ -74,9 +79,7 @@ public class HealthExaminationServiceImpl extends BaseServiceImpl<HealthExaminat
 		if (!User.class.getSimpleName().equals(authUser.getType())) {
 			throw new ServiceException("examination.error.upload.notAllowed");
 		}
-		//TODO 暂时固定
 		examination.setUserId(authUser.getId());
-	
 		examination.setUserName(authUser.getUsername());
 		examination.setUserType(authUser.getType());
 		examination.setTemp(37.5F);
@@ -87,11 +90,36 @@ public class HealthExaminationServiceImpl extends BaseServiceImpl<HealthExaminat
 		examination.setBloodOxygen(6);
 		
 		this.create(examination);
+		//判断是否自动回复
+		String config = systemConfigService.findByKey(SystemConfig.EXAMINATION_REPLY_AUTO);
+		boolean isAuto = config == null?false : true;
 		
 		ExaminationTask task = new ExaminationTask();
 		task.setExaminationId(examination.getId());
+		task.setAuto(isAuto);
 		task.setUserId(authUser.getId());
-		taskService.pending(task);
+		
+		if (isAuto) {
+			Query ruleQuery = new Query();
+			ruleQuery.equals(HealthRule.USAGE.equals(HealthRule.Usage.filter));
+			List<HealthRule> filters = healthRuleService.findAll(ruleQuery);
+			if (filters != null) {
+				for (HealthRule rule : filters) {
+					if (rule.isMatch(examination)) {
+						HealthReply reply = new HealthReply();
+						reply.setExaminationId(examination.getId());
+						rule.autoReply(reply);
+						healthReplyService.create(reply);
+						task.setAuto(true);
+						taskService.complete(task);
+					}
+				}
+			}
+		}
+		else {
+			taskService.pending(task);	
+		}
+		
 		
 		executorService.execute(new Runnable(){
 

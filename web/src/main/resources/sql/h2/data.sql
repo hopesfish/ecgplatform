@@ -164,5 +164,6 @@ values (12,'examinationTask' , 12 , 2 , '测试用户2' , 'pending',null,9,0,'20
 -- task end
 -- system_config start
 insert into system_config (id , type , key , value ) values (1 , 'basic' , 'upload.rootPath' , 'c:/upload/');
+insert into system_config (id , type , key , value ) values (2 , 'basic' , 'examination.reply.isAuto' , 'true');
 -- system_config end
 commit;

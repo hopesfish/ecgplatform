@@ -17,6 +17,7 @@ import com.ainia.ecgApi.domain.sys.Operator;
 import com.ainia.ecgApi.domain.task.Task;
 import com.ainia.ecgApi.domain.task.Task.Status;
 import com.ainia.ecgApi.service.sys.OperatorService;
+import com.ainia.ecgApi.service.sys.SystemConfigService;
 
 /**
  * <p>Task Service Impl</p>
@@ -61,7 +62,7 @@ public class TaskServiceImpl extends BaseServiceImpl<Task , Long> implements Tas
 	}
 
 	public Task pending(Task task) {
-		List<Operator> operators = operatorService.findAll(new Query());
+		List<Operator> operators = operatorService.findAllByWork(new Query());
 		Operator selectedOperator = null;
 		int selectedOperatorTask = -1;
 		for (Operator operator  : operators) {
