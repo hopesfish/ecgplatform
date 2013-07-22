@@ -88,9 +88,7 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 	}
 
 	public void setCurrentUser(AuthUser authUser) {
-		if (currentUser.get() == null) {
-			currentUser.set(authUser);
-		}
+		currentUser.set(authUser);
 	}
 
 	public AuthUser getCurrentUser() {
