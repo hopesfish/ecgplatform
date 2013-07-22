@@ -67,8 +67,7 @@ public class TaskServiceImpl extends BaseServiceImpl<Task , Long> implements Tas
 		int selectedOperatorTask = -1;
 		for (Operator operator  : operators) {
 			List<Task> tasks = this.findAllByOperator(operator.getId());
-			if ((selectedOperator == null || (tasks != null && tasks.size() < selectedOperatorTask)) 
-						&& tasks.size() < OPERATOR_MAX_TASK_COUNT) {
+			if (selectedOperator == null || (tasks != null && tasks.size() < selectedOperatorTask)) {
 				selectedOperator = operator;
 				selectedOperatorTask = tasks.size();
 			}
