@@ -123,7 +123,7 @@ public class HealthExaminationController extends BaseController<HealthExaminatio
      */
 	@RequestMapping(value = "upload" , method = RequestMethod.POST , produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-    public ResponseEntity upload( @RequestParam("file") MultipartFile file) throws IOException {
+    public ResponseEntity upload( @RequestParam("file") MultipartFile file , HealthExamination examination) throws IOException {
 		ResponseEntity entity = new ResponseEntity(HttpStatus.OK);
     	if (file.getBytes().length == 0) {
     		entity =  new ResponseEntity(HttpStatus.BAD_REQUEST);
@@ -136,7 +136,7 @@ public class HealthExaminationController extends BaseController<HealthExaminatio
 			entity = new ResponseEntity(HttpStatus.FORBIDDEN);
 		}
 		else {
-			healthExaminationService.upload(file.getBytes());
+			healthExaminationService.upload(examination , file.getBytes());
 		}
     	return entity;
     }

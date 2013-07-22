@@ -37,6 +37,7 @@ public class HealthExamination implements Domain {
 	private String testItem;
 	private String userType;
 	private Level  level;
+	private String apkId;
 	private Integer bloodPressureLow;
 	private Integer bloodPressureHigh;
 	private Integer heartRhythm;
@@ -318,16 +319,21 @@ public class HealthExamination implements Domain {
 		return userName;
 	}
 
-
 	public void setUserName(String userName) {
 		this.userName = userName;
 	}
-
 
 	public void setId(Long id) {
 		this.id = id;
 	}
 
+	public String getApkId() {
+		return apkId;
+	}
+
+	public void setApkId(String apkId) {
+		this.apkId = apkId;
+	}
 
 
 	@Override

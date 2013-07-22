@@ -69,8 +69,7 @@ public class HealthExaminationServiceImpl extends BaseServiceImpl<HealthExaminat
 		healthReplyService.create(reply);
 	}
 
-	public void upload(final byte[] uploadData) {
-		final HealthExamination examination = new HealthExamination();
+	public void upload(final HealthExamination examination , final byte[] uploadData) {
 
 		final AuthUser authUser = authenticateService.getCurrentUser();	
 		if (authUser == null) {
@@ -90,6 +89,7 @@ public class HealthExaminationServiceImpl extends BaseServiceImpl<HealthExaminat
 		examination.setBloodOxygen(6);
 		
 		this.create(examination);
+		
 		//判断是否自动回复
 		String config = systemConfigService.findByKey(SystemConfig.EXAMINATION_REPLY_AUTO);
 		boolean isAuto = config == null?false : Boolean.valueOf(config);
@@ -110,10 +110,9 @@ public class HealthExaminationServiceImpl extends BaseServiceImpl<HealthExaminat
 						rule.autoReply(reply);
 						healthReplyService.create(reply);
 						task.setAuto(true);
-						taskService.complete(task);
-						break;
 					}
 				}
+				taskService.complete(task);
 			}
 		}
 		else {

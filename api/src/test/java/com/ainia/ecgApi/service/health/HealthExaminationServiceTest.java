@@ -126,7 +126,7 @@ public class HealthExaminationServiceTest {
     	}
     	byte[] bytes = out.toByteArray();
     	((HealthExaminationServiceImpl)healthExaminationService).setAuthenticateService(authenticateService);
-    	healthExaminationService.upload(bytes);
+    	healthExaminationService.upload(new HealthExamination() , bytes);
     	Thread.sleep(5000);
     	input.close();
     	out.close();

@@ -112,6 +112,7 @@ create table health_examination (
     test_item varchar(30) not null,
     user_type varchar(30),
     level varchar(30),
+    apk_id varchar(30),
     blood_pressure_low int,
     blood_pressure_high int,
     heart_rhythm int,
