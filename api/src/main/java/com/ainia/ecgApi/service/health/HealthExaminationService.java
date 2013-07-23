@@ -31,5 +31,5 @@ public interface HealthExaminationService extends BaseService<HealthExamination 
 	 * @param uploadData
 	 * void
 	 */
-	public void upload(HealthExamination examination , byte[] uploadData);
+	public void upload(HealthExamination examination , byte[] uploadData , String md5);
 }

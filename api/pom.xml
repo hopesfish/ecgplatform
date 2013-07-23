@@ -28,13 +28,24 @@
     <junit.version>4.11</junit.version>
     <joda-time.version>2.2</joda-time.version>
     <dozer.version>5.4.0</dozer.version>
-                    
+    <log.level>WARN</log.level>
+    
+    <jdbc.driver.groupId>mysql</jdbc.driver.groupId>
+    <jdbc.driver.artifactId>mysql-connector-java</jdbc.driver.artifactId>
+    <jdbc.driver.version>5.1.21</jdbc.driver.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <jdk.version>1.6</jdk.version>
   </properties>
 
    <dependencies>
-       <!-- spring start -->
+    <!-- jdbc driver -->
+    <dependency>
+        <groupId>${jdbc.driver.groupId}</groupId>
+        <artifactId>${jdbc.driver.artifactId}</artifactId>
+        <version>${jdbc.driver.version}</version>
+        <scope>runtime</scope>
+    </dependency>
+    <!-- spring start -->
     <dependency>
         <groupId>org.springframework</groupId>
         <artifactId>spring-core</artifactId>
@@ -311,6 +322,12 @@
 
   
   <build>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+      </resource>
+    </resources>
     <finalName>ecgApi</finalName>
     <pluginManagement>
         <plugins>

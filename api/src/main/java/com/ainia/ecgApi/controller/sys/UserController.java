@@ -101,7 +101,43 @@ public class UserController extends BaseController<User , Long> {
 		query.getPage().setTotal(total);
 		query.getPage().setDatas(taskService.findAll(query));
 		return new ResponseEntity(query.getPage() ,HttpStatus.OK);
-	}    
+	}  
+	
+	/**
+	 * <p>删除用户相关任务</p>
+	 * @param idzvdzcx
+	 * @param query
+	 * @return
+	 * ResponseEntity<Page<Task>>
+	 */
+	@RequestMapping(value = "{id}/task" , method = RequestMethod.DELETE ,produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public ResponseEntity deleteAllTask(@PathVariable("id") Long id) {
+		User user = userService.get(id);
+		if (user == null) {
+			return new ResponseEntity(HttpStatus.NOT_FOUND);
+		}
+		taskService.deleteAllByUser(id);
+		return new ResponseEntity(HttpStatus.OK);
+	}  
+	
+	/**
+	 * <p>删除用户单个任务</p>
+	 * @param idzvdzcx
+	 * @param query
+	 * @return
+	 * ResponseEntity<Page<Task>>
+	 */
+	@RequestMapping(value = "{id}/task/{taskId}" , method = RequestMethod.DELETE ,produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public ResponseEntity deleteTask(@PathVariable("taskId") Long taskId) {
+		Task task = taskService.get(taskId);
+		if (task == null) {
+			return new ResponseEntity(HttpStatus.NOT_FOUND);
+		}
+		taskService.delete(taskId);
+		return new ResponseEntity(HttpStatus.OK);
+	}  
     
     /**
      * <p>将规则与用户解除</p>

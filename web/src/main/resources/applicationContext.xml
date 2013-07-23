@@ -130,8 +130,8 @@
 
         <!-- 初始化数据表结构 与默认数据-->
         <jdbc:initialize-database data-source="dataSource" ignore-failures="NONE">
-            <jdbc:script location="classpath:sql/h2/schema.sql" />
-            <jdbc:script location="classpath:sql/h2/data.sql" encoding="UTF-8"/>
+            <jdbc:script location="classpath:sql/mysql/schema.sql" />
+            <jdbc:script location="classpath:sql/mysql/data.sql" encoding="UTF-8"/>
         </jdbc:initialize-database>        
         <!-- 数据源配置,使用应用服务器的数据库连接池 -->
         <!--<jee:jndi-lookup id="dataSource" jndi-name="java:comp/env/jdbc/ExampleDB" />-->
@@ -151,8 +151,8 @@
 
         <!-- 初始化数据表结构 与默认数据-->
         <jdbc:initialize-database data-source="dataSource" ignore-failures="NONE">
-            <jdbc:script location="classpath:sql/h2/schema.sql" />
-            <jdbc:script location="classpath:sql/h2/data.sql" encoding="UTF-8"/>
+            <jdbc:script location="classpath:sql/mysql/schema.sql" />
+            <jdbc:script location="classpath:sql/mysql/data.sql" encoding="UTF-8"/>
         </jdbc:initialize-database>
     </beans>
     

@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -157,7 +158,7 @@ public class HealthRule implements Domain {
 	public void setCode(String code) {
 		this.code = code;
 	}
-	
+	@Column(name = "usage1")
 	public String getUsage() {
 		return usage;
 	}

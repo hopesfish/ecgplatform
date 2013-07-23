@@ -43,4 +43,11 @@ public interface AuthUser {
 	 * boolean
 	 */
 	public boolean isSuperAdmin();
+	
+	/**
+	 * <p>the user is chief</p>
+	 * @return
+	 * boolean
+	 */
+	public boolean isChief();
 }

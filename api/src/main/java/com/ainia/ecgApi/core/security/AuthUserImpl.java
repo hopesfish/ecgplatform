@@ -12,6 +12,8 @@ import java.util.List;
  * @version
  */
 public class AuthUserImpl implements AuthUser {
+	
+	public static final String ROLE_CHIEF = "chief";
 
 	private Long id;
 	private String username;
@@ -47,12 +49,25 @@ public class AuthUserImpl implements AuthUser {
 	public boolean isSuperAdmin() {
 		return new Long(1).equals(this.getId());
 	}
+	
+	public boolean isChief() {
+		if (this.roles != null) {
+			for (String role : roles) {
+				if (ROLE_CHIEF.equals(role)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 
 	@Override
 	public String toString() {
 		return "AuthUserImpl [id=" + id + ", username=" + username
 				+ ", type=" + type + ", roles=" + Arrays.toString(roles) + "]";
 	}
+
+
 
 	
 }

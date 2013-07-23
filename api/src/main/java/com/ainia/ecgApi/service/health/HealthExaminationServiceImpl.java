@@ -1,9 +1,11 @@
 package com.ainia.ecgApi.service.health;
 
+import java.math.BigInteger;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +15,7 @@ import com.ainia.ecgApi.core.crud.Query;
 import com.ainia.ecgApi.core.exception.ServiceException;
 import com.ainia.ecgApi.core.security.AuthUser;
 import com.ainia.ecgApi.core.security.AuthenticateService;
+import com.ainia.ecgApi.core.utils.DigestUtils;
 import com.ainia.ecgApi.dao.health.HealthExaminationDao;
 import com.ainia.ecgApi.domain.health.HealthExamination;
 import com.ainia.ecgApi.domain.health.HealthReply;
@@ -69,7 +72,7 @@ public class HealthExaminationServiceImpl extends BaseServiceImpl<HealthExaminat
 		healthReplyService.create(reply);
 	}
 
-	public void upload(final HealthExamination examination , final byte[] uploadData) {
+	public void upload(final HealthExamination examination , final byte[] uploadData , String md5) {
 
 		final AuthUser authUser = authenticateService.getCurrentUser();	
 		if (authUser == null) {
@@ -78,6 +81,17 @@ public class HealthExaminationServiceImpl extends BaseServiceImpl<HealthExaminat
 		if (!User.class.getSimpleName().equals(authUser.getType())) {
 			throw new ServiceException("examination.error.upload.notAllowed");
 		}
+		//校验MD5值
+		if (StringUtils.isNotBlank(md5)) {
+			BigInteger bigint = new BigInteger(1 , DigestUtils.md5(uploadData));
+			String md5Value = bigint.toString(16);
+			if (!md5Value.equals(md5)) {
+				if (log.isWarnEnabled()) {
+					log.warn(" the upload file md5 is not valid");
+				}
+			}
+		}
+		
 		examination.setUserId(authUser.getId());
 		examination.setUserName(authUser.getUsername());
 		examination.setUserType(authUser.getType());

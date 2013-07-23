@@ -1,5 +1,6 @@
 package com.ainia.ecgApi.domain.sys;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -45,7 +46,7 @@ public class SystemConfig implements Domain {
 	public void setType(Type type) {
 		this.type = type;
 	}
-
+	@Column(name = "key1")
 	public String getKey() {
 		return key;
 	}

@@ -100,4 +100,6 @@ public class UserServiceImpl extends BaseServiceImpl<User , Long> implements Use
 		this.userDao.save(user);
 		
 	} 
+	
+
 }

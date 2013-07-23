@@ -47,6 +47,8 @@ public class HealthExamination implements Domain {
 	private Integer pulserate;
 	private Boolean hasDataError;
 	private String heartData;
+	private Float bloodSugar; 
+	private String medicine;
 	private Double  latitude;
 	private Integer  altitude;
 	private Float temp;
@@ -104,6 +106,14 @@ public class HealthExamination implements Domain {
 	}
 	public void setHasDataError(Boolean hasDataError) {
 		this.hasDataError = hasDataError;
+	}
+
+	public String getMedicine() {
+		return medicine;
+	}
+
+	public void setMedicine(String medicine) {
+		this.medicine = medicine;
 	}
 
 	public void setLevel(Level level) {
@@ -314,6 +324,16 @@ public class HealthExamination implements Domain {
 	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
 	}
+
+	public Float getBloodSugar() {
+		return bloodSugar;
+	}
+
+
+	public void setBloodSugar(Float bloodSugar) {
+		this.bloodSugar = bloodSugar;
+	}
+
 
 	public String getUserName() {
 		return userName;

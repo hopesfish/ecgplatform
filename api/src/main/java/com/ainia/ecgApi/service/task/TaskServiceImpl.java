@@ -10,6 +10,8 @@ import com.ainia.ecgApi.core.crud.BaseDao;
 import com.ainia.ecgApi.core.crud.BaseServiceImpl;
 import com.ainia.ecgApi.core.crud.Query;
 import com.ainia.ecgApi.core.exception.ServiceException;
+import com.ainia.ecgApi.core.security.AuthUser;
+import com.ainia.ecgApi.core.security.AuthenticateService;
 import com.ainia.ecgApi.core.utils.PropertyUtil;
 import com.ainia.ecgApi.dao.task.TaskDao;
 import com.ainia.ecgApi.domain.sys.Expert;
@@ -17,7 +19,6 @@ import com.ainia.ecgApi.domain.sys.Operator;
 import com.ainia.ecgApi.domain.task.Task;
 import com.ainia.ecgApi.domain.task.Task.Status;
 import com.ainia.ecgApi.service.sys.OperatorService;
-import com.ainia.ecgApi.service.sys.SystemConfigService;
 
 /**
  * <p>Task Service Impl</p>
@@ -38,6 +39,8 @@ public class TaskServiceImpl extends BaseServiceImpl<Task , Long> implements Tas
     private TaskDao taskDao;
     @Autowired
     private OperatorService operatorService;
+    @Autowired
+    private AuthenticateService authenticateService;
     
     @Override
     public BaseDao<Task , Long> getBaseDao() {
@@ -125,6 +128,17 @@ public class TaskServiceImpl extends BaseServiceImpl<Task , Long> implements Tas
 		return this.findAll(query);
 	}
 
+    public void deleteAllByUser(Long userId) {
+    	AuthUser currentUser = authenticateService.getCurrentUser();
+    	if (!currentUser.isSuperAdmin() && !currentUser.isChief() && !currentUser.getId().equals(userId)) {
+    		throw new ServiceException("exception.method.notAllow");
+    	}
+    	taskDao.deleteAllByUserId(userId); 
+    }
     
 
+	public void setAuthenticateService(AuthenticateService authenticateService) {
+		this.authenticateService = authenticateService;
+	}
+    
 }

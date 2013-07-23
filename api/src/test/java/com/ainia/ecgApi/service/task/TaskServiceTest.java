@@ -1,18 +1,25 @@
 package com.ainia.ecgApi.service.task;
 
+import static org.mockito.Mockito.when;
+
 import java.util.List;
 
-import org.joda.time.DateTime;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
+
 import com.ainia.ecgApi.core.crud.Query;
+import com.ainia.ecgApi.core.security.AuthUserImpl;
+import com.ainia.ecgApi.core.security.AuthenticateService;
+import com.ainia.ecgApi.domain.sys.User;
 import com.ainia.ecgApi.domain.task.Task;
 import com.ainia.ecgApi.domain.task.Task.Status;
 
@@ -33,6 +40,8 @@ public class TaskServiceTest {
 
     @Autowired
     private TaskService taskService;
+    @Mock
+    private AuthenticateService authenticateService;
 
     private static Task task;
     
@@ -44,6 +53,7 @@ public class TaskServiceTest {
     
     @Before
     public void setUp() {
+    	MockitoAnnotations.initMocks(this);
         task = new Task();
         task.setStatus(Status.pending);
         task.setOperatorId(4L);
@@ -82,6 +92,21 @@ public class TaskServiceTest {
         Task _task = taskService.update(task);
         
         taskService.delete(_task);
+    }
+    
+    @Test
+    public void testDeleteAllByUserId() {
+    	when(authenticateService.getCurrentUser()).thenReturn(new AuthUserImpl(2L , "13700230001" , User.class.getSimpleName() , new String[]{}));
+    	((TaskServiceImpl)taskService).setAuthenticateService(authenticateService);
+    	Query query = new Query();
+    	query.eq(Task.USER_ID , 2L);
+    	long count = taskService.count(query);
+    	Assert.assertTrue(count > 0);
+    	
+    	taskService.deleteAllByUser(2L);
+    
+    	count = taskService.count(query);
+    	Assert.assertEquals(count , 0);
     }
     
     
