@@ -68,90 +68,91 @@ import org.jfree.data.xy.XYSeriesCollection;
  */
 public class ECGChart {
 	/**
-	 * 
-	 * @param data
-	 *            chart data
-	 * @param start
-	 *            start index
-	 * @param length
-	 *            data length
-	 * @param path
-	 *            output path
-	 * @throws IOException 
-	 */
-	public static byte[] createChart(float[] data, int start, int length , float tickUnit) throws IOException {
+	*
+	* @param data
+	* chart data
+	* @param start
+	* start index
+	* @param length
+	* data length
+	* @param path
+	* output path
+	* @throws IOException
+	*/
+	public static byte[] createChart(float[] data, int start, int length,
+		float tickUnit, int chartWidth, int chartHeight) throws IOException {
 		final XYDataset dataset = createDataset(data, start, length);
 		final JFreeChart chart = createChart(dataset, tickUnit);
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		try {
-			BufferedImage chartImage = chart.createBufferedImage(1600, 300, 1,
-					null);
+			BufferedImage chartImage = chart.createBufferedImage(chartWidth,
+			chartHeight, 1, null);
 			ImageIO.write(chartImage, "JPEG", out);
-			return out.toByteArray();
-		}
-		finally {
-			try {
-				out.close();
+		return out.toByteArray();
+		} finally {
+		try {
+			out.close();
 			} catch (IOException e) {
 			}
 		}
-	}
-
+		}
+	
 	private static XYDataset createDataset(float[] data, int start, int length) {
-		XYSeriesCollection xySeriesCollection = new XYSeriesCollection();
-		XYSeries series = new XYSeries("");
-		for (int i = start; i < start + length; i++) {
-			series.add(i, (double) data[i]);
-		}
-		xySeriesCollection.addSeries(series);
-		return xySeriesCollection;
+	XYSeriesCollection xySeriesCollection = new XYSeriesCollection();
+	XYSeries series = new XYSeries("");
+	for (int i = start; i < start + length; i++) {
+	series.add(i, (double) data[i]);
 	}
-
-	private static JFreeChart createChart(final XYDataset dataset, float tickUnit) {
-
-		// create the chart...
-		final JFreeChart chart = ChartFactory.createXYLineChart(
-				"", // chart title
-				"X", // x axis label
-				"Y", // y axis label
-				dataset, // data
-				PlotOrientation.VERTICAL, true, // include legend
-				true, // tooltips
-				false // urls
-				);
-
-		chart.setBackgroundPaint(Color.white);
-
-		final XYPlot plot = chart.getXYPlot();
-		plot.setBackgroundPaint(Color.lightGray);
-		plot.setDomainGridlinePaint(Color.white);
-		plot.setRangeGridlinePaint(Color.white);
-
-		final XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
-		renderer.setSeriesShapesVisible(0, false);
-		plot.setRenderer(renderer);
-
-		final NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
-//		rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
-		rangeAxis.setTickUnit(new NumberTickUnit(tickUnit));
-
-		return chart;
-
+	xySeriesCollection.addSeries(series);
+	return xySeriesCollection;
 	}
-
+	
+	private static JFreeChart createChart(final XYDataset dataset,
+	float tickUnit) {
+	
+	// create the chart...
+	final JFreeChart chart = ChartFactory.createXYLineChart("", // chart
+	// title
+	"X", // x axis label
+	"Y", // y axis label
+	dataset, // data
+	PlotOrientation.VERTICAL, true, // include legend
+	true, // tooltips
+	false // urls
+	);
+	
+	chart.setBackgroundPaint(Color.white);
+	
+	final XYPlot plot = chart.getXYPlot();
+	plot.setBackgroundPaint(Color.lightGray);
+	plot.setDomainGridlinePaint(Color.white);
+	plot.setRangeGridlinePaint(Color.white);
+	
+	final XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
+	renderer.setSeriesShapesVisible(0, false);
+	plot.setRenderer(renderer);
+	
+	final NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
+	// rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
+	rangeAxis.setTickUnit(new NumberTickUnit(tickUnit));
+	
+	return chart;
+	
+	}
+	
 	private static void writeFile(JFreeChart chart, String path) {
-		try {
-			OutputStream out;
-			out = new FileOutputStream(path);
-
-			BufferedImage chartImage = chart.createBufferedImage(1600, 300, 1,
-					null);
-			ImageIO.write(chartImage, "JPEG", out);
-
-			out.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	try {
+	OutputStream out;
+	out = new FileOutputStream(path);
+	
+	BufferedImage chartImage = chart.createBufferedImage(1600, 300, 1,
+	null);
+	ImageIO.write(chartImage, "JPEG", out);
+	
+	out.close();
+	} catch (Exception e) {
+	e.printStackTrace();
+	}
 	}
 
 }
