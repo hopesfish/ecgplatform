@@ -183,12 +183,10 @@ public class JPAUtils {
 			predicate = builder.lessThanOrEqualTo(exp , (Date)value);
 			break;
 		case in:
-			Iterable iterable = (Iterable)value;
-			In in = builder.in(exp);
-			for (Iterator iter = iterable.iterator(); iter.hasNext();) {
-				in.value(iter.next());
-			}
-			predicate = in;
+			predicate = builder.in(exp).value(value);
+			break;
+		case notIn:
+			predicate = builder.not(builder.in(exp).value(value));
 			break;
 		case exists:
 			predicate = builder.exists((Subquery)value);

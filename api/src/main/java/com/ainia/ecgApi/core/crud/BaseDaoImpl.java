@@ -116,17 +116,34 @@ public abstract class BaseDaoImpl<T extends Domain , ID extends Serializable> im
 				if (!condition.isGroup() && condition.getValue() != null && !(condition.getValue() instanceof Collection)) {
 					Class targetClass = ReflectionUtils.findField(clazz , condition.getField()).getType();
 					Class sourceClass = condition.getValue().getClass();
-					if (targetClass != sourceClass && conversionService.canConvert(sourceClass, targetClass)) {
-						condition.setValue(conversionService.convert(condition.getValue(), targetClass));
+					Type ctype = condition.getType();
+					if (Type.in.equals(ctype) || Type.notIn.equals(ctype)) {
+						Object value = condition.getValue();
+						if (value instanceof String) {
+							//TODO 固定分隔符为:
+							String[] values = StringUtils.split((String)value , ",");
+							List converterValue = new ArrayList(values.length);
+							for (String v : values ) {
+								if (targetClass != sourceClass && conversionService.canConvert(sourceClass, targetClass)) {
+									converterValue.add(conversionService.convert(v, targetClass));
+								}
+							}
+							condition.setValue(converterValue);
+						}
+					}
+					else {
+						if (targetClass != sourceClass && conversionService.canConvert(sourceClass, targetClass)) {
+							condition.setValue(conversionService.convert(condition.getValue(), targetClass));
+						}
 					}
 				}
-				predicates[i++] = JPAUtils.resolverCondition(root , builder, condition);
 			}catch(Throwable t){
 				t.printStackTrace();
 				if (log.isWarnEnabled()) {
 					log.warn("can not resolver field " + condition.getField() + " for " + query.getClazz());
 				}
 			}
+			predicates[i++] = JPAUtils.resolverCondition(root , builder, condition);
 		}		
 		criteria.where(builder.and(predicates));
 	}
