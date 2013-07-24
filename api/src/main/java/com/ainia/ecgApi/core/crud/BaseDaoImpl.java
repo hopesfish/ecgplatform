@@ -130,6 +130,9 @@ public abstract class BaseDaoImpl<T extends Domain , ID extends Serializable> im
 								if (targetClass != sourceClass && conversionService.canConvert(sourceClass, targetClass)) {
 									converterValue.add(conversionService.convert(v, targetClass));
 								}
+								else {
+									converterValue.add(v);
+								}
 							}
 							condition.setValue(converterValue);
 						}
