@@ -67,6 +67,11 @@ import org.jfree.data.xy.XYSeriesCollection;
  * 
  */
 public class ECGChart {
+	
+	public static byte[] createChart(float[] data, int start, int length,
+							float tickUnit) throws IOException {
+		return createChart(data, start, length , tickUnit , 1600 , 300);
+	}
 	/**
 	*
 	* @param data
