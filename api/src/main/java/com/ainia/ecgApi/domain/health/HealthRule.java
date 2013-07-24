@@ -158,7 +158,7 @@ public class HealthRule implements Domain {
 	public void setCode(String code) {
 		this.code = code;
 	}
-	@Column(name = "usage1")
+	@Column(name = "rule_usage")
 	public String getUsage() {
 		return usage;
 	}

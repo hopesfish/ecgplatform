@@ -112,6 +112,8 @@ public class HealthExaminationServiceImpl extends BaseServiceImpl<HealthExaminat
 		task.setExaminationId(examination.getId());
 		task.setAuto(isAuto);
 		task.setUserId(authUser.getId());
+		task.setUserName(authUser.getUsername());
+		task.setApkId(examination.getApkId());
 		if (isAuto) {
 			Query ruleQuery = new Query();
 			ruleQuery.equals(HealthRule.USAGE.equals(HealthRule.Usage.filter));

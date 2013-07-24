@@ -54,10 +54,5 @@ public class ExaminationTask extends Task {
 	public void setExamination(HealthExamination examination) {
 		this.examination = examination;
 	}
-	@Transient
-	public String getApkId() {
-		return this.examination.getApkId();
-	}
-	
 	
 }

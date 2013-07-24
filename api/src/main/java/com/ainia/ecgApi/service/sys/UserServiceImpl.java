@@ -99,7 +99,28 @@ public class UserServiceImpl extends BaseServiceImpl<User , Long> implements Use
 		user.setPassword(authenticateService.encodePassword(user.getUsername() , null));
 		this.userDao.save(user);
 		
+	}
+
+
+	@Override
+	public void delete(Long id) {
+		AuthUser currentUser = authenticateService.getCurrentUser();
+		if (currentUser.getId().equals(id)) {
+			throw new ServiceException("exception.user.cannotDeleteSelf");
+		}
+		super.delete(id);
+	}
+
+
+	@Override
+	public void delete(User domain) {
+		AuthUser currentUser = authenticateService.getCurrentUser();
+		if (currentUser.getId().equals(domain.getId())) {
+			throw new ServiceException("exception.user.cannotDeleteSelf");
+		}
+		super.delete(domain);
 	} 
+	
 	
 
 }

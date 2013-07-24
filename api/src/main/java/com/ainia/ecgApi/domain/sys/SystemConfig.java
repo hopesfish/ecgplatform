@@ -46,7 +46,7 @@ public class SystemConfig implements Domain {
 	public void setType(Type type) {
 		this.type = type;
 	}
-	@Column(name = "key1")
+	@Column(name = "config_key")
 	public String getKey() {
 		return key;
 	}

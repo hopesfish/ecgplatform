@@ -38,6 +38,7 @@ public class Task implements Domain {
 	
 	private Long id;
 	private Status status;
+	private String apkId;
 	private Long userId;
 	private String userName;
 	private Long expertId;
@@ -116,7 +117,12 @@ public class Task implements Domain {
 	public Date getCompletedDate() {
 		return completedDate;
 	}
-
+	public String getApkId() {
+		return apkId;
+	}
+	public void setApkId(String apkId) {
+		this.apkId = apkId;
+	}
 	public void setCompletedDate(Date completedDate) {
 		this.completedDate = completedDate;
 	}
