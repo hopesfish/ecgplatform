@@ -1,7 +1,12 @@
 package com.ainia.ecgApi.core.security;
 
 import java.util.Arrays;
-import java.util.List;
+
+import com.ainia.ecgApi.domain.sys.Chief;
+import com.ainia.ecgApi.domain.sys.Employee;
+import com.ainia.ecgApi.domain.sys.Expert;
+import com.ainia.ecgApi.domain.sys.Operator;
+import com.ainia.ecgApi.domain.sys.User;
 /**
  * <p>default auth user</p>
  * Copyright: Copyright (c) 2013
@@ -16,13 +21,14 @@ public class AuthUserImpl implements AuthUser {
 	public static final String ROLE_CHIEF = "chief";
 
 	private Long id;
+	private String name;
 	private String username;
 	private String type;
 	private String[] roles;
 	
 	
 	
-	public AuthUserImpl(Long id, String username, String type , String...roles) {
+	public AuthUserImpl(Long id, String name , String username, String type , String...roles) {
 		super();
 		this.id = id;
 		this.username = username;
@@ -47,7 +53,7 @@ public class AuthUserImpl implements AuthUser {
 	}
 
 	public boolean isSuperAdmin() {
-		return new Long(1).equals(this.getId());
+		return this.id != null && new Long(1).equals(this.getId());
 	}
 	
 	public boolean isChief() {
@@ -67,7 +73,24 @@ public class AuthUserImpl implements AuthUser {
 				+ ", type=" + type + ", roles=" + Arrays.toString(roles) + "]";
 	}
 
+	public boolean isUser() {
+		return User.class.getSimpleName().equals(type);
+	}
 
+	public boolean isEmployee() {
+		return Employee.class.getSimpleName().equals(type) ||
+				Chief.class.getSimpleName().equals(type) ||
+				Operator.class.getSimpleName().equals(type) ||
+				Expert.class.getSimpleName().equals(type);
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
 
 	
 }

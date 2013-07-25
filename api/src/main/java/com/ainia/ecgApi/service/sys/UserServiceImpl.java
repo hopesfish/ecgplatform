@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.ainia.ecgApi.core.crud.BaseDao;
 import com.ainia.ecgApi.core.crud.BaseServiceImpl;
+import com.ainia.ecgApi.core.exception.PermissionException;
 import com.ainia.ecgApi.core.exception.ServiceException;
 import com.ainia.ecgApi.core.security.AuthUser;
 import com.ainia.ecgApi.core.security.AuthenticateService;
@@ -46,9 +47,20 @@ public class UserServiceImpl extends BaseServiceImpl<User , Long> implements Use
 		}
 		return super.create(user);
 	}
+	
+	private boolean hasPermission(User user) {
+		AuthUser currentUser = authenticateService.getCurrentUser();
+		if (currentUser == null || (!currentUser.isSuperAdmin() && !user.getId().equals(currentUser.getId()))) {
+			return false;
+		}
+		return true;
+	}
 
 	@Override
 	public User update(User user) {
+		if (!hasPermission(user)) {
+			throw new PermissionException("exception.user.cannotChange");
+		}
 		//not allow change the password
 		User old =  userDao.findOne(user.getId());
 		List<String> excludes = new ArrayList<String>(1);
@@ -59,6 +71,9 @@ public class UserServiceImpl extends BaseServiceImpl<User , Long> implements Use
 
 	@Override
 	public User patch(User user) {
+		if (!hasPermission(user)) {
+			throw new PermissionException("exception.user.cannotChange");
+		}
 		//not allow change the password
 		User old = userDao.findOne(user.getId());
 		user.setPassword(old.getPassword());
@@ -72,12 +87,11 @@ public class UserServiceImpl extends BaseServiceImpl<User , Long> implements Use
 	public void changePassword(Long id, String oldPassword,
 			String newPassword) {
 		User user = this.get(id);
-		AuthUser currentUser = authenticateService.getCurrentUser();
 		if (user == null) {
 			throw new ServiceException("exception.notFound");
 		}
-		if (!currentUser.isSuperAdmin() && !user.getUsername().equals(currentUser.getUsername())) {
-			throw new ServiceException("exception.password.cannotChange");
+		if (!hasPermission(user)) {
+			throw new PermissionException("exception.password.cannotChange");
 		}
 		
 		if (!authenticateService.checkPassword(user.getPassword() , oldPassword , null)) {
@@ -89,11 +103,10 @@ public class UserServiceImpl extends BaseServiceImpl<User , Long> implements Use
 	
 	public void resetPassword(Long id) {
 		User user = this.get(id);
-		AuthUser currentUser = authenticateService.getCurrentUser();
 		if (user == null) {
 			throw new ServiceException("exception.notFound");
 		}
-		if (!currentUser.isSuperAdmin() && !user.getUsername().equals(currentUser.getUsername())) {
+		if (!hasPermission(user)) {
 			throw new ServiceException("exception.password.cannotChange");
 		}
 		user.setPassword(authenticateService.encodePassword(user.getUsername() , null));
@@ -104,21 +117,28 @@ public class UserServiceImpl extends BaseServiceImpl<User , Long> implements Use
 
 	@Override
 	public void delete(Long id) {
+		User user = this.get(id);
 		AuthUser currentUser = authenticateService.getCurrentUser();
 		if (currentUser.getId().equals(id)) {
 			throw new ServiceException("exception.user.cannotDeleteSelf");
+		}
+		if (!hasPermission(user)) {
+			throw new ServiceException("exception.user.cannotDelete");
 		}
 		super.delete(id);
 	}
 
 
 	@Override
-	public void delete(User domain) {
+	public void delete(User user) {
 		AuthUser currentUser = authenticateService.getCurrentUser();
-		if (currentUser.getId().equals(domain.getId())) {
+		if (currentUser.getId().equals(user.getId())) {
 			throw new ServiceException("exception.user.cannotDeleteSelf");
 		}
-		super.delete(domain);
+		if (!hasPermission(user)) {
+			throw new ServiceException("exception.user.cannotDelete");
+		}
+		super.delete(user);
 	} 
 	
 	

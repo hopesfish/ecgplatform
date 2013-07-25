@@ -96,12 +96,7 @@ public class HealthExaminationServiceImpl extends BaseServiceImpl<HealthExaminat
 		examination.setUserId(authUser.getId());
 		examination.setUserName(authUser.getUsername());
 		examination.setUserType(authUser.getType());
-		examination.setTemp(37.5F);
-		examination.setBodyTemp(37.5F);
 		examination.setTestItem("ipad");
-		examination.setHeartRhythm(1);
-		examination.setBreath(50);
-		examination.setBloodOxygen(6);
 		
 		this.create(examination);
 		
@@ -113,7 +108,7 @@ public class HealthExaminationServiceImpl extends BaseServiceImpl<HealthExaminat
 		task.setExaminationId(examination.getId());
 		task.setAuto(isAuto);
 		task.setUserId(authUser.getId());
-		task.setUserName(authUser.getUsername());
+		task.setUserName(authUser.getName());
 		task.setApkId(examination.getApkId());
 		if (isAuto) {
 			Query ruleQuery = new Query();
@@ -182,7 +177,6 @@ public class HealthExaminationServiceImpl extends BaseServiceImpl<HealthExaminat
 					
 					HealthInfo hi = processor.getHealthInfo();
 					
-					examination.setBodyTemp(hi.temperature);
 					examination.setHeartRhythm(hi.heartrate);
 					examination.setBloodPressureLow(hi.dbp);
 					examination.setBloodPressureHigh(hi.sbp);

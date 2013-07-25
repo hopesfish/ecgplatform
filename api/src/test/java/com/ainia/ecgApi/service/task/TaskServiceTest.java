@@ -96,7 +96,7 @@ public class TaskServiceTest {
     
     @Test
     public void testDeleteAllByUserId() {
-    	when(authenticateService.getCurrentUser()).thenReturn(new AuthUserImpl(2L , "13700230001" , User.class.getSimpleName() , new String[]{}));
+    	when(authenticateService.getCurrentUser()).thenReturn(new AuthUserImpl(2L ,"test", "13700230001" , User.class.getSimpleName() , new String[]{}));
     	((TaskServiceImpl)taskService).setAuthenticateService(authenticateService);
     	Query query = new Query();
     	query.eq(Task.USER_ID , 2L);

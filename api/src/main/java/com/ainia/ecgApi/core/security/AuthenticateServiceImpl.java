@@ -72,12 +72,12 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 		if (User.class.getSimpleName().equals(userType)) {
 			User user = userService.findByUsername(username);
 			if (user != null) {
-				authUser = new AuthUserImpl(user.getId() , user.getUsername() , User.class.getSimpleName() , null);
+				authUser = new AuthUserImpl(user.getId() ,user.getName() , user.getUsername() , User.class.getSimpleName());
 			}
 		}
 		else if (Employee.class.getSimpleName().equals(userType)) {
 			Employee employee = employeeService.findByUsername(username);
-			authUser =  new AuthUserImpl(employee.getId() , employee.getUsername() , Employee.class.getSimpleName() , employee.getRolesArray());
+			authUser =  new AuthUserImpl(employee.getId() , employee.getName() , employee.getUsername() , Employee.class.getSimpleName() , employee.getRolesArray());
 		}
 		if (authUser == null) {
 			throw new ServiceException("auth.error.unknown");
@@ -85,7 +85,6 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 		if (log.isDebugEnabled()) {
 			log.debug("load the user " + authUser + " by token " + token);
 		}
-		System.out.println("load the user " + authUser + " by token " + token);
 		return authUser;
 	}
 

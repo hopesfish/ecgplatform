@@ -38,7 +38,7 @@ define(function(require, exports) {
 
         it("the hacker should be created by user/apk.", function(done) {
             hacker = {
-                mobile: 13 + (new Date()).getTime().toString().substring(0, 9),
+                mobile: 13 + (new Date()).getTime().toString().substring(0, 8) + "1",
                 name: '黑客',
                 password: 'passw0rd'
             };

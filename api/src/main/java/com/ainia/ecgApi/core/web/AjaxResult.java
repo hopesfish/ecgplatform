@@ -19,6 +19,7 @@ public class AjaxResult implements Serializable {
 
 	public static final String AUTH_HEADER = "Authorization";
 	public static final String AUTH_TOKEN  = "token";
+	public static final String AUTH_ID = "userId";
 	
 	private static final long serialVersionUID = 1L;
 	

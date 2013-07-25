@@ -19,6 +19,8 @@ import com.ainia.ecgApi.core.crud.BaseService;
 import com.ainia.ecgApi.core.crud.Page;
 import com.ainia.ecgApi.core.crud.Query;
 import com.ainia.ecgApi.core.crud.Query.OrderType;
+import com.ainia.ecgApi.core.security.AuthUser;
+import com.ainia.ecgApi.core.security.AuthenticateService;
 import com.ainia.ecgApi.domain.health.HealthRule;
 import com.ainia.ecgApi.domain.sys.User;
 import com.ainia.ecgApi.domain.task.Task;
@@ -45,6 +47,8 @@ public class UserController extends BaseController<User , Long> {
     private HealthRuleService healthRuleService;
     @Autowired
     private TaskService taskService;
+    @Autowired
+    private AuthenticateService authenticateService;
     
     @Override
     public BaseService<User , Long> getBaseService() {
@@ -95,6 +99,10 @@ public class UserController extends BaseController<User , Long> {
 	@RequestMapping(value = "{id}/task" , method = RequestMethod.GET ,produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public ResponseEntity<Page<Task>> findTask(@PathVariable("id") Long id , Query<Task> query) {
+		AuthUser currentUser = authenticateService.getCurrentUser();
+		if (currentUser!= null && currentUser.isUser() && !currentUser.getId().equals(id)) {
+			return new ResponseEntity(HttpStatus.FORBIDDEN);
+		}
 		query.eq(Task.USER_ID  , id);
 		query.addOrder(Task.CREATED_DATE , OrderType.desc);
 		long total = taskService.count(query);
