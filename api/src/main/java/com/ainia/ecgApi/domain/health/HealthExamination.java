@@ -30,6 +30,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  */
 @Entity
 public class HealthExamination implements Domain {
+	
+	public static final String USER_ID = "userId";
 
 	private Long id;
 	private Long userId;

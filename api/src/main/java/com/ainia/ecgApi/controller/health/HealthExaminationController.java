@@ -115,33 +115,6 @@ public class HealthExaminationController extends BaseController<HealthExaminatio
     	return new ResponseEntity(healthReplyService.findAll(query) , HttpStatus.OK);
     }
 	
-    /**
-     * <p>测试数据上传接口</p>
-     * @param file
-     * @return
-     * ResponseEntity
-     * @throws IOException 
-     */
-	@RequestMapping(value = "upload" , method = RequestMethod.POST , produces = MediaType.APPLICATION_JSON_VALUE)
-	@ResponseBody
-    public ResponseEntity upload( @RequestParam("file") MultipartFile file , HealthExamination examination ,
-    								@RequestParam("md5") String md5) throws IOException {
-		ResponseEntity entity = new ResponseEntity(HttpStatus.OK);
-    	if (file.getBytes().length == 0) {
-    		entity =  new ResponseEntity(HttpStatus.BAD_REQUEST);
-    	}
-		AuthUser authUser = authenticateService.getCurrentUser();	
-		if (authUser == null) {
-			entity = new ResponseEntity(HttpStatus.FORBIDDEN);
-		}
-		else if (!User.class.getSimpleName().equals(authUser.getType())) {
-			entity = new ResponseEntity(HttpStatus.FORBIDDEN);
-		}
-		else {
-			healthExaminationService.upload(examination , file.getBytes() , md5);
-		}
-    	return entity;
-    }
 	
 	/**
 	 * <p>获取心电图1</p>

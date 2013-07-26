@@ -31,6 +31,7 @@ public class AuthUserImpl implements AuthUser {
 	public AuthUserImpl(Long id, String name , String username, String type , String...roles) {
 		super();
 		this.id = id;
+		this.name = name;
 		this.username = username;
 		this.type = type;
 		this.roles = roles;
