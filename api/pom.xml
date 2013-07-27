@@ -317,6 +317,13 @@
       <version>2.5.2</version>
     </dependency>
     <!-- urlrewrite end -->
+    <!-- rest doc start -->
+    <dependency>
+        <groupId>com.mangofactory</groupId>
+        <artifactId>swagger-springmvc</artifactId>
+        <version>0.6.0-SNAPSHOT</version>
+    </dependency>
+    <!-- rest doc end -->
  </dependencies>
 
 
@@ -357,6 +364,13 @@
                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                         </manifest>
                     </archive>
+                    <excludes>  
+                        <exclude>**/*.properties</exclude>  
+                        <exclude>**/*.xml</exclude>  
+                        <exclude>**/*.sql</exclude> 
+                        <exclude>sql</exclude>
+                        <exclude>mapping</exclude> 
+                    </excludes>  
                 </configuration>
             </plugin>
             <plugin>

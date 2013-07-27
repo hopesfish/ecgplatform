@@ -5,13 +5,18 @@
 	xmlns:mvc="http://www.springframework.org/schema/mvc"
 	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
-		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd"
+		 default-lazy-init="false">
 
+    <!--context:property-placeholder location="classpath:swagger.properties" /-->
+	
 	<!-- 自动扫描且只扫描@Controller -->
-	<context:component-scan base-package="com.ainia.ecgApi" use-default-filters="false">
+	<context:component-scan base-package="com.ainia" use-default-filters="false">
 		<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
 		<context:include-filter type="annotation" expression="org.springframework.web.bind.annotation.ControllerAdvice"/>
 	</context:component-scan>
+   
+
 	
 	<mvc:annotation-driven conversion-service="conversionService">
 		<mvc:message-converters register-defaults="true">
@@ -24,8 +29,13 @@
   		</mvc:argument-resolvers>
 	</mvc:annotation-driven>
 		
+	 <context:annotation-config />	
+		
     <mvc:default-servlet-handler/>
 
+    <!--  bean id="documentationConfig" class="com.ainia.doc.CustomDocumentationConfig"/>
+    <bean id="extensibilityModule" class="com.ainia.doc.ExampleExtensibilityModule" /-->
+    
     <bean id="conversionService"
           class="org.springframework.context.support.ConversionServiceFactoryBean">
         <property name="converters">
@@ -56,9 +66,10 @@
 	           <value>/api/auth</value>  
 	           <value>/api/user/auth</value>
 	           <value>/api/user:POST</value>  
+	           <value>/api-docs</value>
 	        </list>  
 	      </property> 
-	      <property name="enable" value="true"></property> 
+	      <property name="enable" value="false"></property> 
 	    </bean>  
 	  </mvc:interceptor>  
 	</mvc:interceptors>  

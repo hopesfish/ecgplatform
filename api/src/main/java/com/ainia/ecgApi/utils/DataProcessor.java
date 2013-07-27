@@ -23,6 +23,7 @@ public class DataProcessor {
 	private float[] daolian_avf;
 	private float[] daolian_v;
 	private HealthInfo healthInfo;
+	private float maxDaolian = 0.0f;
 
 	// Map<Integer, DataRecord> _records = new HashMap<Integer, DataRecord>();
 	List<DataRecord> _records = new ArrayList<DataRecord>();
@@ -71,15 +72,15 @@ public class DataProcessor {
 						i = createHealthInfo(data, i);
 					}
 				} else {
-					// throw new DataException("帧长度不对!");
-					// hack for frame length error!!!
+//					throw new DataException("帧长度不对!");
+					//hack for frame length error!!!
 					i++;
 				}
 			}
 		} catch (ArrayIndexOutOfBoundsException e) {
-			// throw e;
-
-			// hack for data length error!!!
+//			throw e;
+			
+			//hack for data length error!!!
 			DataRecord dr = _records.get(_records.size() - 1);
 			if (dr.ecg1 == null || dr.ecg2 == null || dr.ecg3 == null) {
 				_records.remove(dr);
@@ -152,6 +153,13 @@ public class DataProcessor {
 					daolian_avl[length] = ecg1 - ecg2 / 2;
 					daolian_avf[length] = ecg2 - ecg1 / 2;
 					daolian_v[length] = ecg3;
+					
+					float max_i_ii = Math.max(Math.abs(ecg1), Math.abs(ecg2));
+					float max = Math.max(Math.abs(max_i_ii), Math.abs(ecg1+ecg2));
+					if (max > maxDaolian) {
+						maxDaolian = max;
+					}
+					
 					length++;
 				}
 			}
@@ -199,20 +207,20 @@ public class DataProcessor {
 		return start + 5 + sectionLen;
 	}
 
-	private int createHealthInfo(byte[] data, int start) {
+	private int createHealthInfo(byte[] data, int start) {		
 		HealthInfo hi = new HealthInfo();
 		this.healthInfo = hi;
-
+		
 		int i = start + 5;
-		hi.temperature = data[i] + data[i + 1] / 100f;
-		hi.pulserate = data[i + 2];
-		hi.oxygen = data[i + 3];
+		hi.temperature = data[i] + data[i+1]/100f;
+		hi.pulserate = data[i+2];
+		hi.oxygen = data[i+3];
 		hi.oxygenChart = new byte[24];
-		copyBytes(hi.oxygenChart, data, i + 4, 24);
-		hi.heartrate = data[i + 28];
-		hi.sbp = data[i + 29];
-		hi.dbp = data[i + 30];
-		hi.ptt = data[i + 31];
+		copyBytes(hi.oxygenChart, data, i+4, 24);
+		hi.heartrate = data[i+28];
+		hi.sbp = data[i+29];
+		hi.dbp = data[i+30];
+		hi.ptt = data[i+31];
 		
 		return start + SECTION_LENGTH;
 	}
@@ -271,9 +279,13 @@ public class DataProcessor {
 	public float[] getDaolian_v() {
 		return daolian_v;
 	}
-
+	
 	public HealthInfo getHealthInfo() {
 		return this.healthInfo;
+	}
+	
+	public float getMaxDaolian() {
+		return this.maxDaolian;
 	}
 
 }

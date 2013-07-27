@@ -64,8 +64,12 @@ public abstract class BaseController<T extends Domain , ID extends Serializable>
 	@RequestMapping(value = "/{id}" , method = RequestMethod.GET , 
 									  produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public T get(@PathVariable("id") ID id) {
-		return this.getBaseService().get(id);
+	public ResponseEntity get(@PathVariable("id") ID id) {
+		T t = this.getBaseService().get(id);
+		if (t == null) {
+			return new ResponseEntity(HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity(t , HttpStatus.OK);
 	}
 	
 	/**

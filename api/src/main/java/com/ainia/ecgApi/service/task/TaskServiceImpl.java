@@ -16,8 +16,10 @@ import com.ainia.ecgApi.core.utils.PropertyUtil;
 import com.ainia.ecgApi.dao.task.TaskDao;
 import com.ainia.ecgApi.domain.sys.Expert;
 import com.ainia.ecgApi.domain.sys.Operator;
+import com.ainia.ecgApi.domain.task.ExaminationTask;
 import com.ainia.ecgApi.domain.task.Task;
 import com.ainia.ecgApi.domain.task.Task.Status;
+import com.ainia.ecgApi.service.health.HealthExaminationService;
 import com.ainia.ecgApi.service.sys.OperatorService;
 
 /**
@@ -41,6 +43,8 @@ public class TaskServiceImpl extends BaseServiceImpl<Task , Long> implements Tas
     private OperatorService operatorService;
     @Autowired
     private AuthenticateService authenticateService;
+    @Autowired
+    private HealthExaminationService healthExaminationService;
     
     @Override
     public BaseDao<Task , Long> getBaseDao() {
@@ -136,6 +140,23 @@ public class TaskServiceImpl extends BaseServiceImpl<Task , Long> implements Tas
     	taskDao.deleteAllByUserId(userId); 
     }
     
+    
+
+	@Override
+	public void delete(Long id) {
+		// TODO delete the examination by application event
+		super.delete(this.get(id));
+	}
+
+	@Override
+	public void delete(Task task) {
+		// TODO delete the examination by application event
+		if (task instanceof ExaminationTask) {
+			Long examinationId = ((ExaminationTask)task).getExaminationId();
+			healthExaminationService.delete(examinationId);
+		}
+		super.delete(task);
+	}
 
 	public void setAuthenticateService(AuthenticateService authenticateService) {
 		this.authenticateService = authenticateService;

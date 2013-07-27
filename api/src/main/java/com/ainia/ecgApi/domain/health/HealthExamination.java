@@ -32,6 +32,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class HealthExamination implements Domain {
 	
 	public static final String USER_ID = "userId";
+	public static final String CREATED_DATE = "createdDate";
 
 	private Long id;
 	private Long userId;

@@ -8,6 +8,7 @@ import java.util.Set;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.criterion.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -217,8 +218,11 @@ public class UserController extends BaseController<User , Long> {
     		return new ResponseEntity(HttpStatus.NOT_FOUND);
     	}
     	query.eq(HealthExamination.USER_ID , id);
-    	List<HealthExamination> examinations = healthExaminationService.findAll(query);
-    	return new ResponseEntity(examinations , HttpStatus.OK);
+    	query.addOrder(HealthExamination.CREATED_DATE , OrderType.desc);
+    	long total = healthExaminationService.count(query);
+		query.getPage().setTotal(total);
+		query.getPage().setDatas(healthExaminationService.findAll(query));
+    	return new ResponseEntity(query.getPage() , HttpStatus.OK);
     }
 	
     /**

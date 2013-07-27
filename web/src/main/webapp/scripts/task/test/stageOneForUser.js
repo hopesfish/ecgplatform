@@ -221,7 +221,7 @@ define(function(require, exports) {
         it("the user's examination should be retrieved with condition ge", function(done) {
             expect(userId).not.to.be(undefined);
             $.ajax({
-                url: PATH + '/api/user/' + userId + '/examination?ge=' + fromDate,
+                url: PATH + '/api/user/' + userId + '/examination?createdDate:geth=' + fromDate,
                 type: "GET",                
                 headers: {Authorization: token}
             }).then(function(res) {
@@ -236,7 +236,7 @@ define(function(require, exports) {
         it("the user's examination should not be retrieved with condition gt", function(done) {
             expect(userId).not.to.be(undefined);
             $.ajax({
-                url: PATH + '/api/user/' + userId + '/examination?gt=' + fromDate,
+                url: PATH + '/api/user/' + userId + '/examination?createdDate:gth=' + fromDate,
                 type: "GET",                
                 headers: {Authorization: token}
             }).then(function(res) {

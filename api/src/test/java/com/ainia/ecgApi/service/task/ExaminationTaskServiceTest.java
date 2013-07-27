@@ -2,7 +2,6 @@ package com.ainia.ecgApi.service.task;
 
 import java.util.List;
 
-import org.joda.time.DateTime;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,9 +11,11 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
+
 import com.ainia.ecgApi.core.crud.Query;
 import com.ainia.ecgApi.domain.task.ExaminationTask;
 import com.ainia.ecgApi.domain.task.Task.Status;
+import com.ainia.ecgApi.service.health.HealthExaminationService;
 
 /**
  * <p>ExaminationTask Service test</p>
@@ -33,8 +34,13 @@ public class ExaminationTaskServiceTest {
 
     @Autowired
     private ExaminationTaskService examinationTaskService;
-
+    @Autowired
+    private HealthExaminationService healthExaminationService;
+    @Autowired
+    private TaskService taskService;
+    
     private static ExaminationTask examinationTask;
+    
     
     public void setExaminationTaskService(ExaminationTaskService examinationTaskService) {
         this.examinationTaskService = examinationTaskService;
@@ -84,6 +90,5 @@ public class ExaminationTaskServiceTest {
         
         examinationTaskService.delete(_examinationTask);
     }
-    
     
 }
