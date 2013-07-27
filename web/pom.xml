@@ -219,6 +219,7 @@
 					    <webResources>
 						    <resource>
 						        <directory>src/main/resources</directory>
+						        <filtering>true</filtering>  
 						        <targetPath>WEB-INF/classes</targetPath>
 						    </resource>
 					    </webResources>

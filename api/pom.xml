@@ -318,11 +318,11 @@
     </dependency>
     <!-- urlrewrite end -->
     <!-- rest doc start -->
-    <dependency>
+    <!--dependency>
         <groupId>com.mangofactory</groupId>
         <artifactId>swagger-springmvc</artifactId>
         <version>0.6.0-SNAPSHOT</version>
-    </dependency>
+    </dependency-->
     <!-- rest doc end -->
  </dependencies>
 
