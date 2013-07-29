@@ -177,7 +177,7 @@ insert into task (id , type ,examination_id , user_id , apk_id ,user_name , stat
 values (14,'examinationTask' , 14 , 5 , '14' , '测试用户5' , 'pending',null,9,0,'2013-07-12 01:00:00',null,1);
 -- task end
 -- system_config start
-insert into system_config (id , type , config_key , value ) values (1 , 'basic' , 'upload.rootPath' , '/home/ainia/upload/');
+insert into system_config (id , type , config_key , value ) values (1 , 'basic' , 'upload.rootPath' , 'c:/upload/');
 insert into system_config (id , type , config_key , value ) values (2 , 'basic' , 'examination.reply.isAuto' , 'false');
 -- system_config end
 

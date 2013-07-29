@@ -6,7 +6,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 
+import org.joda.time.DateTime;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,7 +29,6 @@ import com.ainia.ecgApi.core.security.AuthenticateService;
 import com.ainia.ecgApi.domain.health.HealthExamination;
 import com.ainia.ecgApi.domain.health.HealthRule.Level;
 import com.ainia.ecgApi.domain.sys.User;
-import com.ainia.ecgApi.service.health.HealthExaminationService;
 import com.ainia.ecgApi.utils.DataException;
 
 /**
@@ -141,5 +142,12 @@ public class HealthExaminationServiceTest {
         HealthExamination _healthExamination = healthExaminationService.update(healthExamination);
         
         healthExaminationService.delete(_healthExamination);
+    }
+    
+    public void testStatisticsByUserAndDay(){
+    	DateTime now = new DateTime(2013 , 7 , 1 , 0 , 0 ,0);
+    	List<Map> results =  healthExaminationService.statisticsByUserAndDay(1L , now.toDate() , now.plusDays(1).toDate());
+    
+    	Assert.assertTrue(results.size() > 0);
     }
 }

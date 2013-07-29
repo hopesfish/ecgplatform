@@ -33,12 +33,20 @@ public class HealthExamination implements Domain {
 	
 	public static final String USER_ID = "userId";
 	public static final String CREATED_DATE = "createdDate";
-
+	public static final String BLOOD_PRESSURE_LOW = "bloodPressureLow";
+	public static final String BLOOD_PRESSURE_HIGH = "bloodPressureHigh";
+	public static final String HEART_RHYTHM = "heartRhythm";
+	public static final String BLOOD_OXYGEN = "bloodOxygen";
+	public static final String BREATH = "breath";
+	public static final String BODY_TEMP = "bodyTemp";
+	public static final String PULSERATE = "pulserate";
+	
 	private Long id;
 	private Long userId;
 	private String userName;
 	private String testItem;
 	private String userType;
+	private Boolean isTest;
 	private Level  level;
 	private String apkId;
 	private Integer bloodPressureLow;
@@ -153,8 +161,14 @@ public class HealthExamination implements Domain {
 	public void setHeartRhythm(Integer heartRhythm) {
 		this.heartRhythm = heartRhythm;
 	}
+	public Boolean getIsTest() {
+		return isTest;
+	}
 
 
+	public void setIsTest(Boolean isTest) {
+		this.isTest = isTest;
+	}
 
 	public Integer getBloodOxygen() {
 		return bloodOxygen;

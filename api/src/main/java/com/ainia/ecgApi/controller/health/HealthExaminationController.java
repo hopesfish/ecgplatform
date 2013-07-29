@@ -2,10 +2,11 @@ package com.ainia.ecgApi.controller.health;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.jboss.logging.Param;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.ainia.ecgApi.core.crud.BaseController;
 import com.ainia.ecgApi.core.crud.BaseService;
@@ -27,7 +27,6 @@ import com.ainia.ecgApi.core.security.AuthenticateService;
 import com.ainia.ecgApi.core.web.AjaxResult;
 import com.ainia.ecgApi.domain.health.HealthExamination;
 import com.ainia.ecgApi.domain.health.HealthReply;
-import com.ainia.ecgApi.domain.sys.User;
 import com.ainia.ecgApi.service.common.UploadService;
 import com.ainia.ecgApi.service.common.UploadService.Type;
 import com.ainia.ecgApi.service.health.HealthExaminationService;
@@ -136,5 +135,22 @@ public class HealthExaminationController extends BaseController<HealthExaminatio
 			throw new ServiceException("examination.ecgPath.notFound");
 		}
 	}
-
+	
+	/**
+	 * <p>统计用户健康测试平均值</p>
+	 * @param id
+	 * @param start
+	 * @param end
+	 * @return
+	 * ResponseEntity
+	 */
+	@RequestMapping(value = "{id}/statistics/avg" , method = RequestMethod.GET)
+	public ResponseEntity testStatisticsByUserAndDay(@PathVariable("id") Long id , @RequestParam(value = "start" , required = false) Date start ,
+												@RequestParam(value = "end" , required = false) Date end) {
+		if (start == null || end == null) {
+			start = new DateTime().toDate();
+			end = new DateTime().plusDays(1).toDate();
+		}
+		return new ResponseEntity( healthExaminationService.statisticsByUserAndDay(id , start, end) , HttpStatus.OK);
+	}
 }
