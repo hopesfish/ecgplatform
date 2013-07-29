@@ -232,9 +232,9 @@ public class UserController extends BaseController<User , Long> {
      * ResponseEntity
      * @throws IOException 
      */
-	@RequestMapping(value = "{id}/examination" , method = RequestMethod.POST , produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "{uploadUserId}/examination" , method = RequestMethod.POST , produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-    public ResponseEntity upload(@PathVariable("id") Long id , @RequestParam("file") MultipartFile file , HealthExamination examination ,
+    public ResponseEntity upload(@PathVariable("uploadUserId") Long uploadUserId , @RequestParam("file") MultipartFile file , HealthExamination examination ,
     								@RequestParam("md5") String md5) throws IOException {
 		
 		ResponseEntity entity = new ResponseEntity(HttpStatus.OK);
@@ -243,7 +243,7 @@ public class UserController extends BaseController<User , Long> {
 		if (authUser == null) {
 			entity = new ResponseEntity(HttpStatus.FORBIDDEN);
 			return entity;
-		} else if (!User.class.getSimpleName().equals(authUser.getType()) || !authUser.getId().equals(id)) {
+		} else if (!User.class.getSimpleName().equals(authUser.getType()) || !authUser.getId().equals(uploadUserId)) {
 			log.error("the api should only invoked by the user him/herself.");
 			entity = new ResponseEntity(HttpStatus.FORBIDDEN);
 			return entity;
@@ -265,8 +265,6 @@ public class UserController extends BaseController<User , Long> {
 			return entity;
 		}
 		
-		// id不应该注入
-		examination.setId(null);
 		healthExaminationService.upload(examination , file.getBytes() , md5);
 
     	return entity;

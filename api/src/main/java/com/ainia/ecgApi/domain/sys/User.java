@@ -20,6 +20,7 @@ import javax.persistence.Transient;
 import javax.persistence.Version;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.ainia.ecgApi.core.bean.Domain;
@@ -50,6 +51,7 @@ public class User implements Domain {
 	private String address;
 	private Float  stature;
 	private Float  weight;
+	private String email;
 	private String idCard;
 	private int gender;
 	private String city;
@@ -180,7 +182,13 @@ public class User implements Domain {
 	public void setCity(String city) {
 		this.city = city;
 	}
-
+	@Email
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
 	public String getEmContact1() {
 		return emContact1;
 	}
