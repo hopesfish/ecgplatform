@@ -143,11 +143,13 @@ public class HealthExaminationServiceTest {
         
         healthExaminationService.delete(_healthExamination);
     }
-    
+    @Test
     public void testStatisticsByUserAndDay(){
     	DateTime now = new DateTime(2013 , 7 , 1 , 0 , 0 ,0);
     	List<Map> results =  healthExaminationService.statisticsByUserAndDay(1L , now.toDate() , now.plusDays(1).toDate());
-    
+    	for (Map map : results) {
+    		System.out.println(map.get(HealthExamination.CREATED_DATE));
+    	}
     	Assert.assertTrue(results.size() > 0);
     }
 }

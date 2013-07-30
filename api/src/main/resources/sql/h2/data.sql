@@ -10,8 +10,8 @@ insert into user (id, mobile , username, email, name, password, gender, id_card 
 values (5,'13512345678' ,'13512345678','13512345678@test.com', '测试用户4','2e8ec7d18a6e108fce3af34044c661ffa56b084f',1 ,'430203198502011218', 'SIMPLE','1983-06-04 01:00:00','地址2',1.72,72,'','','','','','','','2012-06-04 01:00:00','2012-06-04 01:00:00','',1,1);
 
 --employee start
-insert into employee (id ,type, name , username , password , roles , status,enabled,dismissed,gender,expire,birthday,id_card , mobile ,created_date,last_updated,version) values 
-(1,'employee' ,'管理员','admin','2e8ec7d18a6e108fce3af34044c661ffa56b084f', 'admin' ,'ONLINE',1,0,1,null,'1983-06-04 01:00:00','430203198602031218','13028339212','2012-06-04 01:00:00','2012-06-04 01:00:00',1);
+insert into employee (id ,type, name , username , password , roles , status,enabled,dismissed,gender,expire,birthday,id_card , mobile ,created_date,last_updated, version) values 
+(1,'employee' ,'管理员','admin','2e8ec7d18a6e108fce3af34044c661ffa56b084f', 'admin' ,'ONLINE',1,0,1,null,'1983-06-04 01:00:00','430203198602031218','13028339212','2012-06-04 01:00:00','2012-06-04 01:00:00' , 1);
 insert into employee (id ,type, name , username , password , roles , status,enabled,dismissed,gender,expire,birthday,id_card , mobile ,created_date,last_updated,version) values 
 (2,'chief' ,'主任','chief','2e8ec7d18a6e108fce3af34044c661ffa56b084f', 'chief' ,'ONLINE',1,0,1,null,'1983-06-04 01:00:00','430203198602031218','13028339212','2012-06-04 01:00:00','2012-06-04 01:00:00',1);
 insert into employee (id ,type, name , username , password , roles , status,enabled,dismissed,gender,expire,birthday,id_card , mobile ,created_date,last_updated,version) values 
@@ -179,6 +179,9 @@ values (14,'examinationTask' , 14 , 5 , '14' , '测试用户5' , 'pending',null,
 -- system_config start
 insert into system_config (id , type , config_key , value ) values (1 , 'basic' , 'upload.rootPath' , 'c:/upload/');
 insert into system_config (id , type , config_key , value ) values (2 , 'basic' , 'examination.reply.isAuto' , 'false');
+insert into system_config (id , type , config_key , value ) values (3 , 'basic' , 'employee.live.timeout' , '30');
+
+
 -- system_config end
 
 commit;

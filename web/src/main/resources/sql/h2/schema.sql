@@ -52,6 +52,7 @@ create table employee (
     company varchar(100),
     created_date timestamp,
     last_updated timestamp,
+    last_live_date timestamp,
     email varchar(64),
     version int,
     primary key(id)

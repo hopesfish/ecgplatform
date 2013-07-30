@@ -113,7 +113,34 @@
     
     <!-- 非spring bean 下获得bean的工具类 -->
     <bean class="com.ainia.ecgApi.core.utils.ServiceUtils" lazy-init="false"/>
-    
+
+    <bean id="employeeCheckLiveJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean"> 
+      <property name="targetObject"> 
+          <ref bean="employeeService"/> 
+      </property> 
+      <property name="targetMethod">  <!-- 要执行的方法名称 --> 
+          <value>checkLive</value> 
+      </property> 
+    </bean>
+
+ 
+
+    <!-- ======================== 调度触发器 ======================== --> 
+    <bean id="employeeCheckLiveTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean"> 
+      <property name="jobDetail" ref="employeeCheckLiveJob"></property> 
+      <property name="cronExpression" value="0 0/30 * ? * *"></property>
+    </bean> 
+
+    <!-- ======================== 调度工厂 ======================== --> 
+    <bean id="SpringJobSchedulerFactoryBean" class="org.springframework.scheduling.quartz.SchedulerFactoryBean"> 
+      <property name="triggers"> 
+          <list>  
+              <ref bean="employeeCheckLiveTrigger"/>
+          </list> 
+      </property> 
+    </bean>
+
+   
     <!-- production环境 -->
     <beans profile="production">
         <context:property-placeholder ignore-unresolvable="true"

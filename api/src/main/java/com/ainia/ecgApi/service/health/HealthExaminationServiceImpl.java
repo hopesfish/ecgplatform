@@ -268,6 +268,7 @@ public class HealthExaminationServiceImpl extends BaseServiceImpl<HealthExaminat
 			dataMap.put(HealthExamination.BREATH , data[4]);
 			dataMap.put(HealthExamination.BODY_TEMP , data[5]);
 			dataMap.put(HealthExamination.PULSERATE , data[6]);
+			dataMap.put(HealthExamination.CREATED_DATE , data[7]);
 
 			results.add(dataMap);
 		}

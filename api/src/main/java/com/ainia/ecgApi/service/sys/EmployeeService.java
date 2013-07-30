@@ -36,4 +36,10 @@ public interface EmployeeService  extends BaseService<Employee , Long> {
 	 */
 	public void resetPassword(Long id);
 	
+	/**
+	 * <p>检查员工状态</p>
+	 * void
+	 */
+	public void checkLive();
+	
 }

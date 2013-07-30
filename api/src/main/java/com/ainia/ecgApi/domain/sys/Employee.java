@@ -49,6 +49,7 @@ public class Employee implements Domain {
 	private Date    birthday;
 	private String  idCard;
 	private String  mobile;
+	private Date lastLiveDate;
 	private Date    createdDate;
 	private Date    lastUpdated;
 	private String  roles;
@@ -76,6 +77,11 @@ public class Employee implements Domain {
 	@Transient
 	public boolean isSuperAdmin() {
 		return new Long(1).equals(this.getId());
+	}
+	
+	public void live() {
+		this.lastLiveDate = new Date();
+		this.status = Status.ONLINE;
 	}
 
 	@Transient
@@ -231,6 +237,14 @@ public class Employee implements Domain {
 	
 	public void setId(Long id) {
 		this.id = id;
+	}
+	
+	public Date getLastLiveDate() {
+		return lastLiveDate;
+	}
+
+	public void setLastLiveDate(Date lastLiveDate) {
+		this.lastLiveDate = lastLiveDate;
 	}
 
 	@Override

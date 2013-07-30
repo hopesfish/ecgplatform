@@ -14,4 +14,5 @@ import com.ainia.ecgApi.domain.sys.Expert;
  */
 public interface ExpertService extends BaseService<Expert, Long> {
 
+
 }

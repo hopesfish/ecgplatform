@@ -3,6 +3,7 @@ package com.ainia.ecgApi.controller.sys;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.ainia.ecgApi.core.crud.BaseController;
 import com.ainia.ecgApi.core.crud.BaseService;
 import com.ainia.ecgApi.core.exception.ServiceException;
+import com.ainia.ecgApi.core.security.AuthUser;
+import com.ainia.ecgApi.core.security.AuthenticateService;
 import com.ainia.ecgApi.domain.sys.Employee;
 import com.ainia.ecgApi.service.sys.EmployeeService;
 
@@ -32,6 +35,8 @@ public class EmployeeController extends BaseController<Employee , Long> {
 
 	@Autowired
 	private EmployeeService employeeService;
+	@Autowired
+	private AuthenticateService authenticateService;
 
 
 	@Override
@@ -78,6 +83,28 @@ public class EmployeeController extends BaseController<Employee , Long> {
 		else {
 			employeeService.changePassword(id, oldPassword, newPassword);
 		}
+		return new ResponseEntity(HttpStatus.OK);
+	}
+	
+	/**
+	 * <p>员工在线刷新下信息</p>
+	 * @param employeeId
+	 * @return
+	 * ResponseEntity
+	 */
+	@RequestMapping(value = "{id}/live" , method = RequestMethod.GET , produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public ResponseEntity live(@PathVariable("id") Long id) {
+		Employee employee = employeeService.get(id);
+		if (employee == null) {
+			return new ResponseEntity(HttpStatus.OK);
+		}
+		AuthUser currentUser = authenticateService.getCurrentUser();
+		if (!currentUser.isEmployee() || !employee.getId().equals(currentUser.getId())) {
+			return new ResponseEntity(HttpStatus.FORBIDDEN);
+		}
+		employee.live();
+		employeeService.update(employee);
 		return new ResponseEntity(HttpStatus.OK);
 	}
 
