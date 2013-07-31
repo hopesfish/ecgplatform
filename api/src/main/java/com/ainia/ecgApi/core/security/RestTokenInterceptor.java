@@ -58,7 +58,9 @@ public class RestTokenInterceptor implements HandlerInterceptor {
 		if (!enable) {
 			return true;
 		}
+		
 	    String uri = request.getRequestURI();
+	   
 	    String requestUri = uri.substring(uri.indexOf(request.getContextPath()) + request.getContextPath().length());
 	    if (log.isDebugEnabled()) {
 	    	log.debug(" interceptor the url " + requestUri);
@@ -77,7 +79,7 @@ public class RestTokenInterceptor implements HandlerInterceptor {
 	    	  method = keyValues[1];
 	      }
 	      //TODO 将来需要支持ant 表达式
-	      if (matcher.match(requestUri , url ) && (method == null || request.getMethod().equalsIgnoreCase(method))) {  
+	      if (matcher.match(url , requestUri) && (method == null || request.getMethod().equalsIgnoreCase(method))) {  
 	        isExclude = true;  
 	      }  
 	    }  

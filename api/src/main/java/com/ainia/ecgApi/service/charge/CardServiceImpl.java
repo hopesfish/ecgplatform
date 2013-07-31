@@ -45,12 +45,12 @@ public class CardServiceImpl extends BaseServiceImpl<Card , Long> implements Car
 
 	@Override
 	public void charge(String serial, String password ,  Date activedDate, Long employeeId , User user) {
-		Card card = cardDao.findByEncodedSerial(this.encodePassword(serial , null));
+		Card card = cardDao.findByEncodedSerial(this.encodeString(serial , null));
 		if (card == null) {
 			throw new ServiceException("exception.card.notFound");
 		}
 		//卡号密码判断
-		if (!this.checkPassword(card.getEncodedPassword() , password , null)) {
+		if (!this.checkString(card.getEncodedPassword() , password , null)) {
 			throw new ServiceException("exception.card.errorPassword");
 		}
 		if (activedDate == null || activedDate.before(new Date())) {
@@ -71,17 +71,17 @@ public class CardServiceImpl extends BaseServiceImpl<Card , Long> implements Car
 		this.update(card);
 	}
 
-	public String encodePassword(String password , byte[] salt) {
-		byte[] hashPassword = DigestUtils.sha1(password.getBytes() , salt, HASH_INTERATIONS);
-		return EncodeUtils.encodeHex(hashPassword);
+	public String encodeString(String string , byte[] salt) {
+		byte[] hashString = DigestUtils.sha1(string.getBytes() , salt, HASH_INTERATIONS);
+		return EncodeUtils.encodeHex(hashString);
 	}
 	
-	public boolean checkPassword(String target, String source , byte[] salt) {
-		String hashPassword = this.encodePassword(source , null);
+	public boolean checkString(String target, String source , byte[] salt) {
+		String hashString = this.encodeString(source , null);
 		if (log.isDebugEnabled()) {
-			log.debug(String.format("compare the password %s %s" , hashPassword , target));
+			log.debug(String.format("compare the password %s %s" , hashString , target));
 		}
-		return hashPassword.equals(target);
+		return hashString.equals(target);
 	}
 
 	@Override

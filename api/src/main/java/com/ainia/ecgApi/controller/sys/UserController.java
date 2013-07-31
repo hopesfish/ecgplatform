@@ -322,7 +322,7 @@ public class UserController extends BaseController<User , Long> {
 	 * @return
 	 * ResponseEntity
 	 */
-	@RequestMapping(value = "{id}/card" , method = RequestMethod.POST ,produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "{id}/card" , method = RequestMethod.GET ,produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public ResponseEntity findCards(@PathVariable("id") Long id , Query query) {
     	AuthUser authUser = authenticateService.getCurrentUser();
