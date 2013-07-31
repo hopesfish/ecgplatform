@@ -1,14 +1,12 @@
 package com.ainia.ecgApi.controller.sys;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.List;
+import java.util.Date;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
-import org.hibernate.criterion.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -29,10 +27,12 @@ import com.ainia.ecgApi.core.crud.Query.OrderType;
 import com.ainia.ecgApi.core.exception.ServiceException;
 import com.ainia.ecgApi.core.security.AuthUser;
 import com.ainia.ecgApi.core.security.AuthenticateService;
+import com.ainia.ecgApi.domain.charge.Card;
 import com.ainia.ecgApi.domain.health.HealthExamination;
 import com.ainia.ecgApi.domain.health.HealthRule;
 import com.ainia.ecgApi.domain.sys.User;
 import com.ainia.ecgApi.domain.task.Task;
+import com.ainia.ecgApi.service.charge.CardService;
 import com.ainia.ecgApi.service.common.UploadService;
 import com.ainia.ecgApi.service.common.UploadService.Type;
 import com.ainia.ecgApi.service.health.HealthExaminationService;
@@ -65,6 +65,8 @@ public class UserController extends BaseController<User , Long> {
     private HealthExaminationService healthExaminationService;
     @Autowired
     private UploadService uploadService;
+    @Autowired
+    private CardService cardService;
     
     @Override
     public BaseService<User , Long> getBaseService() {
@@ -287,7 +289,51 @@ public class UserController extends BaseController<User , Long> {
 			response.getOutputStream().write(uploadService.load(Type.heart_img , ecgPath));
 			response.getOutputStream().flush();
 		} catch (IOException e) {
+			e.printStackTrace();
 			throw new ServiceException("examination.ecgPath.notFound");
 		}
+	}
+	
+	/**
+	 * <p>用户充值</p>
+	 * @param id
+	 * @param serial
+	 * @param password
+	 * @param activedDate
+	 * @return
+	 * ResponseEntity
+	 */
+	@RequestMapping(value = "{id}/charge" , method = RequestMethod.POST ,produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public ResponseEntity charge(@PathVariable("id") Long id ,@RequestParam("serial") String serial ,  @RequestParam String password , 
+				@RequestParam("activedDate") Date activedDate) {
+    	AuthUser authUser = authenticateService.getCurrentUser();
+    	if (!authUser.isUser()) {
+    		return new ResponseEntity(HttpStatus.FORBIDDEN);
+    	}
+    	cardService.charge(serial, password ,  activedDate , authUser.getId() , userService.get(authUser.getId()));
+    	
+    	return new ResponseEntity(HttpStatus.OK);
+	}
+	/**
+	 * <p>获得用户的卡</p>
+	 * @param id
+	 * @param query
+	 * @return
+	 * ResponseEntity
+	 */
+	@RequestMapping(value = "{id}/card" , method = RequestMethod.POST ,produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public ResponseEntity findCards(@PathVariable("id") Long id , Query query) {
+    	AuthUser authUser = authenticateService.getCurrentUser();
+    	query.isNotNull(Card.ACTIVED_DATE);
+    	query.isNotNull(Card.USER_ID);
+    	query.eq(Card.USER_ID , authUser.getId());
+    	query.addOrder(Card.ACTIVED_DATE , OrderType.desc);
+		long total = cardService.count(query);
+		query.getPage().setTotal(total);
+		query.getPage().setDatas(cardService.findAll(query));
+		
+		return new ResponseEntity(query.getPage() , HttpStatus.OK);
 	}
 }

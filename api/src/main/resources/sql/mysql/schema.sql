@@ -198,6 +198,7 @@ create table card (
     created_date datetime,
     created_batch int,
     expire_date datetime,
+    actived_date datetime,
     user_id bigint,
     user_name varchar(20),
     charged_date datetime,

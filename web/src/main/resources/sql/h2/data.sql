@@ -182,5 +182,12 @@ insert into system_config (id , type , config_key , value ) values (2 , 'basic' 
 insert into system_config (id , type , config_key , value ) values (3 , 'basic' , 'employee.live.timeout' , '30');
 
 -- system_config end
-
+-- card start
+insert into card (id , encoded_serial , serial , encoded_password , days , created_date , created_batch , expire_date , actived_date , user_id , user_name , charged_date , charge_type , employee_id , employee_name)
+values (1 , '1002300289021102' , '1002300289021102' , '2e8ec7d18a6e108fce3af34044c661ffa56b084f' , 0 , '2013-07-12 01:00:00' , 1 , null , null , null , null , null , null , null , null);
+insert into card (id , encoded_serial , serial , encoded_password , days , created_date , created_batch , expire_date , actived_date , user_id , user_name , charged_date , charge_type , employee_id , employee_name)
+values (2 , '1002300289021102' , '1002300289021102' , '2e8ec7d18a6e108fce3af34044c661ffa56b084f' , 62 , '2013-07-12 01:00:00' , 1 , '2013-09-12 01:00:00' , '2013-07-12 01:00:00' , 1 , '测试用户1' , '2013-09-13 01:00:00' , 'MOBILE' , 9 , '接线员1');
+insert into card (id , encoded_serial , serial , encoded_password , days , created_date , created_batch , expire_date , actived_date , user_id , user_name , charged_date , charge_type , employee_id , employee_name)
+values (3 , '1002300289021102' , '1002300289021102' , '2e8ec7d18a6e108fce3af34044c661ffa56b084f' , 0 , '2013-07-12 01:00:00' , 1 , null , null , null , null , null , null ,null , null);
+-- card end
 commit;

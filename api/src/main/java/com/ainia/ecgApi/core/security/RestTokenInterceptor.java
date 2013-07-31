@@ -10,6 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.util.AntPathMatcher;
+import org.springframework.util.PathMatcher;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -33,6 +35,8 @@ public class RestTokenInterceptor implements HandlerInterceptor {
 	
 	private List<String> excludes;
 	private boolean enable;
+	private PathMatcher matcher = new AntPathMatcher();
+	
 	@Autowired
 	private AuthenticateService authenticateService;
 
@@ -73,7 +77,7 @@ public class RestTokenInterceptor implements HandlerInterceptor {
 	    	  method = keyValues[1];
 	      }
 	      //TODO 将来需要支持ant 表达式
-	      if (requestUri.endsWith(url) && (method == null || request.getMethod().equalsIgnoreCase(method))) {  
+	      if (matcher.match(requestUri , url ) && (method == null || request.getMethod().equalsIgnoreCase(method))) {  
 	        isExclude = true;  
 	      }  
 	    }  

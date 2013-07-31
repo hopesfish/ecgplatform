@@ -7,8 +7,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.PrePersist;
 
 import com.ainia.ecgApi.core.bean.Domain;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * <p>充值卡实体</p>
@@ -21,6 +23,9 @@ import com.ainia.ecgApi.core.bean.Domain;
  */
 @Entity
 public class Card implements Domain {
+	
+	public static String ACTIVED_DATE = "activedDate";
+	public static String USER_ID = "userId";
 
 	private Long id;
 	private String encodedSerial;
@@ -30,6 +35,7 @@ public class Card implements Domain {
 	private Date createdDate;
 	private Integer createdBatch;
 	private Date expireDate;
+	private Date activedDate;
 	private Long userId;
 	private String userName;
 	private Date chargedDate;
@@ -38,6 +44,17 @@ public class Card implements Domain {
 	private String employeeName;
 	
 	
+	
+	@PrePersist
+	public void onCreate() {
+		this.createdDate = new Date();
+	}
+	
+	public enum ChargeType {
+		MOBILE , 
+		WEB
+	}
+	
 	@Override
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)	
@@ -45,7 +62,7 @@ public class Card implements Domain {
 		return id;
 	}
 
-
+	@JsonIgnore
 	public String getEncodedSerial() {
 		return encodedSerial;
 	}
@@ -65,7 +82,7 @@ public class Card implements Domain {
 		this.serial = serial;
 	}
 
-
+	@JsonIgnore
 	public String getEncodedPassword() {
 		return encodedPassword;
 	}
@@ -75,7 +92,7 @@ public class Card implements Domain {
 		this.encodedPassword = encodedPassword;
 	}
 
-
+	
 	public int getDays() {
 		return days;
 	}
@@ -180,6 +197,13 @@ public class Card implements Domain {
 		this.id = id;
 	}
 
+	public Date getActivedDate() {
+		return activedDate;
+	}
+
+	public void setActivedDate(Date activedDate) {
+		this.activedDate = activedDate;
+	}
 
 	@Override
 	public int hashCode() {
@@ -188,7 +212,6 @@ public class Card implements Domain {
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		return result;
 	}
-
 
 	@Override
 	public boolean equals(Object obj) {

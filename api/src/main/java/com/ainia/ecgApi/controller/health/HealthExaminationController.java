@@ -114,28 +114,6 @@ public class HealthExaminationController extends BaseController<HealthExaminatio
     	return new ResponseEntity(healthReplyService.findAll(query) , HttpStatus.OK);
     }
 	
-	
-	/**
-	 * <p>获取心电图1</p>
-	 * @return
-	 * byte[]
-	 * @throws IOException 
-	 */
-	@RequestMapping(value = "{id}/ecg{index}" , method = RequestMethod.GET)
-	public void loadEcg(@PathVariable("id") Long id ,@PathVariable("index") int index, HttpServletResponse response)  {
-		HealthExamination examination = healthExaminationService.get(id);
-		String dateStr = new SimpleDateFormat("yyyyMMdd").format(examination.getCreatedDate());
-		//TODO 文件后缀名固定
-		String ecgPath = String.valueOf(examination.getUserId()) + "/" + dateStr + "-" + examination.getId() + "/ecg" + index + ".jpg";
-		try {
-			response.setContentType("image/jpeg");
-			response.getOutputStream().write(uploadService.load(Type.heart_img , ecgPath));
-			response.getOutputStream().flush();
-		} catch (IOException e) {
-			throw new ServiceException("examination.ecgPath.notFound");
-		}
-	}
-	
 	/**
 	 * <p>统计用户健康测试平均值</p>
 	 * @param id
