@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.PrePersist;
 
 import com.ainia.ecgApi.core.bean.Domain;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
@@ -102,7 +103,7 @@ public class Card implements Domain {
 		this.days = days;
 	}
 
-
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" , timezone = "GMT+08:00")
 	public Date getCreatedDate() {
 		return createdDate;
 	}
@@ -122,7 +123,7 @@ public class Card implements Domain {
 		this.createdBatch = createdBatch;
 	}
 
-
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" , timezone = "GMT+08:00")
 	public Date getExpireDate() {
 		return expireDate;
 	}
@@ -152,7 +153,7 @@ public class Card implements Domain {
 		this.userName = userName;
 	}
 
-
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" , timezone = "GMT+08:00")
 	public Date getChargedDate() {
 		return chargedDate;
 	}
@@ -196,7 +197,7 @@ public class Card implements Domain {
 	public void setId(Long id) {
 		this.id = id;
 	}
-
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" , timezone = "GMT+08:00")
 	public Date getActivedDate() {
 		return activedDate;
 	}

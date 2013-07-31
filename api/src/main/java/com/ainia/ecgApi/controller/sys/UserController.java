@@ -236,8 +236,8 @@ public class UserController extends BaseController<User , Long> {
      */
 	@RequestMapping(value = "{uploadUserId}/examination" , method = RequestMethod.POST , produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-    public ResponseEntity upload(@PathVariable("uploadUserId") Long uploadUserId , @RequestParam("file") MultipartFile file , HealthExamination examination ,
-    								@RequestParam("md5") String md5) throws IOException {
+    public ResponseEntity upload(@PathVariable("uploadUserId") Long uploadUserId , @RequestParam(value = "file" , required = false) MultipartFile file , HealthExamination examination ,
+    								@RequestParam(value = "md5" , required = false) String md5) throws IOException {
 		
 		ResponseEntity entity = new ResponseEntity(HttpStatus.OK);
     	// 必须登录, 必须是用户类型, 必须是本人提交
@@ -281,9 +281,8 @@ public class UserController extends BaseController<User , Long> {
 	@RequestMapping(value = "{id}/examination/{examinationId}/ecg{index}" , method = RequestMethod.GET)
 	public void loadEcg(@PathVariable("id") Long id , @PathVariable("examinationId") Long examinationId , 
 										@PathVariable("index") int index, HttpServletResponse response)  {
-		HealthExamination examination = healthExaminationService.get(examinationId);
 		//TODO 文件后缀名固定
-		String ecgPath = String.valueOf(User.class.getSimpleName().toLowerCase() + "/" + examination.getUserId()) + "/examination/" + examination.getId() + "/ecg" + index + ".jpg";
+		String ecgPath = String.valueOf(User.class.getSimpleName().toLowerCase() + "/" +id) + "/examination/" + examinationId + "/ecg" + index + ".jpg";
 		try {
 			response.setContentType("image/jpeg");
 			response.getOutputStream().write(uploadService.load(Type.heart_img , ecgPath));
