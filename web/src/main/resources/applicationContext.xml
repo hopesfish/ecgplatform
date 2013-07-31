@@ -126,7 +126,7 @@
  
 
     <!-- ======================== 调度触发器 ======================== --> 
-    <bean id="employeeCheckLiveTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean"> 
+    <bean id="employeeCheckLiveTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean"> 
       <property name="jobDetail" ref="employeeCheckLiveJob"></property> 
       <property name="cronExpression" value="0 0/30 * ? * *"></property>
     </bean> 
