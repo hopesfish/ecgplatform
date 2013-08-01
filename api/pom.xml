@@ -317,13 +317,37 @@
       <artifactId>urlrewrite</artifactId>
       <version>2.5.2</version>
     </dependency>
+    <!-- urlrewrite end -->
     <!-- TIMER -->
     <dependency>
         <groupId>org.quartz-scheduler</groupId>
         <artifactId>quartz</artifactId>
         <version>${quartz.version}</version>
     </dependency>
-    <!-- urlrewrite end -->
+    <!-- httpClient start -->
+    <dependency>
+        <groupId>org.apache.httpcomponents</groupId>
+        <artifactId>httpclient</artifactId>
+        <version>4.2.3</version>
+    </dependency>
+    <dependency>
+        <groupId>org.apache.httpcomponents</groupId>
+        <artifactId>httpcore</artifactId>
+        <version>4.2.3</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpmime</artifactId>
+      <version>4.2.3</version>
+    </dependency>    
+    <!-- httpClient end -->
+    <!-- opencsv start -->
+	<dependency>
+	  <groupId>net.sf.opencsv</groupId>
+	  <artifactId>opencsv</artifactId>
+	  <version>2.3</version>
+	</dependency>    
+    <!-- opencsv end -->
     <!-- rest doc start -->
     <!--dependency>
         <groupId>com.mangofactory</groupId>

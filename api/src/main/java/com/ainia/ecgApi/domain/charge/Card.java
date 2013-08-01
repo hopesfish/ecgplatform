@@ -8,6 +8,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.PrePersist;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.NotBlank;
 
 import com.ainia.ecgApi.core.bean.Domain;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -25,6 +29,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 public class Card implements Domain {
 	
+	public static String ENCODED_SERIAL = "encodedSerial";
+	public static String ENCODED_PASSWORD = "encodedPassword";
+	public static String DAYS = "days";
+	public static String EXPIRED_DATE = "expireDate";
 	public static String ACTIVED_DATE = "activedDate";
 	public static String USER_ID = "userId";
 
@@ -32,7 +40,7 @@ public class Card implements Domain {
 	private String encodedSerial;
 	private String serial;
 	private String encodedPassword;
-	private int days;
+	private Integer days;
 	private Date createdDate;
 	private Integer createdBatch;
 	private Date expireDate;
@@ -68,7 +76,7 @@ public class Card implements Domain {
 		return encodedSerial;
 	}
 
-
+	@NotBlank
 	public void setEncodedSerial(String encodedSerial) {
 		this.encodedSerial = encodedSerial;
 	}
@@ -82,7 +90,7 @@ public class Card implements Domain {
 	public void setSerial(String serial) {
 		this.serial = serial;
 	}
-
+	@NotBlank
 	@JsonIgnore
 	public String getEncodedPassword() {
 		return encodedPassword;
@@ -92,17 +100,17 @@ public class Card implements Domain {
 	public void setEncodedPassword(String encodedPassword) {
 		this.encodedPassword = encodedPassword;
 	}
-
-	
-	public int getDays() {
+	@NotNull
+	@Max(365)
+	public Integer getDays() {
 		return days;
 	}
 
 
-	public void setDays(int days) {
+	public void setDays(Integer days) {
 		this.days = days;
 	}
-
+	@NotNull
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" , timezone = "GMT+08:00")
 	public Date getCreatedDate() {
 		return createdDate;

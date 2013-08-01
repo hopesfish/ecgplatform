@@ -146,7 +146,7 @@ public class HealthExaminationServiceTest {
     @Test
     public void testStatisticsByUserAndDay(){
     	DateTime now = new DateTime(2013 , 7 , 1 , 0 , 0 ,0);
-    	List<Map> results =  healthExaminationService.statisticsByUserAndDay(1L , now.toDate() , now.plusDays(1).toDate());
+    	List<Map> results =  healthExaminationService.statisticsByUserAndDay(1L , now.toDate() , now.plusYears(1).toDate());
     	for (Map map : results) {
     		System.out.println(map.get(HealthExamination.CREATED_DATE));
     	}

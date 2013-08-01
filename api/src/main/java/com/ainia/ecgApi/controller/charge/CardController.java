@@ -1,6 +1,10 @@
 package com.ainia.ecgApi.controller.charge;
 
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,11 +16,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+
+import au.com.bytecode.opencsv.CSVReader;
 
 import com.ainia.ecgApi.core.crud.Query;
 import com.ainia.ecgApi.core.crud.Query.OrderType;
 import com.ainia.ecgApi.core.security.AuthUser;
 import com.ainia.ecgApi.core.security.AuthenticateService;
+import com.ainia.ecgApi.core.utils.PropertyUtil;
 import com.ainia.ecgApi.domain.charge.Card;
 import com.ainia.ecgApi.service.charge.CardService;
 import com.ainia.ecgApi.service.sys.UserService;
@@ -77,6 +85,44 @@ public class CardController  {
     	}
     	return new ResponseEntity(card , HttpStatus.OK);
     }
+    
+    /**
+     * <p>卡批量上传</p>
+     * @param file
+     * @return
+     * ResponseEntity
+     * @throws IOException 
+     */
+    @RequestMapping(value = "upload" , method = RequestMethod.POST)
+    public String upload(@RequestParam(value = "file") MultipartFile file ,
+    						@RequestParam("token") String token) throws IOException {
+    	AuthUser authUser = authenticateService.loadUserByToken(token);
+    	if (authUser == null || authUser.isUser()) {
+    		return "/failed.html";
+    	}
+    	try {
+	    	CSVReader reader = new CSVReader(new InputStreamReader(file.getInputStream()));
+	        List<String[]> list =reader.readAll();  
+	        List<Card> cards = new ArrayList(list.size());
+        
+	        for (String[] values : list) {
+	        	Card card = new Card();
+	        	PropertyUtil.setProperty(card , Card.ENCODED_SERIAL , values[0]);
+	        	PropertyUtil.setProperty(card , Card.ENCODED_PASSWORD , values[1]);
+	        	PropertyUtil.setProperty(card , Card.DAYS , values[2]);
+	        	PropertyUtil.setProperty(card , Card.EXPIRED_DATE , values[3]);
+	        	cards.add(card);
+	        }
+	        cardService.create(cards);
+        }
+        catch(Exception e) { 
+        	e.printStackTrace();
+        	return "/failed.html";
+        }
+       
+    	return "/success.html";
+    }
+    
     /**
      * <p>卡号充值</p>
      * @param serial

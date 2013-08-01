@@ -1,6 +1,7 @@
 package com.ainia.ecgApi.service.health;
 
 import java.math.BigInteger;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -267,22 +268,27 @@ public class HealthExaminationServiceImpl extends BaseServiceImpl<HealthExaminat
 	@Override
 	public List<Map> statisticsByUserAndDay(Long userId, Date start, Date end) {
 		List<Object[]> list = healthExaminationDao.statisticsByUserAndDay(userId, start, end);
-	
 		List<Map> results = new ArrayList(list.size());
-		for (Object[] data : list) {
-			Map dataMap = new HashMap();
-			dataMap.put(HealthExamination.BLOOD_PRESSURE_LOW , data[0]);
-			dataMap.put(HealthExamination.BLOOD_PRESSURE_HIGH , data[1]);
-			dataMap.put(HealthExamination.HEART_RHYTHM , data[2]);
-			dataMap.put(HealthExamination.BLOOD_OXYGEN , data[3]);
-			dataMap.put(HealthExamination.BREATH , data[4]);
-			dataMap.put(HealthExamination.BODY_TEMP , data[5]);
-			dataMap.put(HealthExamination.PULSERATE , data[6]);
-			dataMap.put(HealthExamination.CREATED_DATE , data[7]);
-
-			results.add(dataMap);
+		try {
+			//TODO 暂时使用日期方式转换 处理日期格式化
+			SimpleDateFormat from = new SimpleDateFormat("yyyyMMdd");
+			SimpleDateFormat to   = new SimpleDateFormat("yyyy-MM-dd");
+			for (Object[] data : list) {
+				Map dataMap = new HashMap();
+				dataMap.put(HealthExamination.BLOOD_PRESSURE_LOW , data[0]);
+				dataMap.put(HealthExamination.BLOOD_PRESSURE_HIGH , data[1]);
+				dataMap.put(HealthExamination.HEART_RHYTHM , data[2]);
+				dataMap.put(HealthExamination.BLOOD_OXYGEN , data[3]);
+				dataMap.put(HealthExamination.BREATH , data[4]);
+				dataMap.put(HealthExamination.BODY_TEMP , data[5]);
+				dataMap.put(HealthExamination.PULSERATE , data[6]);
+				dataMap.put(HealthExamination.CREATED_DATE , data[7]);
+				results.add(dataMap);
+			}
 		}
-		
+		catch(Exception e) {
+			throw new ServiceException("exception.examination.statisticsError");
+		}
 		return results;
 	}
 
