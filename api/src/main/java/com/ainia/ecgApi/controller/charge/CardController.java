@@ -107,8 +107,8 @@ public class CardController  {
         
 	        for (String[] values : list) {
 	        	Card card = new Card();
-	        	PropertyUtil.setProperty(card , Card.ENCODED_SERIAL , values[0]);
-	        	PropertyUtil.setProperty(card , Card.ENCODED_PASSWORD , values[1]);
+	        	PropertyUtil.setProperty(card , Card.ENCODED_SERIAL , cardService.encodeString(values[0] , null));
+	        	PropertyUtil.setProperty(card , Card.ENCODED_PASSWORD , cardService.encodeString(values[1], null));
 	        	PropertyUtil.setProperty(card , Card.DAYS , values[2]);
 	        	PropertyUtil.setProperty(card , Card.EXPIRED_DATE , values[3]);
 	        	cards.add(card);
