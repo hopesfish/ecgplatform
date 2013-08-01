@@ -271,7 +271,7 @@ public class HealthExaminationServiceImpl extends BaseServiceImpl<HealthExaminat
 		List<Map> results = new ArrayList(list.size());
 		try {
 			//TODO 暂时使用日期方式转换 处理日期格式化
-			SimpleDateFormat from = new SimpleDateFormat("yyyyMMdd");
+			SimpleDateFormat from = new SimpleDateFormat("yyyy-M-d");
 			SimpleDateFormat to   = new SimpleDateFormat("yyyy-MM-dd");
 			for (Object[] data : list) {
 				Map dataMap = new HashMap();
@@ -282,11 +282,13 @@ public class HealthExaminationServiceImpl extends BaseServiceImpl<HealthExaminat
 				dataMap.put(HealthExamination.BREATH , data[4]);
 				dataMap.put(HealthExamination.BODY_TEMP , data[5]);
 				dataMap.put(HealthExamination.PULSERATE , data[6]);
-				dataMap.put(HealthExamination.CREATED_DATE , data[7]);
+				Date date = from.parse((String)data[7]);
+				dataMap.put(HealthExamination.CREATED_DATE , to.format(date));
 				results.add(dataMap);
-			}
+ 			}
 		}
 		catch(Exception e) {
+			e.printStackTrace();
 			throw new ServiceException("exception.examination.statisticsError");
 		}
 		return results;

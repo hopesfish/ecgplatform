@@ -22,7 +22,7 @@ import com.ainia.ecgApi.domain.health.HealthExamination;
 public interface HealthExaminationDao extends JpaRepository<HealthExamination , Long>, BaseDao<HealthExamination , Long> { 
     
     @Query("select avg(bloodPressureLow) , avg(bloodPressureHigh) , avg(heartRhythm) , avg(bloodOxygen), " +
-    		" avg(breath) , avg(bodyTemp) , avg(pulserate),YEAR(createdDate)||MONTH(createdDate)||DAY(createdDate) from HealthExamination where userId = ? and createdDate >= ? and createdDate < ?" +
-    		"	group by YEAR(createdDate)||MONTH(createdDate)||DAY(createdDate) order by year(createdDate)||month(createdDate)||day(createdDate) asc")
+    		" avg(breath) , avg(bodyTemp) , avg(pulserate), YEAR(createdDate)||'-'||MONTH(createdDate)||'-'||DAY(createdDate) from HealthExamination where userId = ? and createdDate >= ? and createdDate < ?" +
+    		"	group by YEAR(createdDate)||'-'||MONTH(createdDate)||'-'||DAY(createdDate) order by  YEAR(createdDate)||'-'||MONTH(createdDate)||'-'||DAY(createdDate) asc")
 	public List<Object[]> statisticsByUserAndDay(Long userId , Date start , Date end);
 }
