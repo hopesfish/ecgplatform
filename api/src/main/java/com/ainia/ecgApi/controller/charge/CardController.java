@@ -2,8 +2,6 @@ package com.ainia.ecgApi.controller.charge;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -12,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -23,9 +22,9 @@ import au.com.bytecode.opencsv.CSVReader;
 
 import com.ainia.ecgApi.core.crud.Query;
 import com.ainia.ecgApi.core.crud.Query.OrderType;
+import com.ainia.ecgApi.core.exception.ServiceException;
 import com.ainia.ecgApi.core.security.AuthUser;
 import com.ainia.ecgApi.core.security.AuthenticateService;
-import com.ainia.ecgApi.core.utils.PropertyUtil;
 import com.ainia.ecgApi.domain.charge.Card;
 import com.ainia.ecgApi.service.charge.CardService;
 import com.ainia.ecgApi.service.sys.UserService;
@@ -68,6 +67,7 @@ public class CardController  {
 		return new ResponseEntity(query.getPage() , HttpStatus.OK);
     }
     
+    
     /**
      * <p>查询指定已激活卡号</p>
      * @param serial
@@ -96,34 +96,25 @@ public class CardController  {
      */
     @RequestMapping(value = "upload" , method = RequestMethod.POST)
     public String upload(@RequestParam(value = "file") MultipartFile file ,
-    						@RequestParam("token") String token) throws IOException {
+    						@RequestParam("token") String token , Model model) throws IOException {
     	AuthUser authUser = authenticateService.loadUserByToken(token);
     	if (authUser == null || authUser.isUser()) {
     		return "/failed.html";
     	}
-    	try {
-	    	CSVReader reader = new CSVReader(new InputStreamReader(file.getInputStream()));
-	        List<String[]> list =reader.readAll();  
-	        List<Card> cards = new ArrayList(list.size());
-        
-	        // TODO: 判断不能喝现存卡号重复,卡号之间不重复,天数都是正整数,失效日期都是今天算起半年以后的日期
-	        SimpleDateFormat format   = new SimpleDateFormat("yyyy-MM-dd");
-	        for (String[] values : list) {
-	        	Card card = new Card();
-	        	PropertyUtil.setProperty(card , Card.ENCODED_SERIAL , cardService.encodeString(values[0] , null));
-	        	PropertyUtil.setProperty(card , Card.ENCODED_PASSWORD , cardService.encodeString(values[1], null));
-	        	PropertyUtil.setProperty(card , Card.DAYS , values[2]);
-	        	PropertyUtil.setProperty(card , Card.EXPIRED_DATE , format.parse(values[3]));
-	        	cards.add(card);
-	        }
-	        cardService.create(cards);
+    	CSVReader reader = new CSVReader(new InputStreamReader(file.getInputStream()));
+        List<String[]> list = reader.readAll();  
+        List<String> errors = null;
+        try {
+        	cardService.createByUpload(list);
+        	model.addAttribute("count" , list.size());
+        	return "/card/success";
         }
-        catch(Exception e) { 
-        	e.printStackTrace();
-        	return "/failed.html";
+        catch(ServiceException e) {
+        	System.out.println("============== " + e.getArguments());
+        	model.addAttribute("errors" , e.getArguments());
+        	return "/card/failed";
         }
-       
-    	return "/success.html";
+    	
     }
     
     /**

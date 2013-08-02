@@ -1,10 +1,9 @@
 package com.ainia.ecgApi.service.charge;
 
 import java.util.Date;
+import java.util.List;
 
 import com.ainia.ecgApi.core.crud.BaseService;
-import com.ainia.ecgApi.core.utils.DigestUtils;
-import com.ainia.ecgApi.core.utils.EncodeUtils;
 import com.ainia.ecgApi.domain.charge.Card;
 import com.ainia.ecgApi.domain.sys.User;
 
@@ -53,4 +52,12 @@ public interface CardService extends BaseService<Card , Long> {
 	 * boolean
 	 */
 	public boolean checkString(String target, String source , byte[] salt);
+	
+	/**
+	 * <p>创建上传卡号</p>
+	 * @param values
+	 * @return
+	 * List<String>
+	 */
+	public void createByUpload(List<String[]> values);
 }

@@ -47,6 +47,11 @@
 	
     <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>
 	
+	   <!-- 定义JSP文件的位置 --> 
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/views/"/>
+        <property name="suffix" value=".jsp"/>
+    </bean>
 	
     <mvc:interceptors>  
 	  <mvc:interceptor>  
@@ -59,6 +64,7 @@
 	           <value>/api/user:POST</value>  
 	           <value>/api/user/*/examination/*/ecg*</value>  
 	           <value>/api/card/upload</value>  
+	           <value>/card/upload*</value>  
 	        </list>  
 	      </property> 
 	      <property name="enable" value="true"></property> 

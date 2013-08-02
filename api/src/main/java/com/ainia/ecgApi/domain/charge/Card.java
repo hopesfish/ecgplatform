@@ -1,6 +1,5 @@
 package com.ainia.ecgApi.domain.charge;
 
-import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Entity;
@@ -12,8 +11,10 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotBlank;
+import org.joda.time.DateTime;
 
 import com.ainia.ecgApi.core.bean.Domain;
+import com.ainia.ecgApi.core.exception.ServiceException;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -56,6 +57,9 @@ public class Card implements Domain {
 	
 	@PrePersist
 	public void onCreate() {
+		if (new DateTime(expireDate).isBefore(new DateTime().plusMonths(6))) {
+			throw new ServiceException("exception.card.expireDate.after6months");
+		}
 		this.createdDate = new Date();
 	}
 	
@@ -130,7 +134,7 @@ public class Card implements Domain {
 	public void setCreatedBatch(Integer createdBatch) {
 		this.createdBatch = createdBatch;
 	}
-
+	@NotNull
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" , timezone = "GMT+08:00")
 	public Date getExpireDate() {
 		return expireDate;

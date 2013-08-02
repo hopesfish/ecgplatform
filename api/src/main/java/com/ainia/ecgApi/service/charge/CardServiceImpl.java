@@ -1,5 +1,7 @@
 package com.ainia.ecgApi.service.charge;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -14,6 +16,7 @@ import com.ainia.ecgApi.core.crud.Query.OrderType;
 import com.ainia.ecgApi.core.exception.ServiceException;
 import com.ainia.ecgApi.core.utils.DigestUtils;
 import com.ainia.ecgApi.core.utils.EncodeUtils;
+import com.ainia.ecgApi.core.utils.PropertyUtil;
 import com.ainia.ecgApi.dao.charge.CardDao;
 import com.ainia.ecgApi.domain.charge.Card;
 import com.ainia.ecgApi.domain.sys.Employee;
@@ -146,5 +149,31 @@ public class CardServiceImpl extends BaseServiceImpl<Card , Long> implements Car
 		// 卡号未使用之前是不存的
 		card.setSerial(serial);
 		return card;
+	}
+
+	@Override
+	public void createByUpload(List<String[]> list) {
+        SimpleDateFormat format   = new SimpleDateFormat("yyyy-MM-dd");
+        List<String> errors = new ArrayList();
+        for (String[] values : list) {
+        	try {
+	        	Card card = new Card();
+	        	PropertyUtil.setProperty(card , Card.ENCODED_SERIAL , this.encodeString(values[0] , null));
+	        	PropertyUtil.setProperty(card , Card.ENCODED_PASSWORD , this.encodeString(values[1], null));
+	        	PropertyUtil.setProperty(card , Card.DAYS , values[2]);
+	        	PropertyUtil.setProperty(card , Card.EXPIRED_DATE , format.parse(values[3]));
+	        	this.create(card);
+        	}catch(RuntimeException r) {
+        		r.printStackTrace();
+        		errors.add(values[3]);
+        	}
+        	catch(Exception e) {
+        		e.printStackTrace();
+        		errors.add(values[0]);
+        	}
+        }
+        if (errors.size() > 0) {
+        	throw new ServiceException("exception.card.errorCard" , errors);
+        }
 	}
 }

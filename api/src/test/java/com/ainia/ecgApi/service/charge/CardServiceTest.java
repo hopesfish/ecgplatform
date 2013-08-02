@@ -1,11 +1,11 @@
 package com.ainia.ecgApi.service.charge;
 
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.joda.time.DateTime;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -54,6 +54,7 @@ public class CardServiceTest {
 		card.setSerial("11111111111111111111111");
 		card.setEncodedPassword("111111");
 		card.setDays(1);
+		card.setExpireDate(new DateTime(2015 , 1, 1, 0 ,0 ,0).toDate());
 		card.setCreatedBatch(1);
 	}
 
@@ -123,5 +124,20 @@ public class CardServiceTest {
 			cards.add(card);
 		}
 		cardService.create(cards);
+	}
+	
+	@Test
+	public void testUploadError() throws Exception {
+		CSVReader reader = new CSVReader(new InputStreamReader(Thread
+				.currentThread().getContextClassLoader()
+				.getResourceAsStream("card/upload-error.csv")));
+		List<String[]> list = reader.readAll();
+		long count = cardService.count(new Query());
+		try {
+			cardService.createByUpload(list);
+		}catch(Exception e) {
+			
+		}
+		Assert.assertTrue(count == cardService.count(new Query()));
 	}
 }

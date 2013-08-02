@@ -1,3 +1,5 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" %>
+<%@include file="/views/include/pub.jsp" %>
 <html>
 <head>
 <title>卡号上传</title>
@@ -6,8 +8,9 @@
 <body>
 
 <form id="form" enctype="multipart/form-data" action="/api/card/upload" method="post" style="display:block;">
-	<input type="hidden" id="token" name="token" value="">
+	<input type="hidden" id="token" name="token" value="operator1_Employee">
 	<input id="file" name="file" type="file">
+	<input type="submit" value="提交">
 </form>
 <div id="notoken" style="display:none;"> 
 	您无法访问该页面
