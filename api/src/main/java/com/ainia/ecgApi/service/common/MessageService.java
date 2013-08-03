@@ -12,7 +12,7 @@ import com.ainia.ecgApi.dto.common.Message;
  * @version
  */
 public interface MessageService {
-
+	
 	/**
 	 * <p>邮件方式发送消息</p>
 	 * @param message

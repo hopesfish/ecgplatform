@@ -57,6 +57,9 @@ public class Employee implements Domain {
 	private String title;
 	private Integer version;
 	
+	private String salt;
+	private Date   lastLoginDate;
+	
 	public enum Status {
 		ONLINE,
 		AWAY,
@@ -245,6 +248,24 @@ public class Employee implements Domain {
 
 	public void setLastLiveDate(Date lastLiveDate) {
 		this.lastLiveDate = lastLiveDate;
+	}
+	
+	@JsonIgnore
+	public String getSalt() {
+		return salt;
+	}
+
+	public void setSalt(String salt) {
+		this.salt = salt;
+	}
+	
+	@JsonFormat(pattern = "yyyy-MM-dd" , timezone = "GMT+08:00")
+	public Date getLastLoginDate() {
+		return lastLoginDate;
+	}
+
+	public void setLastLoginDate(Date lastLoginDate) {
+		this.lastLoginDate = lastLoginDate;
 	}
 
 	@Override

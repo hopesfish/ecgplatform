@@ -9,6 +9,11 @@ create table user (
 	name varchar(20) not null,
 	password varchar(100) not null,
 	roles varchar(100),
+    retake_code varchar(10),
+    retake_date datetime,
+    retake_count int,
+    salt varchar(100),
+    last_login_date datetime,
     gender int,
 	type varchar(10),
 	birthday datetime,
@@ -54,6 +59,8 @@ create table employee (
     last_updated datetime,
     last_live_date datetime,
     email varchar(64),
+    salt varchar(100),
+    last_login_date datetime,
     version int,
     primary key(id)
 );

@@ -67,6 +67,12 @@ public class User implements Domain {
 	private Boolean isFree;
 	private Integer version;
 	private Set<HealthRule> rules;
+	private Date lastLoginDate;
+	
+	private String salt;
+	private String retakeCode;
+	private Date   retakeDate;
+	private Integer retakeCount;
 	
 	@PrePersist
 	public void onCreate() {
@@ -310,6 +316,42 @@ public class User implements Domain {
 	public void setIdCard(String idCard) {
 		this.idCard = idCard;
 	}
+	
+	@JsonIgnore
+	public String getRetakeCode() {
+		return retakeCode;
+	}
+	public void setRetakeCode(String retakeCode) {
+		this.retakeCode = retakeCode;
+	}
+	@JsonIgnore
+	public Date getRetakeDate() {
+		return retakeDate;
+	}
+	public void setRetakeDate(Date retakeDate) {
+		this.retakeDate = retakeDate;
+	}
+	@JsonIgnore
+	public Integer getRetakeCount() {
+		return retakeCount;
+	}
+	public void setRetakeCount(Integer retakeCount) {
+		this.retakeCount = retakeCount;
+	}
+	
+	public Date getLastLoginDate() {
+		return lastLoginDate;
+	}
+	public void setLastLoginDate(Date lastLoginDate) {
+		this.lastLoginDate = lastLoginDate;
+	}
+	@JsonIgnore
+	public String getSalt() {
+		return salt;
+	}
+	public void setSalt(String salt) {
+		this.salt = salt;
+	}
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -317,6 +359,7 @@ public class User implements Domain {
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		return result;
 	}
+
 
 	@Override
 	public boolean equals(Object obj) {

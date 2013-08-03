@@ -13,11 +13,22 @@ import java.io.Serializable;
  */
 public class Message implements Serializable {
 
+	private String code;
 	private String from;
 	private String to;
 	private String title;
 	private String content;
 	
+	
+	public Message( String title, String code, String from, String to,
+			String content) {
+		super();
+		this.code = code;
+		this.from = from;
+		this.to = to;
+		this.title = title;
+		this.content = content;
+	}
 	
 	public String getFrom() {
 		return from;
@@ -44,5 +55,17 @@ public class Message implements Serializable {
 		this.content = content;
 	}
 	
+	public String getCode() {
+		return code;
+	}
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+
+	public enum Type {
+		email ,
+		sms
+	}
 	
 }

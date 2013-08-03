@@ -128,7 +128,6 @@ public class CardServiceTest {
 	
 	@Test
 	public void testUploadError() throws Exception {
-		/*
 		CSVReader reader = new CSVReader(new InputStreamReader(Thread
 				.currentThread().getContextClassLoader()
 				.getResourceAsStream("card/upload-error.csv")));
@@ -140,6 +139,5 @@ public class CardServiceTest {
 			
 		}
 		Assert.assertTrue(count == cardService.count(new Query()));
-		*/
 	}
 }

@@ -32,6 +32,7 @@ import com.ainia.ecgApi.domain.health.HealthExamination;
 import com.ainia.ecgApi.domain.health.HealthRule;
 import com.ainia.ecgApi.domain.sys.User;
 import com.ainia.ecgApi.domain.task.Task;
+import com.ainia.ecgApi.dto.common.Message;
 import com.ainia.ecgApi.service.charge.CardService;
 import com.ainia.ecgApi.service.common.UploadService;
 import com.ainia.ecgApi.service.common.UploadService.Type;
@@ -334,5 +335,69 @@ public class UserController extends BaseController<User , Long> {
 		query.getPage().setDatas(cardService.findAll(query));
 		
 		return new ResponseEntity(query.getPage() , HttpStatus.OK);
+	}
+	
+	/**
+	 * <p>重置密码请求</p>
+	 * @return
+	 * ResponseEntity
+	 */
+	@RequestMapping(value = "password/retake" , method = RequestMethod.GET , produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public ResponseEntity retakePasswordRequest(@RequestParam(value = "mobile" , required = false) String mobile , 
+								@RequestParam(value = "email" , required = false) String email) {
+		ResponseEntity response = new ResponseEntity(HttpStatus.OK);
+		if (StringUtils.isBlank(mobile) && StringUtils.isBlank(email)) {
+			response = new ResponseEntity(HttpStatus.BAD_REQUEST);
+		}
+		if (StringUtils.isNotBlank(email)) {
+			User user = userService.findByEmail(email);
+			if (user == null) {
+				return new ResponseEntity(HttpStatus.NOT_FOUND);
+			}
+			userService.retakePassword(user, Message.Type.email);
+			response = new ResponseEntity(HttpStatus.OK);
+		}
+		if (StringUtils.isNotBlank(mobile)){
+			User user = userService.findByMobile(mobile);
+			if (user == null) {
+				return new ResponseEntity(HttpStatus.NOT_FOUND);
+			}
+			userService.retakePassword(user, Message.Type.sms);
+		}
+		return response;
+	}
+	/**
+	 * <p>通过随机码重置密码</p>
+	 * @return
+	 * ResponseEntity
+	 */
+	@RequestMapping(value = "password/retake" , method = RequestMethod.POST , produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public ResponseEntity retakePasswordByCode(@RequestParam(value = "mobile" , required = false) String mobile , 
+						@RequestParam(value = "email" , required = false) String email , 
+						@RequestParam("code") String code, @RequestParam("newPassword") String newPassword) {
+		ResponseEntity response;
+		if (StringUtils.isBlank(mobile) && StringUtils.isBlank(email)) {
+			response = new ResponseEntity(HttpStatus.BAD_REQUEST);
+		}
+		if (StringUtils.isNotBlank(email)) {
+			User user = userService.findByEmail(email);
+			if (user == null) {
+				return new ResponseEntity(HttpStatus.NOT_FOUND);
+			}
+			userService.retakePassword(user, code , newPassword);
+			response = new ResponseEntity(HttpStatus.OK);
+		}
+		else {
+			User user = userService.findByMobile(mobile);
+			if (user == null) {
+				return new ResponseEntity(HttpStatus.NOT_FOUND);
+			}
+			userService.retakePassword(user, code , newPassword);
+			response = new ResponseEntity(HttpStatus.OK);
+		}
+		return response;
+		
 	}
 }

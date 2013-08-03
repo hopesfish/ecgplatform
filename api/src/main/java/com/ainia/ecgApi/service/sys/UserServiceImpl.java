@@ -1,9 +1,11 @@
 package com.ainia.ecgApi.service.sys;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,10 +15,15 @@ import com.ainia.ecgApi.core.exception.PermissionException;
 import com.ainia.ecgApi.core.exception.ServiceException;
 import com.ainia.ecgApi.core.security.AuthUser;
 import com.ainia.ecgApi.core.security.AuthenticateService;
+import com.ainia.ecgApi.core.utils.DigestUtils;
+import com.ainia.ecgApi.core.utils.EncodeUtils;
 import com.ainia.ecgApi.core.utils.PropertyUtil;
 import com.ainia.ecgApi.dao.sys.UserDao;
 import com.ainia.ecgApi.domain.sys.Employee;
 import com.ainia.ecgApi.domain.sys.User;
+import com.ainia.ecgApi.dto.common.Message;
+import com.ainia.ecgApi.dto.common.Message.Type;
+import com.ainia.ecgApi.service.common.MessageService;
 
 /**
  * <p>User Service Impl</p>
@@ -29,11 +36,16 @@ import com.ainia.ecgApi.domain.sys.User;
  */
 @Service
 public class UserServiceImpl extends BaseServiceImpl<User , Long> implements UserService {
+	
+	public static final int RETAKE_CODE_NUM = 3;
+	public static final int RETAKE_MAX_NUM = 3;
     
     @Autowired
     private UserDao userDao;
     @Autowired
     private AuthenticateService authenticateService;
+    @Autowired
+    private MessageService messageService;
     
     public BaseDao<User , Long> getBaseDao() {
         return userDao;
@@ -139,6 +151,68 @@ public class UserServiceImpl extends BaseServiceImpl<User , Long> implements Use
 			throw new ServiceException("exception.user.cannotDelete");
 		}
 		super.delete(user);
+	}
+
+
+	@Override
+	public void retakePassword(User user , Type messageType) {
+		//生成随机6为找回码
+		String code = EncodeUtils.encodeHex(DigestUtils.generateSalt(RETAKE_CODE_NUM));
+		user.setRetakeCode(code);
+		user.setRetakeDate(new Date());
+		userDao.save(user);
+		//TODO 短信 邮件接口修改后 同步修改发送内容
+		switch(messageType) {
+		case email:
+			messageService.sendEmail(new Message("" , code , null , user.getEmail() , null));
+			break;
+		case sms:
+			messageService.sendSms(new Message("" , code , null , "13027334591" , null));
+			break;
+		default:
+			throw new ServiceException("exception.message.unknown");
+		}
+ 	}
+
+
+	@Override
+	public void retakePassword(User user, String code, String newPassword) {
+		String retakeCode = user.getRetakeCode();
+		Date   retakeDate = user.getRetakeDate();
+		Integer retakeCount= user.getRetakeCount() == null ? 1 : user.getRetakeCount();
+		if (StringUtils.isBlank(newPassword) || StringUtils.isBlank(code)) {
+			throw new ServiceException("exception.user.retakePassword.infoError");
+		}
+		if (new DateTime(retakeDate).plusMinutes(30).isBefore(new Date().getTime())) {
+			throw new ServiceException("exception.user.retakePassword.dateTimeout");
+		}
+		if (!retakeCode.equals(code)) {
+			if (retakeCount > RETAKE_MAX_NUM) {
+				user.setRetakeCode(null);
+				user.setRetakeCount(null);
+				user.setRetakeDate(null);
+			}
+			else {
+				user.setRetakeCount(retakeCount + 1);
+			}
+			userDao.save(user);
+			throw new ServiceException("exception.user.retakePassword.codeNotEqual");
+		}
+		//reset the password
+		user.setPassword(authenticateService.encodePassword(newPassword , null));
+		userDao.save(user);
+	}
+
+
+	@Override
+	public User findByMobile(String mobile) {
+		return userDao.findByMobile(mobile);
+	}
+
+
+	@Override
+	public User findByEmail(String email) {
+		return userDao.findByEmail(email);
 	} 
 	
 	

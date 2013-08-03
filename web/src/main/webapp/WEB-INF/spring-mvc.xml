@@ -61,6 +61,7 @@
 	        <list>  
 	           <value>/api/auth</value>  
 	           <value>/api/user/auth</value>
+	           <value>/api/user/password/retake</value>
 	           <value>/api/user:POST</value>  
 	           <value>/api/user/*/examination/*/ecg*</value>  
 	           <value>/api/card/upload</value>  

@@ -1,5 +1,6 @@
 package com.ainia.ecgApi.controller.security;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ainia.ecgApi.core.security.AuthenticateService;
+import com.ainia.ecgApi.core.utils.DigestUtils;
+import com.ainia.ecgApi.core.utils.EncodeUtils;
 import com.ainia.ecgApi.core.web.AjaxResult;
 import com.ainia.ecgApi.domain.sys.Employee;
 import com.ainia.ecgApi.domain.sys.User;
@@ -34,7 +37,7 @@ import com.ainia.ecgApi.service.sys.UserService;
 @Controller
 @RequestMapping("api")
 public class LoginController {
-	
+
 	protected final Logger log = LoggerFactory.getLogger(this.getClass());
 	
 	@Autowired
@@ -62,8 +65,12 @@ public class LoginController {
 			ajaxResult.setStatus(HttpStatus.UNAUTHORIZED.value());
 		}
 		else {
+			employee.setSalt(EncodeUtils.encodeHex(DigestUtils.generateSalt(EmployeeService.SALT_NUM)));
+			employee.setLastLoginDate(new Date());
+			employeeService.update(employee);
+			
 			ajaxResult.setStatus(HttpStatus.OK.value());
-			result.put(AjaxResult.AUTH_TOKEN , authenticateService.generateToken(username , Employee.class.getSimpleName()));
+			result.put(AjaxResult.AUTH_TOKEN , authenticateService.generateToken(username , Employee.class.getSimpleName() , employee.getSalt()));
 		}
 		return new ResponseEntity<Map<String , String>>(result, HttpStatus.valueOf(ajaxResult.getStatus()));
 	}
@@ -87,8 +94,11 @@ public class LoginController {
 				ajaxResult.setStatus(HttpStatus.UNAUTHORIZED.value());
 			}
 			else {
+				user.setSalt(EncodeUtils.encodeHex(DigestUtils.generateSalt(UserService.SALT_NUM)));
+				user.setLastLoginDate(new Date());
+				userService.update(user);
 				ajaxResult.setStatus(HttpStatus.OK.value());
-				result.put(AjaxResult.AUTH_TOKEN , authenticateService.generateToken(username , User.class.getSimpleName()));
+				result.put(AjaxResult.AUTH_TOKEN , authenticateService.generateToken(username , User.class.getSimpleName(), user.getSalt()));
 				result.put(AjaxResult.AUTH_ID , user.getId().toString());
 			}
 		}

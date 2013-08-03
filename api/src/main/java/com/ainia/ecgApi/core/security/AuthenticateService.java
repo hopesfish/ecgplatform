@@ -30,11 +30,13 @@ public interface AuthenticateService {
 	public boolean checkPassword(String target , String source , byte[] salt);
 	/**
 	 * <p>generate rest token</p>
-	 * boolean
 	 * @param username
+	 * @param userType
+	 * @param salt
 	 * @return
+	 * String
 	 */
-	public String generateToken(String username , String userType);
+	public String generateToken(String username , String userType , String salt);
 	/**
 	 * <p>decode toke get the username</p>
 	 * @param token

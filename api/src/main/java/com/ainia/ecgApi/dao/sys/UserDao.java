@@ -23,4 +23,17 @@ public interface UserDao extends JpaRepository<User , Long>, BaseDao<User , Long
      * User
      */
 	public User findByUsername(String username);
+	/**
+	 * <p>通过电话获得用户</p>
+	 * @param mobile
+	 * @return
+	 * User
+	 */
+	public User findByMobile(String mobile);
+	/**
+	 * <p>通过email 获得用户</p>
+	 * @return
+	 * User
+	 */
+	public User findByEmail(String email);
 }
