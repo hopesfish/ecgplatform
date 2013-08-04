@@ -99,7 +99,7 @@ public class EmployeeController extends BaseController<Employee , Long> {
 		
 		Map result = new HashMap(1);
 		result.put(AjaxResult.AUTH_TOKEN , authenticateService.generateToken(employee.getUsername() , 
-												User.class.getSimpleName(), employee.getSalt()));
+												Employee.class.getSimpleName(), employee.getSalt()));
 		return new ResponseEntity(result , HttpStatus.OK);
 	}
 	

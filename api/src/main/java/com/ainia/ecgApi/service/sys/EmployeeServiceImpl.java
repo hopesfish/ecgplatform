@@ -96,6 +96,7 @@ public class EmployeeServiceImpl extends BaseServiceImpl<Employee , Long> implem
 		if (!authenticateService.checkPassword(employee.getPassword() , oldPassword , null)) {
 			throw new ServiceException("exception.oldPassword.notEquals");
 		}
+		employee.setLastLoginDate(new Date());
 		employee.setPassword(authenticateService.encodePassword(newPassword , null));
 		this.employeeDao.save(employee);
 	}
@@ -109,6 +110,7 @@ public class EmployeeServiceImpl extends BaseServiceImpl<Employee , Long> implem
 		if (!currentUser.isSuperAdmin() && !currentUser.isChief() && !currentUser.getId().equals(id)) {
 			throw new ServiceException("exception.password.cannotChange");
 		}
+		employee.setLastLoginDate(new Date());
 		employee.setPassword(authenticateService.encodePassword(employee.getUsername() , null));
 		this.employeeDao.save(employee);
 	}

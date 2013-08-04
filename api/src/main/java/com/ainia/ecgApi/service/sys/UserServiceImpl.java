@@ -109,6 +109,7 @@ public class UserServiceImpl extends BaseServiceImpl<User , Long> implements Use
 		if (!authenticateService.checkPassword(user.getPassword() , oldPassword , null)) {
 			throw new ServiceException("exception.oldPassword.notEquals");
 		}
+		user.setLastLoginDate(new Date());
 		user.setPassword(authenticateService.encodePassword(newPassword , null));
 		this.userDao.save(user);
 	}
@@ -121,6 +122,7 @@ public class UserServiceImpl extends BaseServiceImpl<User , Long> implements Use
 		if (!hasPermission(user)) {
 			throw new ServiceException("exception.password.cannotChange");
 		}
+		user.setLastLoginDate(new Date());
 		user.setPassword(authenticateService.encodePassword(user.getUsername() , null));
 		this.userDao.save(user);
 		
