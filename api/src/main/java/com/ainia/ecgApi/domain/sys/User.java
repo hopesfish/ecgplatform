@@ -68,6 +68,7 @@ public class User implements Domain {
 	private Integer version;
 	private Set<HealthRule> rules;
 	private Date lastLoginDate;
+	private Date tokenDate;
 	
 	private String salt;
 	private String retakeCode;
@@ -351,6 +352,13 @@ public class User implements Domain {
 	}
 	public void setSalt(String salt) {
 		this.salt = salt;
+	}
+	@JsonIgnore
+	public Date getTokenDate() {
+		return tokenDate;
+	}
+	public void setTokenDate(Date tokenDate) {
+		this.tokenDate = tokenDate;
 	}
 	@Override
 	public int hashCode() {

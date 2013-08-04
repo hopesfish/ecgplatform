@@ -1,5 +1,7 @@
 package com.ainia.ecgApi.core.security;
 
+import java.util.Date;
+
 /**
  * <p>安全验证服务</p>
  * Copyright: Copyright (c) 2013
@@ -36,7 +38,7 @@ public interface AuthenticateService {
 	 * @return
 	 * String
 	 */
-	public String generateToken(String username , String userType , String salt);
+	public String generateToken(String username , String userType , Date tokenDate , String salt);
 	/**
 	 * <p>decode toke get the username</p>
 	 * @param token

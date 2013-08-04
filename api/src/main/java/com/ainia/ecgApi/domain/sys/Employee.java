@@ -52,6 +52,7 @@ public class Employee implements Domain {
 	private Date lastLiveDate;
 	private Date    createdDate;
 	private Date    lastUpdated;
+	private Date tokenDate;
 	private String  roles;
 	private String company;
 	private String title;
@@ -266,6 +267,14 @@ public class Employee implements Domain {
 
 	public void setLastLoginDate(Date lastLoginDate) {
 		this.lastLoginDate = lastLoginDate;
+	}
+	@JsonIgnore
+	public Date getTokenDate() {
+		return tokenDate;
+	}
+
+	public void setTokenDate(Date tokenDate) {
+		this.tokenDate = tokenDate;
 	}
 
 	@Override

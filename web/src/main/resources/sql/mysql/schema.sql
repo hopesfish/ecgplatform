@@ -198,8 +198,8 @@ drop table if exists card;
 
 create table card (
     id int auto_increment,
-    encoded_serial varchar(200),
-    serial varchar(100),
+    encoded_serial varchar(200) unique,
+    serial varchar(100) unique,
     encoded_password varchar(100),
     days int,
     created_date datetime,

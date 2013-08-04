@@ -32,7 +32,7 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 	public static final int HASH_INTERATIONS = 1024;
 
 	private static final int SALT_SIZE = 8;
-	private static final String TOKEN_SPLAT = "_";
+	private static final String TOKEN_SPLIT = "_";
 	
 	protected final Logger log = LoggerFactory.getLogger("com.ainia.ecgApi.core.security");
 	
@@ -55,31 +55,32 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 		return hashPassword.equals(target);
 	}
 
-	public String generateToken(String username , String userType , String salt) {
-		String code = username + TOKEN_SPLAT + userType;
-		String token = code + TOKEN_SPLAT + EncodeUtils.encodeHex(DigestUtils.md5(code.getBytes() , EncodeUtils.decodeHex(salt)));
+	public String generateToken(String username , String userType , Date tokenDate , String salt) {
+		String code = username + TOKEN_SPLIT + userType;
+		String token = code + TOKEN_SPLIT + new DateTime(tokenDate).monthOfYear() + TOKEN_SPLIT +
+										EncodeUtils.encodeHex(DigestUtils.md5(code.getBytes() , EncodeUtils.decodeHex(salt)));
 		return  EncodeUtils.encodeBase64(token.getBytes());
 	}
 	
 	public AuthUser loadUserByToken(String tokenStr) {
 		String token = new String(EncodeUtils.decodeBase64(tokenStr));
-		if (token.indexOf(TOKEN_SPLAT) == -1) {
+		if (token.indexOf(TOKEN_SPLIT) == -1) {
 			throw new ServiceException("exception.token.invalid");
 		}
 		log.debug("token is " + token);
-		String[] value = token.split(TOKEN_SPLAT);
+		String[] value = token.split(TOKEN_SPLIT);
 		String username = value[0];
 		String userType = value[1];
 		AuthUser authUser = null;
 		if (User.class.getSimpleName().equals(userType)) {
 			User user = userService.findByUsername(username);
-			Date lastLoginDate = user.getLastLoginDate();
-			if (lastLoginDate == null || new DateTime().minusDays(30).isAfter(lastLoginDate.getTime())) {
+			Date tokenDate = user.getTokenDate();
+			if (tokenDate == null || new DateTime().minusDays(30).isAfter(tokenDate.getTime())) {
 				throw new ServiceException("exception.auth.token.invalid");
 			}
 			if (user != null) {
 				String salt = user.getSalt();
-				if (!generateToken(username , userType , salt).equals(tokenStr)) {
+				if (!generateToken(username , userType ,  user.getTokenDate() , salt).equals(tokenStr)) {
 					throw new ServiceException("exception.auth.token.invalid");
 				}
 				authUser = new AuthUserImpl(user.getId() ,user.getName() , user.getUsername() , User.class.getSimpleName());
@@ -87,13 +88,13 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 		}
 		else if (Employee.class.getSimpleName().equals(userType)) {
 			Employee employee = employeeService.findByUsername(username);
-			Date lastLoginDate = employee.getLastLoginDate();
-			if (lastLoginDate == null || new DateTime().minusDays(1).isAfter(lastLoginDate.getTime())) {
+			Date tokenDate = employee.getTokenDate();
+			if (tokenDate == null || new DateTime().minusDays(30).isAfter(tokenDate.getTime())) {
 				throw new ServiceException("exception.auth.token.invalid");
 			}
 			if (employee != null) {
 				String salt = employee.getSalt();
-				if (!generateToken(username , userType , salt).equals(tokenStr)) {
+				if (!generateToken(username , userType ,  employee.getTokenDate() , salt).equals(tokenStr)) {
 					throw new ServiceException("exception.auth.token.invalid");
 				}
 				authUser =  new AuthUserImpl(employee.getId() , employee.getName() , employee.getUsername() , Employee.class.getSimpleName() , employee.getRolesArray());

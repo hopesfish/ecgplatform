@@ -218,7 +218,9 @@ public class UserController extends BaseController<User , Long> {
 		userService.update(user);
 		
 		Map result = new HashMap(1);
-		result.put(AjaxResult.AUTH_TOKEN , authenticateService.generateToken(user.getUsername() , User.class.getSimpleName(), user.getSalt()));
+		result.put(AjaxResult.AUTH_TOKEN , authenticateService.generateToken(user.getUsername() , User.class.getSimpleName(),
+											user.getTokenDate() ,
+											user.getSalt()));
 		return new ResponseEntity(result , HttpStatus.OK);
 	}
 	

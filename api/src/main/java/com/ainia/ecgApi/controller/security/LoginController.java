@@ -66,12 +66,17 @@ public class LoginController {
 			ajaxResult.setStatus(HttpStatus.UNAUTHORIZED.value());
 		}
 		else {
+			DateTime now = new DateTime();
 			authenticateService.setCurrentUser(new AuthUserImpl(employee.getId() , employee.getName() , employee.getUsername() , Employee.class.getSimpleName() , employee.getRolesArray()));
+			if (employee.getTokenDate() == null || employee.getTokenDate().before(new DateTime().minusDays(30).toDate())) {
+				employee.setTokenDate(now.toDate());
+			}
 			employee.setSalt(EncodeUtils.encodeHex(EncodeUtils.asciiSum(employee.getPassword()).getBytes()));
-			employee.setLastLoginDate(new Date());
+			employee.setLastLoginDate(now.toDate());
 			employeeService.update(employee);
 			ajaxResult.setStatus(HttpStatus.OK.value());
-			result.put(AjaxResult.AUTH_TOKEN , authenticateService.generateToken(username , Employee.class.getSimpleName() , employee.getSalt()));
+			result.put(AjaxResult.AUTH_TOKEN , authenticateService.generateToken(username , Employee.class.getSimpleName() ,
+														employee.getTokenDate() , employee.getSalt()));
 		}
 		return new ResponseEntity<Map<String , String>>(result, HttpStatus.valueOf(ajaxResult.getStatus()));
 	}
@@ -95,13 +100,16 @@ public class LoginController {
 				ajaxResult.setStatus(HttpStatus.UNAUTHORIZED.value());
 			}
 			else {
-				String month = String.valueOf(new DateTime().getMonthOfYear());
+				DateTime now = new DateTime();
+				if (user.getTokenDate() == null || user.getTokenDate().before(new DateTime().minusDays(30).toDate())) {
+					user.setTokenDate(now.toDate());
+				}
 				authenticateService.setCurrentUser(new AuthUserImpl(user.getId() ,user.getName() , user.getUsername() , User.class.getSimpleName()));
 				user.setSalt(EncodeUtils.encodeHex(EncodeUtils.asciiSum(user.getPassword()).getBytes()));
-				user.setLastLoginDate(new Date());
+				user.setLastLoginDate(now.toDate());
 				userService.update(user);
 				ajaxResult.setStatus(HttpStatus.OK.value());
-				result.put(AjaxResult.AUTH_TOKEN , authenticateService.generateToken(username , User.class.getSimpleName(), user.getSalt()));
+				result.put(AjaxResult.AUTH_TOKEN , authenticateService.generateToken(username , User.class.getSimpleName(), user.getTokenDate() , user.getSalt()));
 				result.put(AjaxResult.AUTH_ID , user.getId().toString());
 			}
 		}

@@ -165,7 +165,7 @@ public class CardServiceImpl extends BaseServiceImpl<Card , Long> implements Car
 	        	this.create(card);
         	}catch(RuntimeException r) {
         		r.printStackTrace();
-        		errors.add(values[3]);
+        		errors.add(values[0]);
         	}
         	catch(Exception e) {
         		e.printStackTrace();

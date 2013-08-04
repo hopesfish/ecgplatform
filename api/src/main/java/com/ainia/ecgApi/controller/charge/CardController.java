@@ -110,7 +110,6 @@ public class CardController  {
         	return "/card/success";
         }
         catch(ServiceException e) {
-        	System.out.println("============== " + e.getArguments());
         	model.addAttribute("errors" , e.getArguments());
         	return "/card/failed";
         }
