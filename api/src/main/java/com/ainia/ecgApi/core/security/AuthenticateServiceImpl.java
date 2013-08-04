@@ -1,5 +1,7 @@
 package com.ainia.ecgApi.core.security;
 
+import java.util.Date;
+
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,7 +73,8 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 		AuthUser authUser = null;
 		if (User.class.getSimpleName().equals(userType)) {
 			User user = userService.findByUsername(username);
-			if (new DateTime().minusDays(1).isAfter(user.getLastLoginDate().getTime())) {
+			Date lastLoginDate = user.getLastLoginDate();
+			if (lastLoginDate == null || new DateTime().minusDays(30).isAfter(lastLoginDate.getTime())) {
 				throw new ServiceException("exception.auth.token.invalid");
 			}
 			if (user != null) {
@@ -84,7 +87,8 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 		}
 		else if (Employee.class.getSimpleName().equals(userType)) {
 			Employee employee = employeeService.findByUsername(username);
-			if (new DateTime().minusDays(1).isAfter(employee.getLastLoginDate().getTime())) {
+			Date lastLoginDate = employee.getLastLoginDate();
+			if (lastLoginDate == null || new DateTime().minusDays(1).isAfter(lastLoginDate.getTime())) {
 				throw new ServiceException("exception.auth.token.invalid");
 			}
 			if (employee != null) {

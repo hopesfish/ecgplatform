@@ -2,11 +2,14 @@ package com.ainia.ecgApi.controller.sys;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -27,6 +30,8 @@ import com.ainia.ecgApi.core.crud.Query.OrderType;
 import com.ainia.ecgApi.core.exception.ServiceException;
 import com.ainia.ecgApi.core.security.AuthUser;
 import com.ainia.ecgApi.core.security.AuthenticateService;
+import com.ainia.ecgApi.core.utils.EncodeUtils;
+import com.ainia.ecgApi.core.web.AjaxResult;
 import com.ainia.ecgApi.domain.charge.Card;
 import com.ainia.ecgApi.domain.health.HealthExamination;
 import com.ainia.ecgApi.domain.health.HealthRule;
@@ -198,13 +203,23 @@ public class UserController extends BaseController<User , Long> {
 	public ResponseEntity<?> changePassword(@PathVariable("id") Long id , 
 										 @RequestParam(value = "oldPassword" , required = false) String oldPassword ,
 										 @RequestParam(value = "newPassword" , required = false) String newPassword) {
+		User user = userService.get(id);
+		if (user == null) {
+			return new ResponseEntity(HttpStatus.NOT_FOUND);
+		}
+		
 		if (StringUtils.isBlank(oldPassword) || StringUtils.isBlank(newPassword)) {
 			userService.resetPassword(id);
 		}
 		else {
 			userService.changePassword(id, oldPassword, newPassword);
 		}
-		return new ResponseEntity(HttpStatus.OK);
+		user.setSalt(EncodeUtils.encodeHex(EncodeUtils.asciiSum(user.getPassword()).getBytes()));
+		userService.update(user);
+		
+		Map result = new HashMap(1);
+		result.put(AjaxResult.AUTH_TOKEN , authenticateService.generateToken(user.getUsername() , User.class.getSimpleName(), user.getSalt()));
+		return new ResponseEntity(result , HttpStatus.OK);
 	}
 	
     /**

@@ -78,4 +78,17 @@ public class EncodeUtils {
 	public static String unescapeHtml(String htmlEscaped) {
 		return StringEscapeUtils.unescapeHtml4(htmlEscaped);
 	}
+	/**
+	 * <p>获得指定字符串所有的ascii码的和值</p>
+	 * @param str
+	 * @return
+	 * String
+	 */
+	public static String asciiSum(String str) {
+		int sum = 0;
+		for (char c : str.toCharArray()) {
+			sum += (int)c;
+		}
+		return String.valueOf(sum);
+	}
 }

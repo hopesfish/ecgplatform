@@ -51,12 +51,12 @@ public class MessageServiceImpl implements MessageService {
 		try {
 			HttpResponse response = httpclient.execute(get);
 			if (response.getStatusLine().getStatusCode() != 200) {
-				throw new ServiceException("exception.email.sendError");
+				throw new ServiceException("exception.sms.sendError");
 			}
 		} 
 		catch (Exception e) {
 			e.printStackTrace();
-			throw new ServiceException("exception.email.sendError");
+			throw new ServiceException("exception.sms.sendError");
 		} 
 		finally {
 			httpclient.getConnectionManager().shutdown();

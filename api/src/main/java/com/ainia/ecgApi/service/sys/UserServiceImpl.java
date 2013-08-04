@@ -157,7 +157,7 @@ public class UserServiceImpl extends BaseServiceImpl<User , Long> implements Use
 	@Override
 	public void retakePassword(User user , Type messageType) {
 		//生成随机6为找回码
-		String code = EncodeUtils.encodeHex(DigestUtils.generateSalt(RETAKE_CODE_NUM));
+		String code = String.valueOf(((int)(Math.random() * 1000000)));
 		user.setRetakeCode(code);
 		user.setRetakeDate(new Date());
 		userDao.save(user);
@@ -167,7 +167,7 @@ public class UserServiceImpl extends BaseServiceImpl<User , Long> implements Use
 			messageService.sendEmail(new Message("" , code , null , user.getEmail() , null));
 			break;
 		case sms:
-			messageService.sendSms(new Message("" , code , null , "13027334591" , null));
+			messageService.sendSms(new Message("" , code , null , user.getMobile() , null));
 			break;
 		default:
 			throw new ServiceException("exception.message.unknown");
@@ -183,7 +183,7 @@ public class UserServiceImpl extends BaseServiceImpl<User , Long> implements Use
 		if (StringUtils.isBlank(newPassword) || StringUtils.isBlank(code)) {
 			throw new ServiceException("exception.user.retakePassword.infoError");
 		}
-		if (new DateTime(retakeDate).plusMinutes(30).isBefore(new Date().getTime())) {
+		if (new DateTime(retakeDate).plusHours(24).isBefore(new Date().getTime())) {
 			throw new ServiceException("exception.user.retakePassword.dateTimeout");
 		}
 		if (!retakeCode.equals(code)) {
