@@ -52,6 +52,8 @@ public class Card implements Domain {
 	private String chargeType;
 	private Long employeeId;
 	private String employeeName;
+	private Integer usedCount;
+	private Integer maxUsed;
 	
 	
 	
@@ -216,6 +218,22 @@ public class Card implements Domain {
 
 	public void setActivedDate(Date activedDate) {
 		this.activedDate = activedDate;
+	}
+
+	public Integer getUsedCount() {
+		return usedCount;
+	}
+
+	public void setUsedCount(Integer usedCount) {
+		this.usedCount = usedCount;
+	}
+
+	public Integer getMaxUsed() {
+		return maxUsed;
+	}
+
+	public void setMaxUsed(Integer maxUsed) {
+		this.maxUsed = maxUsed;
 	}
 
 	@Override

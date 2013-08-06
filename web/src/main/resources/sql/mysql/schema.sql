@@ -5,7 +5,7 @@ create table user (
     mobile varchar(20) not null unique,
     id_card varchar(20),
     username varchar(20),
-    email varchar(64) not null unique,
+    email varchar(64) unique,
     name varchar(20) not null,
     password varchar(100) not null,
     roles varchar(100),
@@ -214,5 +214,7 @@ create table card (
     charge_type varchar(10),
     employee_id bigint,
     employee_name varchar(20),
+    used_count int ,
+    max_used int,
     primary key(id)
 );

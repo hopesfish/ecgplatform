@@ -190,7 +190,6 @@ public class User implements Domain {
 		this.city = city;
 	}
 	@Email
-	@NotBlank
 	public String getEmail() {
 		return email;
 	}

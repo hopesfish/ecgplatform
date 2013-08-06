@@ -39,10 +39,10 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 	
 	    @ExceptionHandler(value = { ServiceException.class })
 	    public final ResponseEntity<AjaxResult> handleException(ServiceException ex, WebRequest request) {
-	    	AjaxResult ajaxResult = new AjaxResult(HttpStatus.INTERNAL_SERVER_ERROR.value());
+	    	AjaxResult ajaxResult = new AjaxResult(HttpStatus.BAD_REQUEST.value());
 	    	ajaxResult.setMessage(ex.getErrorMessage());
 	    	ex.printStackTrace();
-	    	return new ResponseEntity<AjaxResult>(ajaxResult , HttpStatus.INTERNAL_SERVER_ERROR);
+	    	return new ResponseEntity<AjaxResult>(ajaxResult , HttpStatus.BAD_REQUEST);
 	    } 
 	    
 	    @ExceptionHandler(value = { ConstraintViolationException.class })
