@@ -15,7 +15,8 @@ public interface UploadService {
 	
 	
 	public enum Type {
-		heart_img //心电图文件
+		heart_img, //心电图文件
+		apk        //客户端
 	}
 	
 	public static final String UPLOAD_URI = "/upload/";
@@ -38,6 +39,14 @@ public interface UploadService {
 	 * byte[]
 	 */
 	public byte[] load(Type type , String relativePath) throws IOException;
+	
+	/**
+	 * <p>删除上传文件</p>
+	 * @param type
+	 * @param relativePath
+	 * void
+	 */
+	public void remove(Type type , String relativePath) throws IOException;
 	/**
 	 * <p>读取心跳数据上传文件</p>
 	 * @param type

@@ -218,3 +218,12 @@ create table card (
     max_used int,
     primary key(id)
 );
+
+drop  table  if exists apk;
+create table apk (
+    id bigint auto_increment,
+    version varchar(20) not null unique,
+    released int,
+    enabled int,
+    primary key(id)
+);
