@@ -63,7 +63,7 @@ public class ApkController {
      * @throws IOException
      * ResponseEntity
      */
-    @RequestMapping(value = "create" , method = RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity create(Apk apk , @RequestParam(value = "file" , required = true) MultipartFile file ) throws IOException {
     	apkService.upload(apk , file.getBytes());

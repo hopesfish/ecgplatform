@@ -66,6 +66,7 @@
 	           <value>/api/user/*/examination/*/ecg*</value>  
 	           <value>/api/card/upload</value>  
 	           <value>/card/upload*</value>  
+	           <value>/api/apk</value>  
 	        </list>  
 	      </property> 
 	      <property name="enable" value="true"></property> 
