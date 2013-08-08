@@ -143,7 +143,14 @@ public abstract class BaseDaoImpl<T extends Domain , ID extends Serializable> im
 						}
 					}
 				}
-			}catch(Throwable t){
+			}
+			catch(RuntimeException r){
+				r.printStackTrace();
+				if (log.isWarnEnabled()) {
+					log.warn("can not resolver field " + condition.getField() + " for " + query.getClazz());
+				}
+			}
+			catch(Exception t){
 				t.printStackTrace();
 				if (log.isWarnEnabled()) {
 					log.warn("can not resolver field " + condition.getField() + " for " + query.getClazz());
