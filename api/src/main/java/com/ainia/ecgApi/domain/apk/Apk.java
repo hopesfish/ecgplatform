@@ -23,6 +23,7 @@ public class Apk implements Domain {
 	
 	public static final String APK_NAME = "healthApk";
 	public static final String APK_SUFFIX = ".apk";
+	public static final String VERSION = "version";
 	
 	private Long id;
 	private String version;
