@@ -11,6 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -55,6 +56,7 @@ public class ApkServiceTest {
     
     @Before
     public void setUp() {
+    	MockitoAnnotations.initMocks(this);
         apk = new Apk();
         apk.setVersion("1121321");
         apk.setReleased(true);
@@ -70,7 +72,7 @@ public class ApkServiceTest {
 
     @Test
     public void testUpload() throws Exception{
-    	/*
+    	
     	when(authenticateService.getCurrentUser()).thenReturn(new AuthUserImpl(2L , "test" , "13700230001" , User.class.getSimpleName()));
     	
     	Resource resource = new ClassPathResource("apk/sample");
@@ -89,7 +91,7 @@ public class ApkServiceTest {
     	apkService.upload(apk , bytes);
     	Thread.sleep(5000);
     	input.close();
-    	out.close();*/
+    	out.close();
     	
     }
 

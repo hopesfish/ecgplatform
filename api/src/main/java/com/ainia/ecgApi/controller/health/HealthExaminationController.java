@@ -1,7 +1,6 @@
 package com.ainia.ecgApi.controller.health;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.servlet.http.HttpServletResponse;
@@ -21,16 +20,27 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.ainia.ecgApi.core.crud.BaseController;
 import com.ainia.ecgApi.core.crud.BaseService;
 import com.ainia.ecgApi.core.crud.Query;
-import com.ainia.ecgApi.core.exception.ServiceException;
 import com.ainia.ecgApi.core.security.AuthUser;
 import com.ainia.ecgApi.core.security.AuthenticateService;
 import com.ainia.ecgApi.core.web.AjaxResult;
 import com.ainia.ecgApi.domain.health.HealthExamination;
 import com.ainia.ecgApi.domain.health.HealthReply;
+import com.ainia.ecgApi.domain.sys.User;
 import com.ainia.ecgApi.service.common.UploadService;
 import com.ainia.ecgApi.service.common.UploadService.Type;
 import com.ainia.ecgApi.service.health.HealthExaminationService;
 import com.ainia.ecgApi.service.health.HealthReplyService;
+import com.ainia.ecgApi.service.sys.UserService;
+import com.lowagie.text.Chapter;
+import com.lowagie.text.Document;
+import com.lowagie.text.DocumentException;
+import com.lowagie.text.Font;
+import com.lowagie.text.Image;
+import com.lowagie.text.PageSize;
+import com.lowagie.text.Paragraph;
+import com.lowagie.text.pdf.BaseFont;
+import com.lowagie.text.pdf.PdfPTable;
+import com.lowagie.text.pdf.PdfWriter;
 
 /**
  * <p>HealthExamination controller</p>
@@ -53,6 +63,8 @@ public class HealthExaminationController extends BaseController<HealthExaminatio
     private AuthenticateService authenticateService;
     @Autowired
     private UploadService uploadService;
+    @Autowired
+    private UserService userService;
     
     @Override
     public BaseService<HealthExamination , Long> getBaseService() {

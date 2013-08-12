@@ -63,7 +63,8 @@
 	           <value>/api/user/auth</value>
 	           <value>/api/user/password/retake</value>
 	           <value>/api/user:POST</value>  
-	           <value>/api/user/*/examination/*/ecg*</value>  
+	           <value>/api/user/*/examination/*/ecg*</value>
+	           <value>/api/user/*/examination/*/pdf</value>    
 	           <value>/api/card/upload</value>  
 	           <value>/api/apk/upload</value>
 	           <value>/api/apk*:GET</value>

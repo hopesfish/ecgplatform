@@ -1,5 +1,6 @@
 package com.ainia.ecgApi.service.health;
 
+import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -22,8 +23,8 @@ import com.ainia.ecgApi.dao.health.HealthExaminationDao;
 import com.ainia.ecgApi.domain.health.HealthExamination;
 import com.ainia.ecgApi.domain.health.HealthReply;
 import com.ainia.ecgApi.domain.health.HealthRule;
-import com.ainia.ecgApi.domain.health.HealthRuleReply;
 import com.ainia.ecgApi.domain.health.HealthRule.Level;
+import com.ainia.ecgApi.domain.health.HealthRuleReply;
 import com.ainia.ecgApi.domain.sys.SystemConfig;
 import com.ainia.ecgApi.domain.sys.User;
 import com.ainia.ecgApi.domain.task.ExaminationTask;
@@ -37,6 +38,16 @@ import com.ainia.ecgApi.service.task.TaskService;
 import com.ainia.ecgApi.utils.DataProcessor;
 import com.ainia.ecgApi.utils.ECGChart;
 import com.ainia.ecgApi.utils.OxygenChart;
+import com.lowagie.text.Chapter;
+import com.lowagie.text.Document;
+import com.lowagie.text.Font;
+import com.lowagie.text.PageSize;
+import com.lowagie.text.Paragraph;
+import com.lowagie.text.Phrase;
+import com.lowagie.text.pdf.BaseFont;
+import com.lowagie.text.pdf.PdfPCell;
+import com.lowagie.text.pdf.PdfPTable;
+import com.lowagie.text.pdf.PdfWriter;
 
 /**
  * <p>HealthExamination Service Impl</p>
@@ -306,10 +317,8 @@ public class HealthExaminationServiceImpl extends BaseServiceImpl<HealthExaminat
 						if (processor.isSnerror() && log.isWarnEnabled()) {
 							log.warn("sn error!");
 						}
-						
 					}
 					catch(Exception e) {
-						e.printStackTrace();
 						examination.setHasDataError(true);
 						updateTaskAndExamination(task, examination);
 					}
