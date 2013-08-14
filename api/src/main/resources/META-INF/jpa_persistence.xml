@@ -3,7 +3,10 @@
     xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd" version="2.0">
 	<!-- Keep this file empty, Spring will scan the @Entity classes -->
 	<persistence-unit name="defaultPU" transaction-type="RESOURCE_LOCAL">
-    	<properties>
-    	</properties>
+        <properties>
+           <property name="hibernate.ejb.event.pre-insert"  value="com.ainia.ecgApi.persistence.HibernateListener"/>
+           <property name="hibernate.ejb.event.post-update" value="com.ainia.ecgApi.persistence.HibernateListener"/>
+           <property name="hibernate.ejb.event.post-delete" value="com.ainia.ecgApi.persistence.HibernateListener"/> 
+        </properties>
 	</persistence-unit>
 </persistence>
