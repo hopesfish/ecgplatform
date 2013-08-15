@@ -67,6 +67,7 @@
 	           <value>/api/user/auth</value>
 	           <value>/api/user:POST</value>  
 	           <value>/api-docs</value>
+	           <value>/api/user</value>
 	        </list>  
 	      </property> 
 	      <property name="enable" value="false"></property> 
