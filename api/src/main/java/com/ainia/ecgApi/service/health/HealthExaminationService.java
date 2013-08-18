@@ -1,5 +1,6 @@
 package com.ainia.ecgApi.service.health;
 
+import java.io.OutputStream;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -46,4 +47,12 @@ public interface HealthExaminationService extends BaseService<HealthExamination 
 	 * List<Map>
 	 */
 	public List<Map> statisticsByUserAndDay(Long userId , Date start , Date end);
+	
+	/**
+	 * <p>导出PDF</p>
+	 * @param examination
+	 * @param output
+	 * void
+	 */
+	public void exportPDF(HealthExamination examination , OutputStream output);
 }

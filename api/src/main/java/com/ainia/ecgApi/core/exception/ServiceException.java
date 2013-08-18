@@ -19,6 +19,11 @@ public class ServiceException extends RuntimeException {
 		super(e);
 	}
 	
+	public ServiceException(Exception e , String message) {
+		super(e);
+		this.errorMessage = message;
+	}
+	
 	public ServiceException(String message , Object... objects) {
 		super(message);
 		this.errorMessage = message;

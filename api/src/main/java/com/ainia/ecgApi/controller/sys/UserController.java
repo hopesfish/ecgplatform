@@ -331,94 +331,92 @@ public class UserController extends BaseController<User , Long> {
 			response.setStatus(HttpStatus.NOT_FOUND.value());
 			return;
 		}
-		User user = userService.get(examination.getUserId());
 		response.setContentType("application/pdf");
-		//TODO 使用固定方式生成pdf
-		Document doc = new Document(PageSize.A4, 50, 50, 50, 50);
+		healthExaminationService.exportPDF(examination,  response.getOutputStream());
 		
-//		String pdfPath = "user/"
-//				+ String.valueOf(authUser.getId())
-//				+ "/examination/" + examination.getId()
-//				+ "/examination.pdf";
-		
-		PdfWriter writer = PdfWriter.getInstance(doc, 
-								response.getOutputStream());
-		doc.open();
-		BaseFont bfChinese = BaseFont.createFont("STSongStd-Light", "UniGB-UCS2-H", true);
-	    Font fontChinese = new Font(bfChinese, 12, Font.NORMAL);  
-		Paragraph title = new Paragraph("测试信息" , fontChinese);
-		
-		Chapter chapter = new Chapter(title , 1);
-		chapter.setNumberDepth(0);
-		
-		Section section1 = chapter.addSection(new Paragraph("用户信息" , fontChinese));
-		
-		PdfPTable userInfo = new PdfPTable(4);
-		userInfo.setSpacingBefore(25);
-		userInfo.setSpacingAfter(25);
-		
-		
-		userInfo.addCell(new PdfPCell(new Paragraph("姓名：" , fontChinese)));
-		userInfo.addCell(new PdfPCell(new Paragraph(user.getName() , fontChinese)));
-		
-		userInfo.addCell(new PdfPCell(new Paragraph("电话：" , fontChinese)));
-		userInfo.addCell(new PdfPCell(new Paragraph(user.getMobile() , fontChinese)));
-		
-		userInfo.addCell(new PdfPCell(new Paragraph("不良爱好：" , fontChinese)));
-		userInfo.addCell(user.getBadHabits());
-		
-		userInfo.addCell(new PdfPCell(new Paragraph("既往病史：" , fontChinese)));
-		userInfo.addCell(user.getAnamnesis());
-		
-		userInfo.addCell(new PdfPCell(new Paragraph("紧急联系人：" , fontChinese)));
-		userInfo.addCell(user.getEmContact1());
-		
-		section1.add(userInfo);
-		
-		Paragraph examTitle = new Paragraph("测试信息" , fontChinese);
-		
-		Section section2 = chapter.addSection(examTitle);
-		
-		PdfPTable exam = new PdfPTable(4);
-		userInfo.setSpacingBefore(25);
-		userInfo.setSpacingAfter(25);
-		
-		exam.addCell(new PdfPCell(new Paragraph("健康状态:" , fontChinese)));
-		exam.addCell(examination.getLevel().name());
-		
-		exam.addCell(new PdfPCell(new Paragraph("测试时间:" , fontChinese)));
-		exam.addCell(new DateTime(examination.getCreatedDate()).toString("yyyy-MM-dd HH:mm:ss"));
-	
-		exam.addCell(new PdfPCell(new Paragraph("心律:" , fontChinese)));
-		exam.addCell(String.valueOf(examination.getHeartRhythm()));
-		
-		exam.addCell(new PdfPCell(new Paragraph("体温:" , fontChinese)));
-		exam.addCell(String.valueOf(examination.getBodyTemp()));
-		
-		exam.addCell(new PdfPCell(new Paragraph("血压:" , fontChinese)));
-		exam.addCell(new PdfPCell(new Paragraph(String.format("%s-%s 毫米汞柱", String.valueOf(examination.getBloodPressureLow()) ,
-				String.valueOf(examination.getBloodPressureHigh())) , fontChinese)));
-		
-		exam.addCell(new PdfPCell(new Paragraph("血氧:" , fontChinese)));
-		exam.addCell(String.valueOf(examination.getBloodOxygen()));
-		
-		section2.add(exam);
-		
-		Paragraph heartTitle = new Paragraph("心电图" , fontChinese);
-		
-		Section section3 = chapter.addSection(heartTitle);
-		
-		for (int i = 1; i < 8; i++) {
-			String ecgPath = String.valueOf(User.class.getSimpleName().toLowerCase() + "/" + user.getId()) + "/examination/" + examinationId + "/ecg" + i + ".jpg";
-			Image image = Image.getInstance(uploadService.load(Type.heart_img , ecgPath));
-			image.scalePercent(40, 38);
-			
-			section3.add(image);
-		}
-		
-		doc.add(chapter);
-		
-		doc.close();
+////		String pdfPath = "user/"
+////				+ String.valueOf(authUser.getId())
+////				+ "/examination/" + examination.getId()
+////				+ "/examination.pdf";
+//		
+//		PdfWriter writer = PdfWriter.getInstance(doc, 
+//								response.getOutputStream());
+//		doc.open();
+//		BaseFont bfChinese = BaseFont.createFont("STSongStd-Light", "UniGB-UCS2-H", true);
+//	    Font fontChinese = new Font(bfChinese, 12, Font.NORMAL);  
+//		Paragraph title = new Paragraph("测试信息" , fontChinese);
+//		
+//		Chapter chapter = new Chapter(title , 1);
+//		chapter.setNumberDepth(0);
+//		
+//		Section section1 = chapter.addSection(new Paragraph("用户信息" , fontChinese));
+//		
+//		PdfPTable userInfo = new PdfPTable(4);
+//		userInfo.setSpacingBefore(25);
+//		userInfo.setSpacingAfter(25);
+//		
+//		
+//		userInfo.addCell(new PdfPCell(new Paragraph("姓名：" , fontChinese)));
+//		userInfo.addCell(new PdfPCell(new Paragraph(user.getName() , fontChinese)));
+//		
+//		userInfo.addCell(new PdfPCell(new Paragraph("电话：" , fontChinese)));
+//		userInfo.addCell(new PdfPCell(new Paragraph(user.getMobile() , fontChinese)));
+//		
+//		userInfo.addCell(new PdfPCell(new Paragraph("不良爱好：" , fontChinese)));
+//		userInfo.addCell(user.getBadHabits());
+//		
+//		userInfo.addCell(new PdfPCell(new Paragraph("既往病史：" , fontChinese)));
+//		userInfo.addCell(user.getAnamnesis());
+//		
+//		userInfo.addCell(new PdfPCell(new Paragraph("紧急联系人：" , fontChinese)));
+//		userInfo.addCell(user.getEmContact1());
+//		
+//		section1.add(userInfo);
+//		
+//		Paragraph examTitle = new Paragraph("测试信息" , fontChinese);
+//		
+//		Section section2 = chapter.addSection(examTitle);
+//		
+//		PdfPTable exam = new PdfPTable(4);
+//		userInfo.setSpacingBefore(25);
+//		userInfo.setSpacingAfter(25);
+//		
+//		exam.addCell(new PdfPCell(new Paragraph("健康状态:" , fontChinese)));
+//		exam.addCell(examination.getLevel().name());
+//		
+//		exam.addCell(new PdfPCell(new Paragraph("测试时间:" , fontChinese)));
+//		exam.addCell(new DateTime(examination.getCreatedDate()).toString("yyyy-MM-dd HH:mm:ss"));
+//	
+//		exam.addCell(new PdfPCell(new Paragraph("心律:" , fontChinese)));
+//		exam.addCell(String.valueOf(examination.getHeartRhythm()));
+//		
+//		exam.addCell(new PdfPCell(new Paragraph("体温:" , fontChinese)));
+//		exam.addCell(String.valueOf(examination.getBodyTemp()));
+//		
+//		exam.addCell(new PdfPCell(new Paragraph("血压:" , fontChinese)));
+//		exam.addCell(new PdfPCell(new Paragraph(String.format("%s-%s 毫米汞柱", String.valueOf(examination.getBloodPressureLow()) ,
+//				String.valueOf(examination.getBloodPressureHigh())) , fontChinese)));
+//		
+//		exam.addCell(new PdfPCell(new Paragraph("血氧:" , fontChinese)));
+//		exam.addCell(String.valueOf(examination.getBloodOxygen()));
+//		
+//		section2.add(exam);
+//		
+//		Paragraph heartTitle = new Paragraph("心电图" , fontChinese);
+//		
+//		Section section3 = chapter.addSection(heartTitle);
+//		
+//		for (int i = 1; i < 8; i++) {
+//			String ecgPath = String.valueOf(User.class.getSimpleName().toLowerCase() + "/" + user.getId()) + "/examination/" + examinationId + "/ecg" + i + ".jpg";
+//			Image image = Image.getInstance(uploadService.load(Type.heart_img , ecgPath));
+//			image.scalePercent(40, 38);
+//			
+//			section3.add(image);
+//		}
+//		
+//		doc.add(chapter);
+//		
+//		doc.close();
 		
 	}
 	

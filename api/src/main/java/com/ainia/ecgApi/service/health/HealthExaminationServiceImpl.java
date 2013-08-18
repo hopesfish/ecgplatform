@@ -2,6 +2,7 @@ package com.ainia.ecgApi.service.health;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -13,6 +14,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.zip.GZIPInputStream;
 
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +25,7 @@ import com.ainia.ecgApi.core.crud.Query.OrderType;
 import com.ainia.ecgApi.core.exception.ServiceException;
 import com.ainia.ecgApi.core.security.AuthUser;
 import com.ainia.ecgApi.core.security.AuthenticateService;
+import com.ainia.ecgApi.core.utils.StringUtils;
 import com.ainia.ecgApi.dao.health.HealthExaminationDao;
 import com.ainia.ecgApi.domain.charge.Card;
 import com.ainia.ecgApi.domain.health.HealthExamination;
@@ -41,11 +44,24 @@ import com.ainia.ecgApi.service.common.UploadService;
 import com.ainia.ecgApi.service.common.UploadService.Type;
 import com.ainia.ecgApi.service.sys.OperatorService;
 import com.ainia.ecgApi.service.sys.SystemConfigService;
+import com.ainia.ecgApi.service.sys.UserService;
 import com.ainia.ecgApi.service.task.ExaminationTaskService;
 import com.ainia.ecgApi.service.task.TaskService;
 import com.ainia.ecgApi.utils.DataProcessor;
 import com.ainia.ecgApi.utils.ECGChart;
 import com.ainia.ecgApi.utils.OxygenChart;
+import com.lowagie.text.Chapter;
+import com.lowagie.text.Document;
+import com.lowagie.text.Font;
+import com.lowagie.text.Image;
+import com.lowagie.text.PageSize;
+import com.lowagie.text.Paragraph;
+import com.lowagie.text.Phrase;
+import com.lowagie.text.pdf.BaseFont;
+import com.lowagie.text.pdf.PdfContentByte;
+import com.lowagie.text.pdf.PdfPCell;
+import com.lowagie.text.pdf.PdfPTable;
+import com.lowagie.text.pdf.PdfWriter;
 
 /**
  * <p>HealthExamination Service Impl</p>
@@ -81,7 +97,9 @@ public class HealthExaminationServiceImpl extends BaseServiceImpl<HealthExaminat
     private CardService cardService;
     @Autowired
     private OperatorService operatorService;
-
+    @Autowired
+    private UserService userService;
+    
     private ExecutorService executorService = Executors.newFixedThreadPool(3);
     
     
@@ -421,7 +439,7 @@ public class HealthExaminationServiceImpl extends BaseServiceImpl<HealthExaminat
 			SimpleDateFormat from = new SimpleDateFormat("yyyy-M-d");
 			SimpleDateFormat to   = new SimpleDateFormat("yyyy-MM-dd");
 			for (Object[] data : list) {
-				Map dataMap = new HashMap();
+				Map<String, Object> dataMap = new HashMap<String , Object>();
 				dataMap.put(HealthExamination.BLOOD_PRESSURE_LOW , data[0]);
 				dataMap.put(HealthExamination.BLOOD_PRESSURE_HIGH , data[1]);
 				dataMap.put(HealthExamination.HEART_RHYTHM , data[2]);
@@ -440,8 +458,164 @@ public class HealthExaminationServiceImpl extends BaseServiceImpl<HealthExaminat
 		}
 		return results;
 	}
+	
+	@Override
+	public void exportPDF(HealthExamination examination , OutputStream output) {
+		try {
+			User user = userService.get(examination.getUserId());
+			
+			Document doc = new Document(PageSize.A4, 50, 50, 50, 50);
+			PdfWriter writer = PdfWriter.getInstance(doc, output);
+			doc.open();
+			PdfContentByte canvas = writer.getDirectContent();
+			
+			BaseFont bfChinese = BaseFont.createFont("STSongStd-Light", "UniGB-UCS2-H", true);
+		    Font titleFont = new Font(bfChinese, 30, Font.BOLD);  
+		    Font textFont = new Font(bfChinese, 18, Font.NORMAL); 
+		    Font valueFont = new Font(bfChinese , 12 , Font.NORMAL);
+		    //-------------------  page1  -----------------------------------
+			Paragraph title = new Paragraph("体检病例报告",  titleFont);
+			title.setAlignment(1);
+			Chapter chapter = new Chapter(title , 1);
+			chapter.setNumberDepth(0);
+			
+			PdfPTable firstTable = new PdfPTable(2);
+			firstTable.setTotalWidth(180);
+			firstTable.setSpacingBefore(80);
+			firstTable.setHorizontalAlignment(1);
+			
+			firstTable.addCell(createCell("姓名 " , textFont , 0));
+			firstTable.addCell(createCell(user.getName() , valueFont , 1));
+			
+			firstTable.addCell(createCell("性别 " , textFont , 0));
+			firstTable.addCell(createCell(user.isMan()?"男" : "女" , valueFont , 1));
+			
+			firstTable.addCell(createCell("年龄 " , textFont , 0));
+			firstTable.addCell(createCell(String.valueOf(user.getAge()) , valueFont , 1));
+			
+			firstTable.addCell(createCell("检测日期 " , textFont , 0));
+			firstTable.addCell(createCell(new DateTime(user.getCreatedDate()).toString("yyyy-MM-dd") , 
+					valueFont , 1));
+			
+			doc.add(chapter);
+			firstTable.completeRow();
+		    // write the table to an absolute position
+			firstTable.writeSelectedRows(0, -1, 360, firstTable.getTotalHeight() + 60, canvas);
+		    //-------------------  page1  -----------------------------------
+			//-------------------  page2  -----------------------------------
+			Paragraph userInfo = new Paragraph("个人信息",  titleFont);
+			Chapter chapter2 = new Chapter(userInfo , 1);
+			chapter2.setNumberDepth(0);
+			
+			PdfPTable infoTable = new PdfPTable(4);
+			infoTable.setSpacingBefore(20);
+			infoTable.setSpacingAfter(20);
+			
+			infoTable.addCell(createCell("姓名 " , textFont , 0));
+			infoTable.addCell(createCell(user.getName() , valueFont , 1));
+			
+			infoTable.addCell(createCell("电话 " , textFont , 0));
+			infoTable.addCell(createCell(user.getMobile() , valueFont , 1));
+			
+			infoTable.addCell(createCell("不良嗜好 " , textFont , 0));
+			PdfPCell badHabits = createCell(user.getBadHabits() , valueFont , 1);
+			badHabits.setColspan(3);
+			infoTable.addCell(badHabits);
+			
+			infoTable.addCell(createCell("既往病史 " , textFont , 0));
+			PdfPCell anamnesis = createCell(user.getAnamnesis() , valueFont , 1);
+			anamnesis.setColspan(3);
+			infoTable.addCell(anamnesis);
+
+			chapter2.add(infoTable);
+			
+			chapter2.add(new Paragraph("报告回复 ",  new Font(bfChinese, 18, Font.BOLD)));
+			
+			//获得所有回复
+			List<HealthReply> replys = healthReplyService.findAllReplyByExamination(examination.getId());
+			if (replys != null) {
+				for (HealthReply reply : replys) {
+					chapter2.add(new Paragraph(reply.getContent() ,  valueFont));
+				}
+			}
+			doc.add(chapter2);
+			//-------------------  page2  -----------------------------------
+			//-------------------  page3  -----------------------------------
+			Paragraph result = new Paragraph("各项检查结果如下: ",  titleFont);
+			Chapter chapter3 = new Chapter(result , 1);
+			chapter3.setNumberDepth(0);
+			
+			chapter3.add(new Paragraph("一般项目 ",  new Font(bfChinese, 18 , Font.BOLD)));
+			
+			PdfPTable resultTable1 = new PdfPTable(2);
+			resultTable1.setSpacingBefore(20);
+			resultTable1.setHorizontalAlignment(1);
+			
+			resultTable1.addCell(createCell("项目名称" , textFont , 1));
+			resultTable1.addCell(createCell("项目结果" , valueFont , 1));
+			
+			resultTable1.addCell(createCell("收缩压" , textFont , 0));
+			resultTable1.addCell(createCell(StringUtils.valueOf(examination.getBloodPressureLow()) , valueFont , 0));
+			
+			resultTable1.addCell(createCell("舒张压" , textFont , 0));
+			resultTable1.addCell(createCell(StringUtils.valueOf(examination.getBloodPressureHigh()) , valueFont , 0));
+			
+			resultTable1.addCell(createCell("体温" , textFont , 0));
+			resultTable1.addCell(createCell(StringUtils.valueOf(examination.getBodyTemp()) , valueFont , 0));
+			
+			chapter3.add(resultTable1);
+			
+			chapter3.add(new Paragraph("内科 ",  new Font(bfChinese, 18 , Font.BOLD)));
+			
+			PdfPTable resultTable2 = new PdfPTable(2);
+			resultTable2.setSpacingBefore(20);
+			resultTable2.setHorizontalAlignment(1);
+			
+			resultTable2.addCell(createCell("项目名称" , textFont , 1));
+			resultTable2.addCell(createCell("项目结果" , textFont , 1));
+			
+			resultTable2.addCell(createCell("心率" , textFont , 0));
+			resultTable2.addCell(createCell(StringUtils.valueOf(examination.getHeartRhythm()) , valueFont , 0));
+
+			resultTable2.addCell(createCell("血氧" , textFont , 0));
+			resultTable2.addCell(createCell(StringUtils.valueOf(examination.getBloodOxygen()) , valueFont , 0));
+
+			chapter3.add(resultTable2);
+			
+			doc.add(chapter3);
+			//-------------------  page3  -----------------------------------
+			//-------------------  page4  -----------------------------------
+			Chapter chapter4 = new Chapter(new Paragraph("心电图 ",  titleFont) , 1);
+			chapter4.setNumberDepth(0);
+			
+			for (int i = 1; i < 8; i++) {
+				String ecgPath = String.valueOf(User.class.getSimpleName().toLowerCase() + "/" + user.getId()) + "/examination/" + examination.getId() + "/ecg" + i + ".jpg";
+				Image image = Image.getInstance(uploadService.load(Type.heart_img , ecgPath));
+				image.scalePercent(28, 38);
+				
+				chapter4.add(image);
+			}
+			doc.add(chapter4);
+			//-------------------  page4  -----------------------------------
+			
+			doc.close();
+		}
+		catch(Exception e) {
+			throw new ServiceException(e , "exception.export.pdf.error");
+		}
+	}
+	
+	private PdfPCell createCell(String name , Font font , float borderBottom) {
+		PdfPCell cell = new PdfPCell(new Phrase(name , font));
+		cell.setBorderWidth(0);
+		cell.setHorizontalAlignment(1);
+		cell.setBorderWidthBottom(borderBottom);
+		return cell;
+	}
 
 	public void setAuthenticateService(AuthenticateService authenticateService) {
 		this.authenticateService = authenticateService;
 	}
+
+
 }

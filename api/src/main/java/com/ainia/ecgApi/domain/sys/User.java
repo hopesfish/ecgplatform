@@ -6,7 +6,6 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -22,6 +21,7 @@ import javax.persistence.Version;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
+import org.joda.time.DateTime;
 
 import com.ainia.ecgApi.core.bean.Domain;
 import com.ainia.ecgApi.domain.health.HealthRule;
@@ -92,6 +92,18 @@ public class User implements Domain {
 	public String getMobilePrefix () {
 		return mobile == null?null : mobile.substring(7);
 	}
+	@Transient
+	public boolean isMan() { 
+		return this.gender == 1;
+	}
+	@Transient
+	public Integer getAge() {
+		if (this.birthday != null) {
+			return new DateTime().getYear() - new DateTime(this.birthday).getYear();
+		}
+		return null;
+	}
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public Long getId() {
