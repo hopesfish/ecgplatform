@@ -1,12 +1,20 @@
 <div class="row-fluid">
 	<div class="span12 buttons">
+		<button class="btn btn-primary" type="button"
+				ng-click="expert.refresh()">
+			<i class="icon-refresh"></i>刷新
+		</button>
 		<a href="#/expert/new" class="btn btn-primary"><i class="icon-plus"></i>新增专家</a>
 		<button class="btn" type="button"
 				ng-class="{'btn-danger': expert.selectedItem != null}"
 				ng-click="expert.confirmDelete()" ng-disabled="expert.selectedItem == null">
 			<i class="icon-remove"></i>删除专家
 		</button>
-		<input type="text" placeholder="请输入任意关键字" title="请输入任意关键字" ng-model="expert.query" ng-change="expert.queryChanged(expert.query)">
+		<input type="text" placeholder="请输入任意关键字" title="请输入任意关键字" ng-model="expert.query">
+		<button class="btn btn-primary" type="button"
+				ng-click="expert.queryChanged(expert.query)">
+			<i class="icon-search"></i>查询
+		</button>
     </div>
 </div>
 <div class="row-fluid">
@@ -29,6 +37,6 @@
 		  </tbody>
 		</table>
 
-		<at-pagination items-per-page="10" instance="expertPagination" list="expert.filteredData"></at-pagination>
+		<at-pagination items-per-page="15" instance="expertPagination" list="expert.filteredData"></at-pagination>
     </div>
 </div>

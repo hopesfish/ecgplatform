@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.PrePersist;
+import javax.persistence.Transient;
 import javax.persistence.Version;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -30,13 +31,26 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  */
 @Entity
 public class HealthExamination implements Domain {
-
+	
+	public static final String USER_ID = "userId";
+	public static final String CREATED_DATE = "createdDate";
+	public static final String BLOOD_PRESSURE_LOW = "bloodPressureLow";
+	public static final String BLOOD_PRESSURE_HIGH = "bloodPressureHigh";
+	public static final String HEART_RHYTHM = "heartRhythm";
+	public static final String BLOOD_OXYGEN = "bloodOxygen";
+	public static final String BREATH = "breath";
+	public static final String BODY_TEMP = "bodyTemp";
+	public static final String PULSERATE = "pulserate";
+	
 	private Long id;
 	private Long userId;
 	private String userName;
 	private String testItem;
 	private String userType;
+	private Boolean isTest;
+	private Boolean isGziped = false;
 	private Level  level;
+	private String apkId;
 	private Integer bloodPressureLow;
 	private Integer bloodPressureHigh;
 	private Integer heartRhythm;
@@ -44,7 +58,10 @@ public class HealthExamination implements Domain {
 	private Integer breath;
 	private Float bodyTemp;
 	private Integer pulserate;
+	private Boolean hasDataError;
 	private String heartData;
+	private Float bloodSugar; 
+	private String medicine;
 	private Double  latitude;
 	private Integer  altitude;
 	private Float temp;
@@ -97,7 +114,20 @@ public class HealthExamination implements Domain {
 		return level;
 	}
 
+	public Boolean getHasDataError() {
+		return hasDataError;
+	}
+	public void setHasDataError(Boolean hasDataError) {
+		this.hasDataError = hasDataError;
+	}
 
+	public String getMedicine() {
+		return medicine;
+	}
+
+	public void setMedicine(String medicine) {
+		this.medicine = medicine;
+	}
 
 	public void setLevel(Level level) {
 		this.level = level;
@@ -133,8 +163,14 @@ public class HealthExamination implements Domain {
 	public void setHeartRhythm(Integer heartRhythm) {
 		this.heartRhythm = heartRhythm;
 	}
+	public Boolean getIsTest() {
+		return isTest;
+	}
 
 
+	public void setIsTest(Boolean isTest) {
+		this.isTest = isTest;
+	}
 
 	public Integer getBloodOxygen() {
 		return bloodOxygen;
@@ -308,21 +344,44 @@ public class HealthExamination implements Domain {
 		this.createdDate = createdDate;
 	}
 
+	public Float getBloodSugar() {
+		return bloodSugar;
+	}
+
+
+	public void setBloodSugar(Float bloodSugar) {
+		this.bloodSugar = bloodSugar;
+	}
+
+
 	public String getUserName() {
 		return userName;
 	}
-
 
 	public void setUserName(String userName) {
 		this.userName = userName;
 	}
 
-
 	public void setId(Long id) {
 		this.id = id;
 	}
 
+	public String getApkId() {
+		return apkId;
+	}
 
+	public void setApkId(String apkId) {
+		this.apkId = apkId;
+	}
+
+	@Transient
+	public Boolean getIsGziped() {
+		return isGziped;
+	}
+
+	public void setIsGziped(Boolean isGziped) {
+		this.isGziped = isGziped;
+	}
 
 	@Override
 	public int hashCode() {
@@ -353,6 +412,25 @@ public class HealthExamination implements Domain {
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this);
 	}
-
 	
+	public String getPropNameByCode (String code) {
+		String prop = "unknown";
+		if ("1".equals(code)) {
+			prop =  HealthExamination.BLOOD_PRESSURE_LOW;
+		} else if ("2".equals(code)) {
+			prop =  HealthExamination.BLOOD_PRESSURE_HIGH;
+		} else if ("3".equals(code)) {
+			prop =  HealthExamination.HEART_RHYTHM;
+		} else if ("4".equals(code)) {
+			prop =  HealthExamination.BLOOD_OXYGEN;
+		} else if ("5".equals(code)) {
+			prop =  HealthExamination.BREATH;
+		} else if ("6".equals(code)) {
+			prop =  HealthExamination.BODY_TEMP;
+		} else if ("7".equals(code)) {
+			prop =  HealthExamination.PULSERATE;
+		}
+		return prop;
+	}
+
 }

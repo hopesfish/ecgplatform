@@ -77,6 +77,8 @@ angular.module('ecgChief', [])
         $location.path("chief/" + chief.id);
     };
 
+    $scope.chief.refresh = refreshGrid;
+
 }])
 .controller('ChiefNewController', ['$scope', '$timeout', '$location', 'EnumService', 'ProfileService', 'ChiefService',
     function ($scope, $timeout, $location, EnumService, ProfileService, ChiefService) {

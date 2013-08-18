@@ -44,7 +44,14 @@
 	  </property>
 	</bean>	
 	
+	
     <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>
+    
+    <!-- 定义JSP文件的位置 --> 
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/views/"/>
+        <property name="suffix" value=".jsp"/>
+    </bean>
 	
     <mvc:interceptors>  
 	  <mvc:interceptor>  
@@ -52,8 +59,16 @@
 	    <bean class="com.ainia.ecgApi.core.security.RestTokenInterceptor">  
 	      <property name="excludes">  
 	        <list>  
-	          <value>/api/auth</value>  
-	           <value>/api/user/auth</value>  
+	           <value>/api/auth</value>  
+	           <value>/api/user/auth</value>
+	           <value>/api/user/password/retake</value>
+	           <value>/api/user:POST</value>  
+	           <value>/api/user/*/examination/*/ecg*</value>
+	           <value>/api/user/*/examination/*/pdf</value>    
+	           <value>/api/card/upload</value>  
+	           <value>/api/apk/upload</value>
+	           <value>/api/apk*:GET</value>
+	           <value>/api/apk/*:GET</value>
 	        </list>  
 	      </property> 
 	      <property name="enable" value="true"></property> 

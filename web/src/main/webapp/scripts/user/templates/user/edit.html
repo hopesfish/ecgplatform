@@ -17,6 +17,15 @@
 		</tr>
 
 		<tr>
+		<td width="150px" valign="top"><label for="user-email">邮箱地址:</label></td>
+		<td>
+			<input ng-model="user.updateobj.email" class="input-xlarge" id="user-email"
+				   ng-pattern="/^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/"
+				   placeholder="请输入有效邮箱地址" ng-change="user.checkUnique()"></input>
+			<span class="desc">找回密码的方式之一</span></td>
+		</tr>
+
+		<tr>
 		<td><label for="user-gender">性别:</label></td>
 		<td><select ng-model="user.updateobj.gender" ng-options="g.value as g.label for g in user.genders"></select></td>
 		</tr>
@@ -94,9 +103,9 @@
 <div class="row-fluid">
 	<div class="span12">
 		<button class="btn" type="button"
-				ng-class="{'btn-primary': updateChiefForm.$valid}" 
+				ng-class="{'btn-primary': updateChiefForm.$valid && user.isEmailUnique}" 
 				ng-click="user.update()"
-				ng-disabled="!updateChiefForm.$valid">
+				ng-disabled="!updateChiefForm.$valid || !user.isEmailUnique">
 			<i class="icon-save"></i>保存
 		</button>
 		<button class="btn btn-primary" type="button"

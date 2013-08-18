@@ -66,7 +66,7 @@ angular.module('ecgHeader', [])
     };
 
     $scope.header.heartbeat = function() {
-        ProfileService.update($scope.session.user).then(function(result) {
+        ProfileService.heartbeat($scope.session.user).then(function(result) {
         }, function() {
             $scope.message.error("服务端接受心跳信号异常!");
         });

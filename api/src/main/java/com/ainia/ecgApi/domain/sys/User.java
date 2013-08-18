@@ -20,6 +20,7 @@ import javax.persistence.Transient;
 import javax.persistence.Version;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.ainia.ecgApi.core.bean.Domain;
@@ -50,6 +51,7 @@ public class User implements Domain {
 	private String address;
 	private Float  stature;
 	private Float  weight;
+	private String email;
 	private String idCard;
 	private int gender;
 	private String city;
@@ -65,6 +67,13 @@ public class User implements Domain {
 	private Boolean isFree;
 	private Integer version;
 	private Set<HealthRule> rules;
+	private Date lastLoginDate;
+	private Date tokenDate;
+	
+	private String salt;
+	private String retakeCode;
+	private Date   retakeDate;
+	private Integer retakeCount;
 	
 	@PrePersist
 	public void onCreate() {
@@ -180,7 +189,13 @@ public class User implements Domain {
 	public void setCity(String city) {
 		this.city = city;
 	}
-
+	@Email
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
 	public String getEmContact1() {
 		return emContact1;
 	}
@@ -301,6 +316,50 @@ public class User implements Domain {
 	public void setIdCard(String idCard) {
 		this.idCard = idCard;
 	}
+	
+	@JsonIgnore
+	public String getRetakeCode() {
+		return retakeCode;
+	}
+	public void setRetakeCode(String retakeCode) {
+		this.retakeCode = retakeCode;
+	}
+	@JsonIgnore
+	public Date getRetakeDate() {
+		return retakeDate;
+	}
+	public void setRetakeDate(Date retakeDate) {
+		this.retakeDate = retakeDate;
+	}
+	@JsonIgnore
+	public Integer getRetakeCount() {
+		return retakeCount;
+	}
+	public void setRetakeCount(Integer retakeCount) {
+		this.retakeCount = retakeCount;
+	}
+
+	@JsonFormat(pattern = "yyyy-MM-dd hh:mm" ,  timezone = "GMT+08:00")
+	public Date getLastLoginDate() {
+		return lastLoginDate;
+	}
+	public void setLastLoginDate(Date lastLoginDate) {
+		this.lastLoginDate = lastLoginDate;
+	}
+	@JsonIgnore
+	public String getSalt() {
+		return salt;
+	}
+	public void setSalt(String salt) {
+		this.salt = salt;
+	}
+	@JsonIgnore
+	public Date getTokenDate() {
+		return tokenDate;
+	}
+	public void setTokenDate(Date tokenDate) {
+		this.tokenDate = tokenDate;
+	}
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -308,6 +367,7 @@ public class User implements Domain {
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		return result;
 	}
+
 
 	@Override
 	public boolean equals(Object obj) {

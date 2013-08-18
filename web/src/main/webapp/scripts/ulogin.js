@@ -20,7 +20,7 @@ $(function() {
             type: 'POST',
             dataType: 'json'
         }).then(function(res) {
-            $.cookie('AiniaSelfAuthToken', encodeURI(res.token), { expires: 1, path: '/' });
+            $.cookie('AiniaSelfAuthToken', encodeURI(res.token), { expires: 7, path: '/' });
             window.location.href = "uindex.html";
         }, function() {
             alert('用户名或密码不对,请重新尝试!');
@@ -38,4 +38,6 @@ $(function() {
     });
     // restore the cookie
     $("#username").val($.cookie('AiniaSelfUsername') || '');
+
+    $("#ecgSlider").carousel();
 });

@@ -4,7 +4,11 @@ define(function(require, exports) {
 var profileEditTemp = require("../templates/profile/edit.html");
 var profilePasswordTemp = require("../templates/profile/password.html");
 
+var httpProvider;
 angular.module('ecgProfileDirectives', [])
+.config(['$httpProvider', function ($httpProvider) {
+    httpProvider = $httpProvider;
+}])
 .controller('ProfileController', ['$scope', '$routeParams', '$timeout', '$location', 'EnumService', 'ProfileService',
     function ($scope, $routeParams, $timeout, $location, EnumService, ProfileService) {
     $scope.subheader.title = "个人设置";
@@ -85,8 +89,8 @@ angular.module('ecgProfileDirectives', [])
     };
 }])
 // 修改密码
-.controller('ProfilPasswordController', ['$scope', '$routeParams', '$timeout', '$location', 'EnumService', 'ProfileService',
-    function ($scope, $routeParams, $timeout, $location, EnumService, ProfileService) {
+.controller('ProfilPasswordController', ['$scope', '$http', '$routeParams', '$timeout', '$location', 'EnumService', 'ProfileService',
+    function ($scope, $http, $routeParams, $timeout, $location, EnumService, ProfileService) {
 
    	$scope.profile.user = null;
 
@@ -112,24 +116,41 @@ angular.module('ecgProfileDirectives', [])
     };
 
     $scope.profile.updatePassword = function() {
-        var isEmployee = $scope.session.user.isEmployee, promise;
+        var isEmployee = $scope.session.user.isEmployee, promise, updateCookie;
         
         $scope.profile.user.birthday = $('#profile-birthday input').val();
         
         if (isEmployee && isEmployee()) {
             promise = ProfileService.updatePassword($scope.profile.user.id, $scope.profile.user.oldPassword, $scope.profile.user.newPassword);
+            updateCookie = function(token) {
+                $.cookie('AiniaOpAuthToken', encodeURI(token), { expires: 1, path: '/' });
+            };
         } else {
             promise = ProfileService.updateUserPassword($scope.profile.user.id, $scope.profile.user.oldPassword, $scope.profile.user.newPassword);
+            updateCookie = function(token) {
+                $.cookie('AiniaSelfAuthToken', encodeURI(token), { expires: 3, path: '/' });
+            };
         }
 
         $scope.dialog.showStandby();
-        promise.then(function(result) {
+        promise.then(function(token) {
+            // 后续操作
             $scope.dialog.hideStandby();
-            $scope.message.success("修改密码成功!");
+
+            if (!token) {
+                $scope.message.error("修改密码失败！您输入正确的旧密码可能不正确。");
+                return;
+            }
+            // 更新请求头
+            httpProvider.defaults.headers.common['Authorization'] = token;
+            // 更新cookie
+            if (updateCookie) { updateCookie(token); }
+            
+            $scope.message.success("修改密码成功！");
             refresh();
         }, function() {
             $scope.dialog.hideStandby();
-            $scope.message.error("修改密码失败!");
+            $scope.message.error("修改密码失败！您输入正确的旧密码可能不正确。");
         });;
     };
 }])

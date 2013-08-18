@@ -24,7 +24,7 @@ angular.module('ecgApp', ['ecgCommon', 'ecgTask', 'ecgUser', 'ecgProfile'])
         .when('/welcome', {
             template: welcomeTemp,
             controller: function($scope) {
-                $scope.subheader.title = "个人中心";
+                $scope.subheader.title = "用户中心";
             }
         })
         .when('/help', {
@@ -40,7 +40,7 @@ angular.module('ecgApp', ['ecgCommon', 'ecgTask', 'ecgUser', 'ecgProfile'])
             }
         })
         .otherwise({
-            redirectTo: '/task'
+            redirectTo: '/examination'
         });
 }])
 .run(['$rootScope', '$http', '$location', 'UserService', function($rootScope, $http, $location, UserService) {
@@ -50,6 +50,7 @@ angular.module('ecgApp', ['ecgCommon', 'ecgTask', 'ecgUser', 'ecgProfile'])
     // 公用函数:退出系统
     function logout(msg) {
         if (msg) { alert(msg); }
+        $.cookie("AiniaSelfAuthToken", '', { path: '/' });
         window.location.href = "ulogin.html";
     };
     window.logout = logout;
@@ -61,8 +62,10 @@ angular.module('ecgApp', ['ecgCommon', 'ecgTask', 'ecgUser', 'ecgProfile'])
     }
 
     // 判断是否登录
-    var username = $.cookie("AiniaSelfUsername");
-    if (!username) {
+    var username = $.cookie("AiniaSelfUsername"),
+        token = $.cookie("AiniaSelfAuthToken");
+
+    if (!token) {
         logout('请先登录!');
         return;
     }
@@ -79,7 +82,6 @@ angular.module('ecgApp', ['ecgCommon', 'ecgTask', 'ecgUser', 'ecgProfile'])
             };
             $rootScope.session.user = user;
             $.cookie("AiniaSelfUserId", user.id, { expires: 1, path: '/' });
-            $location.path("/task");
         } else {
             logout('无法获取您登录名为' + username +'的用户信息。请与管理员联系!');
         }

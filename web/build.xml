@@ -3,15 +3,32 @@
     basedir="."
     default="copy" >
 
+	<property name="web.dir" value="../web" />
 	<property name="api.dir" value="../api" />
 
-	
-    <target name="clean">
-        <delete dir="${api.dir}/src/main/resources/sql/h2" />
-    </target>
-    
-	<target name="copy" depends="clean">
-		<!-- 拷贝HTML -->
+
+	<target name="clean">
+		<delete dir="${web.dir}/src/main/resources/sql/mysql/data.sql" />
+		<delete dir="${api.dir}/src/main/resources/sql/mysql" />
+		<delete dir="${api.dir}/src/main/resources/sql/h2" />
+	</target>
+
+	<target name="concat">
+		<concat destfile="${web.dir}/src/main/resources/sql/h2/data.sql" append="false" encoding="utf-8">
+			<fileset  file="${web.dir}/src/main/resources/sql/source/source.sql"/>
+			<fileset  file="${web.dir}/src/main/resources/sql/h2/append.sql"/>
+		</concat>
+		<concat destfile="${web.dir}/src/main/resources/sql/mysql/data.sql" append="false" encoding="utf-8">
+			<fileset  file="${web.dir}/src/main/resources/sql/source/source.sql"/>
+            <fileset  file="${web.dir}/src/main/resources/sql/mysql/append.sql"/>
+        </concat>
+	</target>
+
+	<target name="copy" depends="clean, concat">
+		<copy todir="${api.dir}/src/main/resources/sql/mysql">
+			<fileset dir="${basedir}/src/main/resources/sql/mysql">
+			</fileset>
+		</copy>
 		<copy todir="${api.dir}/src/main/resources/sql/h2">
 			<fileset dir="${basedir}/src/main/resources/sql/h2">
 			</fileset>

@@ -26,7 +26,7 @@ angular.module('ecgOperator', [])
             $scope.operator.filteredData = $scope.operator.data;
         }, function() {
             $scope.dialog.hideStandby();
-            $scope.message.error("无法加载用户数据!");
+            $scope.message.error("无法加载员工数据!");
         });
     }
     refreshGrid();
@@ -80,10 +80,12 @@ angular.module('ecgOperator', [])
         $location.path("operator/" + operator.id);
     };
 
+    // 刷新功能
+    $scope.operator.refresh = refreshGrid;
 }])
 .controller('OperatorNewController', ['$scope', '$timeout', '$location', 'EnumService', 'ProfileService', 'OperatorService',
     function ($scope, $timeout, $location, EnumService, ProfileService, OperatorService) {
-    $scope.subheader.title = "新增专家";
+    $scope.subheader.title = "新增接线员";
 
     $scope.operator = {};
     $scope.operator.newobj = OperatorService.getPlainObject();
@@ -102,24 +104,24 @@ angular.module('ecgOperator', [])
 
     $scope.operator.isUnique = true;
     $scope.operator.checkUnique = function() {
-        if (!$scope.operator.newobj.operatorname) { return; }
-        ProfileService.get($scope.operator.newobj.operatorname).then(function(operator) {
+        if (!$scope.operator.newobj.username) { return; }
+        ProfileService.get($scope.operator.newobj.username).then(function(operator) {
             if (operator) { 
                 $scope.operator.isUnique = false;
-                $scope.message.warn("用户" + $scope.operator.newobj.operatorname + "已存在!");
+                $scope.message.warn("员工" + $scope.operator.newobj.username + "已存在!");
             } else {
                 $scope.operator.isUnique = true;
             }
         }, function() {
             $scope.operator.isUnique = true;
-            $scope.message.warn("查询用户是否唯一时出错!");
+            $scope.message.warn("查询员工是否唯一时出错!");
         });
     };
 
     $scope.operator.create = function() {
         $scope.dialog.showStandby();
         $scope.operator.newobj.birthday = $('#operator-birthday input').val();
-        $scope.operator.newobj.password = $scope.operator.newobj.operatorname;
+        $scope.operator.newobj.password = $scope.operator.newobj.username;
         OperatorService.create($scope.operator.newobj)
         .then(function(result) {
             $scope.dialog.hideStandby();
@@ -137,7 +139,7 @@ angular.module('ecgOperator', [])
 }])
 .controller('OperatorViewController', ['$scope', '$routeParams', '$timeout', '$location', 'EnumService', 'OperatorService',
     function ($scope, $routeParams, $timeout, $location, EnumService, OperatorService) {
-    $scope.subheader.title = "编辑专家";
+    $scope.subheader.title = "编辑接线员";
 
     $scope.operator = {};
     $scope.operator.tab = 1; // 默认为基本页面
@@ -276,8 +278,15 @@ angular.module('ecgOperator', [])
 
     $scope.operator.addExperts = function() {
         $scope.expertdialog.show({
+            excludes: $scope.operator.experts,
             handler: function(experts) {
                 var len = experts.length, count = 0;
+                if (len > 1) {
+                    $scope.dialog.alert({
+                        text: '只能绑定一名专家!'
+                    });
+                    return;
+                }
                 $(experts).each(function(i, expert) {
                     $scope.dialog.showStandby();
                     OperatorService.linkExpert($routeParams.id, expert)
@@ -313,7 +322,7 @@ angular.module('ecgOperator', [])
         
         if (removes.length == 0) {
             $scope.dialog.alert({
-                text: '请选择需要删除的绑定!'
+                text: '请选择需要解除的绑定!'
             });
             return;
         };
@@ -321,7 +330,7 @@ angular.module('ecgOperator', [])
         len = removes.length;
 
         $scope.dialog.confirm({
-            text: "请确认删除这些专家与接线员绑定, 该操作无法恢复!",
+            text: "请确认解除绑定, 该操作无法恢复!",
             handler: function() {
                 $scope.dialog.showStandby();
                 $(removes).each(function(i, remove) {
@@ -330,13 +339,13 @@ angular.module('ecgOperator', [])
                         count++;
                         if (count === len) {
                             $scope.dialog.hideStandby();
-                            $scope.message.success("成功删除绑定！");
+                            $scope.message.success("成功解除绑定！");
                             refreshLinks();
                         }
                     }, function() {
                         count++;
                         $scope.dialog.hideStandby();
-                        $scope.message.error("无法删除该绑定，用户名为：" + remove.name);
+                        $scope.message.error("无法解除绑定，员工名为：" + remove.name);
                     });
                 });
             }
@@ -354,20 +363,47 @@ angular.module('ecgOperator', [])
     };
 }])
 .controller('OperatorDialogController', 
-    ['$scope', '$filter', '$timeout', '$location', 'EnumService', 'OperatorService', 
-    function ($scope, $filter, $timeout, $location, EnumService, OperatorService) {
+    ['$scope', '$filter', '$q', '$location', 'EnumService', 'OperatorService', 
+    function ($scope, $filter, $q, $location, EnumService, OperatorService) {
 
     // 命名空间
     $scope.operatordialog = {};
+    // 只能单选
+    $scope.operatordialog.single = false;
 
     // 表格展示
     $scope.operatordialog.data = null;
-    function refreshGrid() {
-        OperatorService.queryAll().then(function(operators) {
-            $scope.operatordialog.data = operators;
+    function refreshGrid(params) {
+        var operatorsArray = [];
+        OperatorService.queryAll(params)
+        .then(function(operators) {
+            var querys = [];
+            $(operators).each(function(i, operator) {
+                querys.push(OperatorService.getExperts(operator));
+            });
+
+            $q.all(querys).then(function(results) {
+                $(results).each(function(i, result) {
+                    if (result.length == 0) {
+                        operatorsArray.push(operators[i]);
+                    }
+                });
+            });
+
+            $scope.operatordialog.data = operatorsArray;
+
         });
     };
     refreshGrid();
+
+    $scope.operatordialog.select = function(item) {
+        if ($scope.operatordialog.single) {
+            $($scope.operatordialog.data).each(function(i, operator) {
+                operator.selected = false;
+            });
+        }
+        item.selected = !item.selected;
+    };
 
     $scope.operatordialog.execute = function() {
         var selecteds = [];
@@ -387,10 +423,25 @@ angular.module('ecgOperator', [])
     };
 
     $scope.operatordialog.show = function(opts) {
-      var opts = opts || {};
+      var opts = opts || {}, ids = '', params;
+
+      if (opts.excludes) {
+        $(opts.excludes).each(function(i, user) {
+            var comma = '';
+            if (i != 0) {
+                comma = ',';
+            }
+            ids += comma + user.id;
+
+        });
+        if (opts.excludes.length > 0) {
+            params = {'id:notIn': ids};
+        }
+      }
+
       $scope.operatordialog.handler = opts.handler;
       $('#ecgOperatorsDialog').modal('show');
-      refreshGrid();
+      refreshGrid(params);
     };
 
 }])

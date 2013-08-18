@@ -22,7 +22,6 @@ public class ControllerExceptionResolver implements HandlerExceptionResolver {
 	
 	public ModelAndView resolveException(HttpServletRequest request,
 			HttpServletResponse response, Object handler, Exception ex) {
-		System.out.println("-----------------------------");
 		request.setAttribute(EXCPRTION_KEY , ex);
 		return new ModelAndView("forward:/exception/");
 	}

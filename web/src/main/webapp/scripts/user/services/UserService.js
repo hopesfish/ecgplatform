@@ -9,18 +9,20 @@ angular.module('ecgUserService', [])
         return {
             queryAll: function(params) {
                 var params = params || {};
+                if (typeof params["page.max"] == 'undefined') {
+                    params["page.max"] = 15; // user.html的每页行数也需要一起修改
+                }
                 return $http({
                     method: 'GET',
                     url: uri + '?' + $.param(params)
                 }).then(function(res) {
-                    if (res.data.datas && res.data.datas.length > 0) {
-                        return res.data.datas;
+                    if (res.data.datas) {
+                        return res.data;
                     } else {
-                        return [];    
+                        return null;    
                     }
                 }, function() {
-                    $rootScope.message.error('服务器异常,无法获取数据');
-                    return [];
+                    return null;
                 });
             },
             getPlainObject: function() {
@@ -28,6 +30,7 @@ angular.module('ecgUserService', [])
                     "mobile": "", // 应该是 mobile 必填
                     "name": "", // 必填
                     "username": "", // 可作为别名登录，但是现在没需求 留空 手机就是唯一登录凭证
+                    "email": "",
                     "password": "",
                     "birthday": "", // 可空
                     "address": "", // 可空
@@ -74,6 +77,20 @@ angular.module('ecgUserService', [])
                     return [];
                 });
             },
+            findAllByEmail: function(email) {
+                return $http({
+                    method: 'GET',
+                    url: uri + '?email=' + email
+                }).then(function(res) {
+                    if (res.data.datas && res.data.datas.length > 0) {
+                        return res.data.datas;
+                    } else {
+                        return [];    
+                    }
+                }, function() {
+                    return [];
+                });
+            },
             get: function(id) {
                 return $http({
                     method: 'GET',
@@ -93,7 +110,15 @@ angular.module('ecgUserService', [])
                     data: $.param(user),
                     url: uri + '/' + user.id
                 });
-            },           
+            },     
+            resetPassword: function(user) {
+                return $http({
+                    method: 'PUT',
+                    headers:{'Content-Type':'application/x-www-form-urlencoded'},
+                    data: $.param({oldPassword: '', newPassword: ''}),
+                    url: uri + '/' + user.id + '/password'
+                });
+            },        
             remove: function(id) {
                 return $http({
                     method: 'DELETE',

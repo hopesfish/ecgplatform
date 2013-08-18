@@ -1,9 +1,19 @@
 /*基本元素*/
 html, body {
 	height: 100%;
+	min-width: 940px !important;
 }
 i { 
 	padding-right: 5px;
+}
+.navbar-inner > .container {
+	width: 98%;
+}
+.ecgContent {
+	min-height: 500px;
+}
+.container {
+	width: 98%;
 }
 
 /*应用加载时没有滚动条*/
@@ -44,7 +54,9 @@ i {
 	margin: 0px;
 }
 /*菜单*/
+.navbar #cards-menu,
 .navbar .examination,
+.navbar .apk,
 .navbar .sysconfig {
 	display: none;
 }
@@ -57,6 +69,7 @@ i {
 /*对专家不可见的菜单*/
 .navbar.expert .duplicated,
 .navbar.expert .overview,
+.navbar.expert #users-menu,
 .navbar.expert #employees-menu {
 	display: none
 }
@@ -64,6 +77,7 @@ i {
 /*对接线员不可见的菜单*/
 .navbar.operator .overview,
 .navbar.operator #employees-menu,
+.navbar.operator #users-menu,
 .navbar.operator #rules-menu {
 	display: none
 }
@@ -72,11 +86,14 @@ i {
 .navbar.user .overview,
 .navbar.user #dashboard-menu,
 .navbar.user .task,
+.navbar.user #users-menu,
 .navbar.user #employees-menu,
 .navbar.user #rules-menu {
 	display: none
 }
 .navbar.admin .sysconfig,
+.navbar.admin #cards-menu,
+.navbar.admin .apk,
 .navbar.user .examination {
 	display: block;
 }
@@ -191,10 +208,6 @@ table tbody tr.active {
 	text-align:right;
 }
 
-#ecgplot img {
-	max-width: 1600px;
-}
-
 /* employee link*/
 .employeeLink {
 	float: left; margin: 0px; margin-right: 10px; display: inline-block;
@@ -205,9 +218,36 @@ table tbody tr.active {
 
 /* ecg plot */
 .plot-c {
-	width: 100%; min-width: 500px; height: 300px;overflow:auto;
+	width: 100%; min-width: 500px; height: 810px;
+	overflow:auto;
 	margin: 10px 0px;
 }
-.plot-c .plot {
-	width:1600px;height:300px;max-wdith:1600px !important;
+.plot-c img {
+	clear: both;
+	height: 100px;
+	max-width: none !important;
+	display: block;
+}
+.plot-c.small {
+	height: 850px;
+}
+.plot-c.medium {
+	height: 1610px;
+}
+.plot-c.large {
+	height: 2410px;
+}
+.plot-c.small img {
+	height: 100px;
+}
+.plot-c.medium img {
+	height: 200px;
+}
+.plot-c.large img {
+	height: 300px;
+}
+.oxygenPlot {
+	margin: auto;
+	width: 99%;
+	min-width: 800px;
 }

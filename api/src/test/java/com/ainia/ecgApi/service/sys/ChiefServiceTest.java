@@ -15,6 +15,7 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 
 import com.ainia.ecgApi.core.crud.Query;
 import com.ainia.ecgApi.domain.sys.Chief;
+import com.ainia.ecgApi.domain.sys.Employee.Status;
 
 /**
  * <p>Chief Service test</p>
@@ -53,7 +54,7 @@ public class ChiefServiceTest {
 		chief.setDismissed(false);
 		chief.setCompany("健康中心");
 		chief.setEnabled(true);
-		chief.setStatus("ONLINE");
+		chief.setStatus(Status.ONLINE);
 		chief.setIdCard("430203198302011518");
 		
 	}

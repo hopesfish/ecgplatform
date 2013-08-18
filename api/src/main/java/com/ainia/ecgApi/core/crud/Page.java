@@ -14,6 +14,8 @@ import org.springframework.util.Assert;
  * @version 0.3
  */
 public class Page<T> implements Serializable {
+	
+	public static final String PAGE_QUERY_STRING = "page.";
 
 	public static final int DEFAULT_PAGE_SIZE = 15;
 	

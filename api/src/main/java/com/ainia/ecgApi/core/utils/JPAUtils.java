@@ -1,5 +1,6 @@
 package com.ainia.ecgApi.core.utils;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -65,8 +66,25 @@ public class JPAUtils {
 	 * @throws
 	 */
 	public static Predicate resolverCondition(Root root , CriteriaBuilder builder , Condition condition) {
-		return resolverSimpleCondition(root , builder , condition);
+		if (condition.isGroup()) {
+			Condition[] conditions = (Condition[])condition.getValue();
+			Predicate[] predicates = new Predicate[conditions.length];
+			int i =0;
+			for (Condition subCondition : conditions) {
+				predicates[i++] = resolverSimpleCondition(root , builder , subCondition);
+			}
+			switch (condition.getLogic()) {
+			case or:
+				return builder.or(predicates);
+			default:
+				return builder.and(predicates);
+			}			
+		}
+		else {
+			return resolverSimpleCondition(root , builder , condition);
+		}
 	}
+	
 	
 	/**
 	 * @Method Name  : resolverCondition
@@ -94,17 +112,17 @@ public class JPAUtils {
 		else {
 			exp                 = root.get(field);
 		}
-		return resolverException(exp , builder , condition);
+		return resolverExpression(exp , builder , condition);
 	}
 	
 	/**
-	 * @MethodName   : resolverException
+	 * @MethodName   : resolverExpression
 	 * @Author       : pq
 	 * @Create Date  : 2012-11-19
 	 * @Last Modified: 
 	 * @Description  : 将expression 转换条件
 	 */
-	public static Predicate resolverException(Expression exp , CriteriaBuilder builder , Condition condition) {
+	public static Predicate resolverExpression(Expression exp , CriteriaBuilder builder , Condition condition) {
 		Predicate predicate = null;
 		Object value = condition.getValue();
 		//如果为空 则直接采用 isNull 条件
@@ -165,12 +183,10 @@ public class JPAUtils {
 			predicate = builder.lessThanOrEqualTo(exp , (Date)value);
 			break;
 		case in:
-			Iterable iterable = (Iterable)value;
-			In in = builder.in(exp);
-			for (Iterator iter = iterable.iterator(); iter.hasNext();) {
-				in.value(iter.next());
-			}
-			predicate = in;
+			predicate = builder.in(exp).value(value);
+			break;
+		case notIn:
+			predicate = builder.not(builder.in(exp).value(value));
 			break;
 		case exists:
 			predicate = builder.exists((Subquery)value);

@@ -48,7 +48,8 @@ define(function(require, exports) {
             TaskService.queryAllTaskByEmployee(
                 user, 
                 {status: 'undone'}
-            ).then(function(tasks) {
+            ).then(function(paging) {
+                var tasks = paging.datas;
                 expect(tasks).not.to.be(null);
                 expect(tasks.length).not.to.be(0);
                 task = tasks[0];
@@ -101,7 +102,7 @@ define(function(require, exports) {
             replys[1].result += 'updated';
             replys[1].reason += 'updated';
 
-            replys.push({result: "专家建议结果test", content: "专家建议内容", reason: "原因", level: "专家建议级别"})
+            replys.push({result: "专家建议结果test", content: "专家建议内容", reason: "原因", level: "success"})
 
             TaskService.replyInBatch(examination, replys)
             .then(function(flag) {

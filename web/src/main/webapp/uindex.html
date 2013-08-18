@@ -63,7 +63,7 @@
     <div ecg-header></div>
     <div ecg-nav></div>
 
-    <div class="content">
+    <div class="content ecgContent">
         <div class="container">
             <div ecg-sub-header></div>
             <ng-view></ng-view>
@@ -83,6 +83,15 @@
     <script src="lib/angular.js" type="text/javascript"></script>
     <script src="lib/angular-table.js" type="text/javascript"></script>
     
+    <script>
+    // 判断是否登录
+    var token = $.cookie("AiniaSelfAuthToken");
+    if (!token) {
+        window.location.href = "ulogin.html";
+        return;
+    }
+    </script>
+
     <script src="lib/seajs/sea.js"
         data-config="./scripts/config.js"
         data-main="./scripts/umain.js"></script>

@@ -57,4 +57,11 @@ public interface TaskService extends BaseService<Task , Long> {
 	 * List<Task>
 	 */
 	public List<Task> findAllByExpert(Long expertId);
+	
+	/**
+	 * <p>删除所有指定用户的任务</p>
+	 * @param userId
+	 * void
+	 */
+	public void deleteAllByUser(Long userId);
 }

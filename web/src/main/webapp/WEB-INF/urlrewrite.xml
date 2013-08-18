@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<urlrewrite>
+  <rule>
+    <from>api/user/([0-9]+)/examination/([0-9]+)/ecg([1-7]).jpg</from>
+    <to type="forward">upload/heart_img/user/$1/examination/$2/ecg$3.jpg</to>
+  </rule>
+</urlrewrite>

@@ -1,0 +1,36 @@
+<div class="row-fluid">
+	<div class="span12">
+		<form name="updateConfigForm">
+		<table class="ecgprops">
+
+		<tr ng-repeat="config in sysconfig.configs">
+		<td valign="top"><label for="upload-path">{{config.key}}:</label></td>
+		<td>
+			<input ng-model="config.value" class="input-xlarge" id="upload-path" required></input>
+			<span class="required">*</span>
+			<!--
+			<br/>
+			<button class="btn" type="button" style="margin-top: 10px;"
+					ng-class="{'btn-primary': updateConfigForm.$valid}" 
+					ng-click="sysconfig.test()"
+					ng-disabled="!updateConfigForm.$valid">
+				</i>测试
+			</button>
+			-->
+		</tr>
+
+		</table>
+		</form>
+    </div>
+</div>
+<div class="row-fluid">
+	<div class="span12">
+		<button class="btn" type="button"
+				ng-class="{'btn-primary': updateConfigForm.$valid}" 
+				ng-click="sysconfig.save()"
+				ng-disabled="!updateConfigForm.$valid">
+			<i class="icon-save"></i>保存
+		</button>
+		<a href="javascript:void(0)" ng-click="sysconfig.reset()" class="btn"><i class="icon-repeat"></i>重置</a>
+    </div>
+</div>

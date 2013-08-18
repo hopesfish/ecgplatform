@@ -2,14 +2,11 @@ language: java
 jdk:
   - oraclejdk7
 before_script:
-  - sudo apt-get install ftp
+  - cd doc
+  - mv itextAsian-1.4.2_12-b03.jar /itextAsian-1.4.2_12-b03.jar
+  - mvn install:install-file -Dfile=/itextAsian-1.4.2_12-b03.jar -DgroupId=com.lowagie -DartifactId=itextAsian -Dversion=1.4.2_12-b03 -Dpackaging=jar -DgeneratePom=true 
 script:
   - cd api
   - mvn clean install
   - cd ../web
   - mvn package
-  - cd target
-  - mv ../../upload.sh ./
-  - chmod +x upload.sh
-  - mv web.war ainia.war
-  - ./upload.sh

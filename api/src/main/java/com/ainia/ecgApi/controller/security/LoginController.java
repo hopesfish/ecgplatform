@@ -1,8 +1,10 @@
 package com.ainia.ecgApi.controller.security;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.ainia.ecgApi.core.security.AuthUserImpl;
 import com.ainia.ecgApi.core.security.AuthenticateService;
+import com.ainia.ecgApi.core.utils.EncodeUtils;
 import com.ainia.ecgApi.core.web.AjaxResult;
 import com.ainia.ecgApi.domain.sys.Employee;
 import com.ainia.ecgApi.domain.sys.User;
@@ -34,7 +38,7 @@ import com.ainia.ecgApi.service.sys.UserService;
 @Controller
 @RequestMapping("api")
 public class LoginController {
-	
+
 	protected final Logger log = LoggerFactory.getLogger(this.getClass());
 	
 	@Autowired
@@ -62,8 +66,17 @@ public class LoginController {
 			ajaxResult.setStatus(HttpStatus.UNAUTHORIZED.value());
 		}
 		else {
+			DateTime now = new DateTime();
+			authenticateService.setCurrentUser(new AuthUserImpl(employee.getId() , employee.getName() , employee.getUsername() , Employee.class.getSimpleName() , employee.getRolesArray()));
+			if (employee.getTokenDate() == null || employee.getTokenDate().before(new DateTime().minusDays(30).toDate())) {
+				employee.setTokenDate(now.toDate());
+			}
+			employee.setSalt(EncodeUtils.encodeHex(EncodeUtils.asciiSum(employee.getPassword()).getBytes()));
+			employee.setLastLoginDate(now.toDate());
+			employeeService.update(employee);
 			ajaxResult.setStatus(HttpStatus.OK.value());
-			result.put(AjaxResult.AUTH_TOKEN , authenticateService.generateToken(username , Employee.class.getSimpleName()));
+			result.put(AjaxResult.AUTH_TOKEN , authenticateService.generateToken(username , Employee.class.getSimpleName() ,
+														employee.getTokenDate() , employee.getSalt()));
 		}
 		return new ResponseEntity<Map<String , String>>(result, HttpStatus.valueOf(ajaxResult.getStatus()));
 	}
@@ -82,14 +95,25 @@ public class LoginController {
 		if (user == null) {
 			ajaxResult.setStatus(HttpStatus.NOT_FOUND.value());
 		}
-		if (!authenticateService.checkPassword(user.getPassword() , password , null)) {
-			ajaxResult.setStatus(HttpStatus.UNAUTHORIZED.value());
+		if (user != null) {
+			if (!authenticateService.checkPassword(user.getPassword() , password , null)) {
+				ajaxResult.setStatus(HttpStatus.UNAUTHORIZED.value());
+			}
+			else {
+				DateTime now = new DateTime();
+				if (user.getTokenDate() == null || user.getTokenDate().before(new DateTime().minusDays(30).toDate())) {
+					user.setTokenDate(now.toDate());
+				}
+				authenticateService.setCurrentUser(new AuthUserImpl(user.getId() ,user.getName() , user.getUsername() , User.class.getSimpleName()));
+				user.setSalt(EncodeUtils.encodeHex(EncodeUtils.asciiSum(user.getPassword()).getBytes()));
+				user.setLastLoginDate(now.toDate());
+				userService.update(user);
+				ajaxResult.setStatus(HttpStatus.OK.value());
+				result.put(AjaxResult.AUTH_TOKEN , authenticateService.generateToken(username , User.class.getSimpleName(), user.getTokenDate() , user.getSalt()));
+				result.put(AjaxResult.AUTH_ID , user.getId().toString());
+			}
 		}
-		else {
-			ajaxResult.setStatus(HttpStatus.OK.value());
-			//TODO 用户类型暂时硬编码为 员工
-			result.put(AjaxResult.AUTH_TOKEN , authenticateService.generateToken(username , User.class.getSimpleName()));
-		}
+		
 		return new ResponseEntity<Map<String , String>>(result, HttpStatus.valueOf(ajaxResult.getStatus()));
 	}
 

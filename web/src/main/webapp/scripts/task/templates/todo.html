@@ -5,6 +5,10 @@
 				ng-click="todo.reply('top')" ng-disabled="todo.current == null || todo.current.examination == null">
 			<i class="icon-edit"></i>回复...
 		</button>
+        <button class="btn btn-primary" type="button"
+                ng-click="todo.refresh()">
+            <i class="icon-refresh"></i>刷新
+        </button>
         <button class="btn btn-warning" type="button"
                 ng-show="todo.current && todo.tasks.length > 0"
                 ng-click="todo.ignore()">
@@ -38,6 +42,10 @@
                 ng-show="todo.current && todo.current.status != 'completed'"
                 ng-click="todo.reply('bottom')" ng-disabled="todo.current == null || todo.current.examination == null">
             <i class="icon-edit"></i>回复...
+        </button>
+        <button class="btn btn-primary" type="button"
+                ng-click="todo.refresh()">
+            <i class="icon-refresh"></i>刷新
         </button>
         <button class="btn btn-warning" type="button"
                 ng-show="todo.current && todo.tasks.length > 0"

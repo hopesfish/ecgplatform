@@ -34,18 +34,21 @@ angular.module('ecgTaskService', [])
                     params += '&id=' + opts.id;
                 }
 
+                var paging = {};
+                paging['page.max'] = typeof opts['page.max'] === 'undefined' ? 15 : opts['page.max'];
+                paging['page.curPage'] = opts['page.curPage'] || 1;
+
                 return $http({
                     method: 'GET',
-                    url: PATH + url + params
+                    url: PATH + url + params + '&' + $.param(paging)
                 }).then(function(res) {
-                    if (res.data.datas && res.data.datas.length > 0) {
-                        return res.data.datas;
+                    if (res.data.datas) {
+                        return res.data;
                     } else {
-                        return [];    
+                        return null;    
                     }
                 }, function() {
-                    $rootScope.message.error('服务器异常,无法获取数据');
-                    return [];
+                    return null;
                 });
             },
             queryAllTaskByUser: function(user, opts) {
@@ -53,22 +56,34 @@ angular.module('ecgTaskService', [])
 
                 id = user.id || user;
 
-                //url = "/api/user/" + id + "/task";
-                url = "/api/task";
+                var paging = {};
+                paging['page.max'] = opts['page.max'] || 15;
+                paging['page.curPage'] = opts['page.curPage'] || 1;
 
-                //params += "userId=" + id;
+                url = "/api/user/" + id + "/task";
 
                 return $http({
                     method: 'GET',
-                    url: PATH + url + params
+                    url: PATH + url + params + '&' + $.param(paging)
                 }).then(function(res) {
-                    if (res.data.datas && res.data.datas.length > 0) {
-                        return res.data.datas;
+                    if (res.data.datas) {
+                        return res.data;
                     } else {
-                        return [];    
+                        return null;    
                     }
                 }, function() {
-                    return [];
+                    return null;
+                });
+            },
+            get: function(id) {
+                return $http({
+                    method: 'GET',
+                    cache: false,
+                    url: PATH + '/api/task/' + id
+                }).then(function(res) {
+                    return res.data;
+                }, function() {
+                    return null;
                 });
             },
             getExamination: function(id) {
@@ -212,6 +227,18 @@ angular.module('ecgTaskService', [])
                 }, function() {
                     $rootScope.message.error('服务器异常,无法获取数据');
                     return [];
+                });
+            },
+            remove: function(task) {
+                return $http({
+                    method: 'DELETE',
+                    url: PATH + '/api/user/' + task.userId + '/task/' + task.id
+                });
+            },
+            removeUserTasks: function(task) {
+                return $http({
+                    method: 'DELETE',
+                    url: PATH + '/api/user/' + task.userId + '/task'
                 });
             }
         };

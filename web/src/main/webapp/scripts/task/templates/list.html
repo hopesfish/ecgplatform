@@ -1,36 +1,48 @@
 <div class="row-fluid">
-    <div class="block span5">
+    <div class="span12 buttons">
+        <button class="btn btn-primary" type="button"
+                ng-click="task.refresh()">
+            <i class="icon-refresh"></i>刷新
+        </button>
+        <button class="btn" type="button"
+                ng-show="session.user.isAdmin() || session.user.isChief()"
+                ng-class="{'btn-danger': task.selected}"
+                ng-click="task.confirmDelete()" ng-disabled="task.selected == null">
+            <i class="icon-remove"></i>删除
+        </button>
+    </div>
+</div>
+<div class="row-fluid">
+    <div class="block span5" ng-show="task.data && task.data.length > 0">
         <div class="block-body block-body-grid collapse in">
-            <!-- 当前区间的回复 -->
-            <table class="table table-hover">
-            <thead>
-                <tr>
-                <th>ID</th>
-                <th width="20%">客户</th>
-                <th>健康状态</th>
-                <th>处理状态</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr ng-repeat="item in task.data" ng-click="task.selected = item" ng-class="{'active': task.selected == item}">
-                    <td nowrap>{{item.id}}</td>
-                    <td nowrap>{{item.userName}}</td>
-                    <td nowrap><span class="label label-{{task.translateLevel(item.level)}}">{{task.getLevelLabel(item.level)}}</span></td>
-                    <td nowrap>
+            <table at-table class="table table-hover" pagination="taskPagination">
+              <thead></thead>
+              <tbody>
+                <tr ng-click="task.selected = item" ng-class="{'active': task.selected == item}">
+                    <td at-implicit sortable title="ID" attribute="id" class="ecgGridLik" ng-click="user.showPage(item)"></td>
+                    <td at-implicit sortable title="姓名" attribute="userName"></td>
+                    <td at-implicit title="健康状态" nowrap><span class="label label-{{task.translateLevel(item.level)}}">{{task.getLevelLabel(item.level)}}</span></td>
+                    <td at-implicit title="处理状态" nowrap>
                         <span ng-show="item.status == 'completed'">{{task.getWorkStatusLabel(item.status)}}</span>
-                        <a ng-show="session.user.isEmployee() && item.status != 'completed'" 
-                           href="#/todo/{{item.id}}">{{task.getWorkStatusLabel(item.status)}}</a>
-                        <span ng-show="!session.user.isEmployee()">{{task.getWorkStatusLabel(item.status)}}</span>
+                        <a ng-show="item.status != 'completed'" href="#/todo/{{item.id}}">{{task.getWorkStatusLabel(item.status)}}</a>
                     </td>
                 </tr>
-            </tbody>
+              </tbody>
             </table>
+
+            <br/>
+
+            <div at-server-pagination items-per-page="15" instance="taskPagination" list="task.data" paging="task.paging"></div>
+
         </div>
     </div>
-    <div class="block span7" ng-show="task.selected">
+    <div class="block span7" ng-show="task.data && task.data.length > 0 && task.selected">
         <div ecg-task-view></div>
     </div>
-    <div class="block span7 block-without-border" ng-show="!task.selected">
+    <div class="block span7 block-without-border" ng-show="task.data && task.data.length > 0 && !task.selected">
         请选择任意一条纪录
+    </div>
+    <div class="block span5" ng-show="task.data == null || task.data.length == 0">
+        没有您的体检记录，如需帮助，请联系客服。
     </div>
 </div>

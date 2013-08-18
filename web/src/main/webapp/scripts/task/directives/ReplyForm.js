@@ -72,6 +72,7 @@ angular.module('ecgReplyForm', [])
                                 replyconfigs[0].reason = rules[filter.code].customed ? '根据专家规则判断；' : '根据系统规则判断：';
                                 replyconfigs[0].reason += codes[filter.code].label + '的测量值为，在区间[' + min + ',' + max + ')之间，';
                                 replyconfigs[0].reason += '属于【' +  EnumService.getLevelLabel(filter.level) + '】。';
+                                replyconfigs[0].preConfig = true;
                                 delete replyconfigs[0].id;
                                 $scope.replyform.replys.push(replyconfigs[0]);
                             }
@@ -128,6 +129,14 @@ angular.module('ecgReplyForm', [])
     $scope.replyform.addManual = function() {
         $scope.replydialog.show({
             handler: function(reply) {
+                if (reply.deletePreConfig) {
+                    for (var i=$scope.replyform.replys.length - 1; i>=0; i--) {
+                        if ($scope.replyform.replys[i].preConfig) {
+                            $scope.replyform.replys.splice(i, 1);
+                        }
+                    }
+                }
+                reply.preConfig = false;
                 reply.reason = "人工回复";
                 $scope.replyform.replys.push(reply);
             }
@@ -232,6 +241,7 @@ angular.module('ecgReplyForm', [])
 
     function reset() {
         $scope.replydialog.reply = TaskService.getPlainReply();
+        $scope.replydialog.reply.deletePreConfig = true;
     };
     reset();
 
@@ -254,6 +264,7 @@ angular.module('ecgReplyForm', [])
             $scope.replydialog.reply = opts.reply;
         }
         $scope.replydialog.handler = opts.handler;
+        $scope.replydialog.deletePreConfig = true;
         $('#ecgReplyDialog').modal('show');
     };
 

@@ -12,12 +12,12 @@ define(function(require, exports) {
         };
 
         $(['online', 'away']).each(function(i, status) {
-            ExpertService.queryAll({status: status.toUpperCase()}).then(function(results) {
-                $scope.employeestatus.expert[status] = results.length;
+            ExpertService.getTotal({status: status.toUpperCase()}).then(function(total) {
+                $scope.employeestatus.expert[status] = total;
             });
 
-            OperatorService.queryAll({status: status.toUpperCase()}).then(function(results) {
-                $scope.employeestatus.operator[status] = results.length;
+            OperatorService.getTotal({status: status.toUpperCase()}).then(function(total) {
+                $scope.employeestatus.operator[status] = total;
             });
         });
     }])

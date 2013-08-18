@@ -65,7 +65,9 @@ define(function(require, exports) {
             expect(sessionemployee).not.to.be(undefined);
             // updated
             ProfileService.updatePassword(sessionemployee.id, user.password, user.password + 'updated')
-            .then(function() {
+            .then(function(token) {
+                expect(token).not.to.be(undefined);
+                httpProvider.defaults.headers.common['Authorization'] = token;
                 done();
             }, function() {
                 throw new Error('the session employee\'s password can\'t be updated');
@@ -75,7 +77,7 @@ define(function(require, exports) {
         it("the session employee's password should be useful", function(done) {
             expect(sessionemployee).not.to.be(undefined);
             $.ajax({
-                url: '/api/auth',
+                url: PATH + '/api/auth',
                 data: {
                     'username': user.username,
                     'password': user.password + 'updated'
@@ -84,7 +86,9 @@ define(function(require, exports) {
                 dataType: 'json'
             }).then(function(res) {
                 // expect token
-                expect(res.token).not.to.be(undefined);
+                token = res.token;
+                expect(token).not.to.be(undefined);
+                httpProvider.defaults.headers.common['Authorization'] = token;
                 done();
             }, function() {
                 throw new Error('the session employee can\'t login in with new password.');
@@ -96,13 +100,24 @@ define(function(require, exports) {
             expect(sessionemployee).not.to.be(undefined);
             // updated
             ProfileService.updatePassword(sessionemployee.id, user.password + 'updated', user.password)
-            .then(function() {
+            .then(function(token) {
+                expect(token).not.to.be(undefined);
+                httpProvider.defaults.headers.common['Authorization'] = token;
                 done();
             }, function() {
                 throw new Error('the session employee\'s password can\'t be rollback');
             });
         });
 
+        it("the session employee is heartbeating", function(done) {
+            expect(sessionemployee).not.to.be(undefined);
+            ProfileService.heartbeat(sessionemployee)
+            .then(function() {
+                done();
+            }, function() {
+                throw new Error('the session employee is not heartbeating.');
+            });
+        });
 
     };
 

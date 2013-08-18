@@ -1,0 +1,76 @@
+<div class="row-fluid">
+	<div class="span12">
+		<br/>
+		<form name="chargeForm">
+		<table class="ecgprops">
+
+		<tr>
+		<td width="100px" valign="top"><label for="card-mobile">手机号:</label></td>
+		<td>
+			<input ng-model="card.chargeinfo.mobile" class="input-xlarge" id="card-mobile"
+				   focus required ng-pattern="/^1[0-9]{10}$/"
+				   placeholder="请输入手机号"></input>
+			<span class="required">*</span><span class="desc">请输入手机号</span></td>
+		</tr>
+
+		<tr>
+		<td width="100px" valign="top"><label for="card-serial">卡号:</label></td>
+		<td>
+			<input ng-model="card.chargeinfo.serial" class="input-xlarge" id="card-serial"
+				   focus required 
+				   placeholder="请输入卡号"></input>
+			<span class="required">*</span><span class="desc">请输入卡号</span></td>
+		</tr>
+
+		<tr>
+		<td><label for="card-password">密码:</label></td>
+		<td>
+			<input ng-model="card.chargeinfo.password" class="input-xlarge" id="card-password" required placeholder="请输入密码"></input>
+			<span class="required">*</span>
+		</td>
+		</tr>
+
+		<tr>
+		<td ><label for="card-startDate">服务开始时间:</label></td>
+		<td>
+			
+			<div id="card-startdate" class="input-append date">
+			    <input ng-model="card.chargeinfo.activedDate" type="text" readonly="readonly" required placeholder="请选择服务开始时间"></input>
+			    <span class="add-on">
+			      <i data-time-icon="icon-time" data-date-icon="icon-calendar">
+			      </i>
+			    </span>
+		    </div>
+		</td>
+		</tr>
+
+		<!--
+		<tr>
+		<td ><label for="card-enddate">服务结束时间:</label></td>
+		<td>
+			
+			<div id="card-enddate" class="input-append date">
+			    <input ng-model="card.chargeinfo.enddate" type="text" readonly="readonly" required placeholder="请选择服务结束时间"></input>
+			    <span class="add-on">
+			      <i data-time-icon="icon-time" data-date-icon="icon-calendar">
+			      </i>
+			    </span>
+		    </div>
+		</td>
+		</tr>
+		-->
+
+		</table>
+		</form>
+    </div>
+</div>
+<div class="row-fluid">
+	<div class="span12">
+		<button class="btn" type="button"
+				ng-class="{'btn-primary': chargeForm.$valid}" 
+				ng-click="card.charge()"
+				ng-disabled="!chargeForm.$valid">
+			<i class="icon-save"></i>充值
+		</button>
+    </div>
+</div>

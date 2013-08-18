@@ -31,7 +31,7 @@ public class SystemConfigServiceImpl extends BaseServiceImpl<SystemConfig , Long
 
 	public String findByKey(String key) {
 		SystemConfig sysConfig = systemConfigDao.findByKeyAndType(key , Type.basic);
-		return sysConfig == null?null : sysConfig.getValue();
+		return sysConfig == null ? null : sysConfig.getValue();
 	}
 
 }

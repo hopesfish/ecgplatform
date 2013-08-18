@@ -34,10 +34,48 @@ define(function(require, exports) {
         });
 
         // Operator
+        var beforeExclude, excludeId;
         it("the operator list should be retrieved", function(done) {
             expect(OperatorService).not.to.be(undefined);
             OperatorService.queryAll().then(function(operators) {
                 expect(operators.length).not.to.be(0);
+                excludeId = operators[0].id;
+                beforeExclude = operators.length;
+                done();
+            }, function() {
+                throw new Error('the operator list can\'t be retrieved');
+            });
+        });
+
+        // Operator
+        it("the operator list should be retrieved with only one item", function(done) {
+            expect(OperatorService).not.to.be(undefined);
+            OperatorService.queryAll({'page.max': 1}).then(function(operators) {
+                expect(operators.length).to.be(1);
+                done();
+            }, function() {
+                throw new Error('the operator list can\'t be retrieved');
+            });
+        });
+
+        // Operator
+        it("the operator list should be retrieved with exclude id", function(done) {
+            expect(OperatorService).not.to.be(undefined);
+            expect(excludeId).not.to.be(undefined);
+            OperatorService.queryAll({'id:notIn': excludeId}).then(function(operators) {
+                expect(operators.length).to.be(beforeExclude - 1);
+                done();
+            }, function() {
+                throw new Error('the operator list can\'t be retrieved');
+            });
+        });
+
+        // Operator
+        it("the operator list should be retrieved with exclude id", function(done) {
+            expect(OperatorService).not.to.be(undefined);
+            expect(excludeId).not.to.be(undefined);
+            OperatorService.queryAll({'id:in': excludeId}).then(function(operators) {
+                expect(operators.length).to.be(1);
                 done();
             }, function() {
                 throw new Error('the operator list can\'t be retrieved');
@@ -91,7 +129,7 @@ define(function(require, exports) {
 
         it("the operator should able to login in with default password", function(done) {
             $.ajax({
-                url: '/api/auth',
+                url: PATH + '/api/auth',
                 data: {
                     'username': operator.username,
                     'password': operator.password
@@ -167,7 +205,7 @@ define(function(require, exports) {
 
         it("the operator should able to login in with reset password", function(done) {
             $.ajax({
-                url: '/api/auth',
+                url: PATH + '/api/auth',
                 data: {
                     'username': operator.username,
                     'password': operator.username

@@ -80,6 +80,9 @@ angular.module('ecgExpert', [])
         $location.path("expert/" + expert.id);
     };
 
+    // 刷新功能
+    $scope.expert.refresh = refreshGrid;
+
 }])
 .controller('ExpertNewController', ['$scope', '$timeout', '$location', 'EnumService', 'ProfileService', 'ExpertService',
     function ($scope, $timeout, $location, EnumService, ProfileService, ExpertService) {
@@ -278,6 +281,7 @@ angular.module('ecgExpert', [])
 
     $scope.expert.addOperators = function() {
         $scope.operatordialog.show({
+            excludes: $scope.expert.operators,
             handler: function(operators) {
                 var len = operators.length, count = 0;
                 $(operators).each(function(i, operator) {
@@ -315,7 +319,7 @@ angular.module('ecgExpert', [])
         
         if (removes.length == 0) {
             $scope.dialog.alert({
-                text: '请选择需要删除的绑定!'
+                text: '请先选择专家!'
             });
             return;
         };
@@ -323,7 +327,7 @@ angular.module('ecgExpert', [])
         len = removes.length;
 
         $scope.dialog.confirm({
-            text: "请确认删除这些专家与接线员绑定, 该操作无法恢复!",
+            text: "请确认解除绑定, 该操作无法恢复!",
             handler: function() {
                 $scope.dialog.showStandby();
                 $(removes).each(function(i, remove) {
@@ -332,13 +336,13 @@ angular.module('ecgExpert', [])
                         count++;
                         if (count === len) {
                             $scope.dialog.hideStandby();
-                            $scope.message.success("成功删除绑定！");
+                            $scope.message.success("成功解除绑定！");
                             refreshLinks();
                         }
                     }, function() {
                         count++;
                         $scope.dialog.hideStandby();
-                        $scope.message.error("无法删除该绑定，用户名为：" + remove.name);
+                        $scope.message.error("无法解除绑定，用户名为：" + remove.name);
                     });
                 });
             }
@@ -361,15 +365,26 @@ angular.module('ecgExpert', [])
 
     // 命名空间
     $scope.expertdialog = {};
+    // 只能单选
+    $scope.expertdialog.single = true;
 
     // 表格展示
     $scope.expertdialog.data = null;
-    function refreshGrid() {
-        ExpertService.queryAll().then(function(experts) {
+    function refreshGrid(params) {
+        ExpertService.queryAll(params).then(function(experts) {
             $scope.expertdialog.data = experts;
         });
     };
     refreshGrid();
+
+    $scope.expertdialog.select = function(item) {
+        if ($scope.expertdialog.single) {
+            $($scope.expertdialog.data).each(function(i, expert) {
+                expert.selected = false;
+            });
+        }
+        item.selected = !item.selected;
+    };
 
     $scope.expertdialog.execute = function() {
         var selecteds = [];
@@ -389,10 +404,24 @@ angular.module('ecgExpert', [])
     };
 
     $scope.expertdialog.show = function(opts) {
-      var opts = opts || {};
+      var opts = opts || {}, ids = '', params;
+
+      if (opts.excludes) {
+        $(opts.excludes).each(function(i, user) {
+            var comma = '';
+            if (i != 0) {
+                comma = ',';
+            }
+            ids += comma + user.id;
+        });
+        if (opts.excludes.length > 0) {
+            params = {'id:notIn': ids};
+        }
+      }
+
       $scope.expertdialog.handler = opts.handler;
       $('#ecgExpertsDialog').modal('show');
-      refreshGrid();
+      refreshGrid(params);
     };
 
 }])

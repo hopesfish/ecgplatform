@@ -15,20 +15,41 @@ angular.module('ecgUserModules', [])
 
     // 表格展示
     $scope.user.data = null;
-    $scope.user.filteredData = null;
+    $scope.user.paging = {
+        total: 0,
+        curPage: 1,
+        goToPage: function(page, max) {
+            refreshGrid({'page.curPage': page, 'page.max': max});
+        }
+    };
+
     // 刷新功能
-    function refreshGrid() {
+    var globalParams = {};
+    function refreshGrid(params) {
+        globalParams = $.extend(globalParams, params);
         $scope.dialog.showLoading();
-        UserService.queryAll().then(function(users) {
+        UserService.queryAll(globalParams).then(function(paging) {
             $scope.dialog.hideStandby();
-            $scope.user.data = users;
-            $scope.user.filteredData = $scope.user.data;
+            if (paging) {
+                $scope.user.paging.total = paging.total;
+                $scope.user.paging.curPage = paging.curPage;
+                $scope.user.data = paging.datas;
+            } else {
+                $scope.message.error("无法加载用户数据!");
+            }
         }, function() {
             $scope.dialog.hideStandby();
             $scope.message.error("无法加载用户数据!");
         });
     }
     refreshGrid();
+
+    // 过滤功能
+    $scope.user.queryChanged = function(query) {
+        globalParams['username:like'] = query;
+        globalParams['page.curPage'] = 1;
+        refreshGrid(globalParams);
+    };
 
     // 显示label
     $scope.user.getGenderLabel = function(user) {
@@ -97,15 +118,13 @@ angular.module('ecgUserModules', [])
         });
     };
 
-    // 过滤功能
-    $scope.user.queryChanged = function(query) {
-        return $scope.user.filteredData = $filter("filter")($scope.user.data, query);
-    };
-
     // 编辑功能
     $scope.user.showPage = function(user) {
         $location.path("user/" + user.id);
     };
+
+    // 刷新功能
+    $scope.user.refresh = refreshGrid;
 
 }])
 .controller('UserNewController', ['$scope', '$timeout', '$location', 'EnumService', 'ProfileService', 'UserService',
@@ -126,19 +145,35 @@ angular.module('ecgUserModules', [])
         $('#user-birthday').datetimepicker('show');
     };
 
-    $scope.user.isUnique = true;
+    $scope.user.isUnique = false;
+    $scope.user.isEmailUnique = true;
     $scope.user.checkUnique = function() {
-        UserService.findAllByMobile($scope.user.newobj.mobile).then(function(users) {
-            if (users.length > 0) { 
+        if ($scope.user.newobj.mobile) {
+            UserService.findAllByMobile($scope.user.newobj.mobile).then(function(users) {
+                if (users.length > 0) { 
+                    $scope.user.isUnique = false;
+                    $scope.message.warn("手机号码" + $scope.user.newobj.mobile + "已存在!");
+                } else {
+                    $scope.user.isUnique = true;
+                }
+            }, function() {
                 $scope.user.isUnique = false;
-                $scope.message.warn("手机号码" + $scope.user.newobj.mobile + "已存在!");
-            } else {
-                $scope.user.isUnique = true;
-            }
-        }, function() {
-            $scope.user.isUnique = true;
-            $scope.message.warn("查询用户是否唯一时出错!");
-        });
+                $scope.message.warn("查询用户是否唯一时出错!");
+            });
+        }
+        if ($scope.user.newobj.email) {
+            UserService.findAllByEmail($scope.user.newobj.email).then(function(users) {
+                if (users.length > 0) { 
+                    $scope.user.isEmailUnique = false;
+                    $scope.message.warn("邮箱地址" + $scope.user.newobj.email + "已存在!");
+                } else {
+                    $scope.user.isEmailUnique = true;
+                }
+            }, function() {
+                $scope.user.isEmailUnique = false;
+                $scope.message.warn("查询邮箱地址是否唯一时出错!");
+            });
+        }    
     };
 
     $scope.user.create = function() {
@@ -188,6 +223,23 @@ angular.module('ecgUserModules', [])
 
     $scope.user.genders = EnumService.getGenders();
 
+    $scope.user.isEmailUnique = true;
+    $scope.user.checkUnique = function() {
+        if ($scope.user.updateobj.email) {
+            UserService.findAllByEmail($scope.user.updateobj.email).then(function(users) {
+                if (users.length > 0) { 
+                    $scope.user.isEmailUnique = false;
+                    $scope.message.warn("邮箱地址" + $scope.user.updateobj.email + "已存在!");
+                } else {
+                    $scope.user.isEmailUnique = true;
+                }
+            }, function() {
+                $scope.user.isEmailUnique = false;
+                $scope.message.warn("查询邮箱地址是否唯一时出错!");
+            });
+        }    
+    };
+
     $('#user-birthday').datetimepicker({
         format: "yyyy-MM-dd",
         language: "zh-CN",
@@ -219,8 +271,7 @@ angular.module('ecgUserModules', [])
             text: "重置后登录密码将与手机号码一致，确定继续?",
             handler: function() {
                 $scope.dialog.showStandby();
-                $scope.user.updateobj.password = $scope.user.updateobj.mobile;
-                UserService.update($scope.user.updateobj)
+                UserService.resetPassword($scope.user.updateobj)
                 .then(function(result) {
                     $scope.dialog.hideStandby();
                     $scope.message.success("重置密码成功!");
@@ -252,12 +303,36 @@ angular.module('ecgUserModules', [])
 
     // 表格展示
     $scope.userdialog.data = null;
-    function refreshGrid() {
-        UserService.queryAll().then(function(users) {
-            $scope.userdialog.data = users;
+    $scope.userdialog.paging = {
+        total: 0,
+        curPage: 1,
+        goToPage: function(page, max) {
+            refreshGrid({'page.curPage': page, 'page.max': max});
+        }
+    };
+
+    var globalParams = {};
+    function refreshGrid(params) {
+        globalParams = $.extend(globalParams, params);
+        UserService.queryAll(globalParams).then(function(paging) {
+            if (paging) {
+                $scope.userdialog.paging.total = paging.total;
+                $scope.userdialog.paging.curPage = paging.curPage;
+                $scope.userdialog.data = paging.datas;
+            } else {
+                $scope.message.error("无法加载用户数据!");
+            }
         });
     };
     refreshGrid();
+
+
+    // 过滤功能
+    $scope.userdialog.queryChanged = function(query) {
+        globalParams['username:like'] = query;
+        globalParams['page.curPage'] = 1;
+        refreshGrid(globalParams);
+    };
 
     $scope.userdialog.execute = function() {
         var selecteds = [];
@@ -277,10 +352,23 @@ angular.module('ecgUserModules', [])
     };
 
     $scope.userdialog.show = function(opts) {
-      var opts = opts || {};
+      var opts = opts || {}, ids = '', params;
+
+      if (opts.excludes) {
+        $(opts.excludes).each(function(i, user) {
+            var comma = '';
+            if (i != 0) {
+                comma = ',';
+            }
+            ids += comma + user.id;
+        });
+        if (opts.excludes.length > 0) {
+            params = {'id:notIn': ids};
+        }
+      }
       $scope.userdialog.handler = opts.handler;
       $('#ecgUsersDialog').modal('show');
-      refreshGrid();
+      refreshGrid(params);
     };
 
 }])

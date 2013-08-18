@@ -35,17 +35,8 @@ define(function(require, exports) {
         it("the user list should be retrieved", function(done) {
             expect(UserService).not.to.be(undefined);
             UserService.queryAll().then(function(users) {
-                if (users.length > 0) {
-                    var user = users[0];
-                    expect(user.gender).not.to.be(undefined);
-                    expect(user.idCard).not.to.be(undefined);
-                    expect(user.fnPlace).to.be(undefined);
-                    expect(user.tel).to.be(undefined);
-                    expect(user.mobileNum).to.be(undefined);
-                    done();
-                } else {
-                    throw new Error('the user list can\'t be retrieved');
-                }
+                expect (users.length).not.to.be(0);
+                done();
             }, function() {
                 throw new Error('the user list can\'t be retrieved');
             });
@@ -68,6 +59,22 @@ define(function(require, exports) {
             invalid.mobile = '13800000000';
             invalid.name = 'user' + (new Date()).getTime();
             invalid.password = '';
+ 
+            UserService.create(invalid).then(function(flag) {
+                if (flag) {
+                    throw new Error('the user can be created');
+                } else {
+                    done();
+                }
+            });
+        });
+
+        it("the user should not be created with invalid email", function(done) {
+            var invalid = UserService.getPlainObject();
+            invalid.mobile = '13800000000';
+            invalid.name = 'user' + (new Date()).getTime();
+            invalid.password = 'passw0rd';
+            invalid.email = 'notaemailaddress';
  
             UserService.create(invalid).then(function(flag) {
                 if (flag) {

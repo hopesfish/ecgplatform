@@ -49,7 +49,8 @@ define(function(require, exports) {
             TaskService.queryAllTaskByEmployee(
                 user, 
                 {status: 'undone'}
-            ).then(function(tasks) {
+            ).then(function(paging) {
+                var tasks = paging.datas;
                 expect(tasks).not.to.be(null);
                 expect(tasks.length).not.to.be(0);
                 expect(tasks.length).not.to.be(1);
@@ -66,7 +67,8 @@ define(function(require, exports) {
             TaskService.queryAllTaskByEmployee(
                 user, 
                 {status: 'done'}
-            ).then(function(tasks) {
+            ).then(function(paging) {
+                var tasks = paging.datas;
                 expect(tasks).not.to.be(null);
                 env.done = tasks.length;
                 done();
@@ -185,7 +187,8 @@ define(function(require, exports) {
             TaskService.queryAllTaskByEmployee(
                 user, 
                 {status: 'undone'}
-            ).then(function(tasks) {
+            ).then(function(paging) {
+                var tasks = paging.datas;
                 expect(tasks).not.to.be(null);
                 expect(tasks.length).to.be(env.undone);
                 done();
@@ -196,7 +199,8 @@ define(function(require, exports) {
             TaskService.queryAllTaskByEmployee(
                 user, 
                 {status: 'done'}
-            ).then(function(tasks) {
+            ).then(function(paging) {
+                var tasks = paging.datas;
                 expect(tasks).not.to.be(null);
                 expect(tasks.length).to.be(env.done);
                 done();
@@ -225,7 +229,8 @@ define(function(require, exports) {
             TaskService.queryAllTaskByEmployee(
                 user, 
                 {status: 'undone'}
-            ).then(function(tasks) {
+            ).then(function(paging) {
+                var tasks = paging.datas;
                 expect(tasks).not.to.be(null);
                 expect(tasks.length).to.be(env.undone - 2);
                 env.undone -= 2;
@@ -237,7 +242,8 @@ define(function(require, exports) {
             TaskService.queryAllTaskByEmployee(
                 user, 
                 {status: 'done'}
-            ).then(function(tasks) {
+            ).then(function(paging) {
+                var tasks = paging.datas;
                 expect(tasks).not.to.be(null);
                 expect(tasks.length).to.be(env.done + 2);
                 env.done = tasks.length;

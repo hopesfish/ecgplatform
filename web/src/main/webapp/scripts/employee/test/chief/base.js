@@ -34,10 +34,38 @@ define(function(require, exports) {
         });
 
         // Chief
+        var firstId, secondId;
         it("the chief list should be retrieved", function(done) {
             expect(ChiefService).not.to.be(undefined);
             ChiefService.queryAll().then(function(chiefs) {
                 expect(chiefs.length).not.to.be(0);
+                expect(chiefs.length).not.to.be(1);
+                firstId = chiefs[0].id;
+                secondId = chiefs[1].id;
+                done();
+            }, function() {
+                throw new Error('the chief list can\'t be retrieved');
+            });
+        });
+
+        // Chief
+        it("the chief list should be retrieved with only the first item", function(done) {
+            expect(ChiefService).not.to.be(undefined);
+            ChiefService.queryAll({'page.max': 1}).then(function(chiefs) {
+                expect(chiefs.length).to.be(1);
+                expect(chiefs[0].id).to.be(firstId);
+                done();
+            }, function() {
+                throw new Error('the chief list can\'t be retrieved');
+            });
+        });
+
+        // Chief
+        it("the chief list should be retrieved with only the second items", function(done) {
+            expect(ChiefService).not.to.be(undefined);
+            ChiefService.queryAll({'page.curPage': 2, 'page.max': 1}).then(function(chiefs) {
+                expect(chiefs.length).to.be(1);
+                expect(chiefs[0].id).to.be(secondId);
                 done();
             }, function() {
                 throw new Error('the chief list can\'t be retrieved');
@@ -90,7 +118,7 @@ define(function(require, exports) {
 
         it("the chief should able to login in with default password", function(done) {
             $.ajax({
-                url: '/api/auth',
+                url: PATH + '/api/auth',
                 data: {
                     'username': chief.username,
                     'password': chief.password
@@ -167,7 +195,7 @@ define(function(require, exports) {
 
         it("the chief should able to login in with reset password", function(done) {
             $.ajax({
-                url: '/api/auth',
+                url: PATH + '/api/auth',
                 data: {
                     'username': chief.username,
                     'password': chief.username

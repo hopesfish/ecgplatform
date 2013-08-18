@@ -19,6 +19,13 @@ public interface AuthUser {
 	 * Long
 	 */
 	public Long   getId();
+	
+	/**
+	 * <p>get user's name</p>
+	 * @return
+	 * String
+	 */
+	public String getName();
 	/**
 	 * <p>get username</p>
 	 * @return
@@ -43,4 +50,25 @@ public interface AuthUser {
 	 * boolean
 	 */
 	public boolean isSuperAdmin();
+	
+	/**
+	 * <p>the user is chief</p>
+	 * @return
+	 * boolean
+	 */
+	public boolean isChief();
+	
+	/**
+	 * <p>the authUser is user</p>
+	 * @return
+	 * boolean
+	 */
+	public boolean isUser();
+	
+	/**
+	 * <p>the authUser is employee</p>
+	 * @return
+	 * boolean
+	 */
+	public boolean isEmployee();
 }

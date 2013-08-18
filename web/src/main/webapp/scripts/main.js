@@ -7,7 +7,8 @@ require("./monitor/main");
 require("./employee/main");
 require("./user/main");
 require("./profile/main");
-require("./rule/main");
+require("./sys/main");
+require("./card/main");
 
 var welcomeTemp = require("./common/templates/welcome.html");
 var helpTemp = require("./common/templates/help.html");
@@ -15,12 +16,12 @@ var faqTemp = require("./common/templates/faq.html");
 
 // GOABAL VAL
 window.PATH = window.location.pathname.slice(0, window.location.pathname.lastIndexOf("/"));
-    
-angular.module('ecgApp', ['ecgCommon', 'ecgTask', 'ecgMonitor', 'ecgEmployee', 'ecgUser', 'ecgRule', 'ecgProfile',])
+
+angular.module('ecgApp', ['ecgCommon', 'ecgTask', 'ecgMonitor', 'ecgEmployee', 'ecgUser', 'ecgSys', 'ecgProfile', 'ecgCard'])
 .config(['$httpProvider', '$routeProvider', function ($httpProvider, $routeProvider) {
         var token = $.cookie('AiniaOpAuthToken');
         // header头带认证参数
-         $httpProvider.defaults.headers.common['Authorization'] = token;
+        $httpProvider.defaults.headers.common['Authorization'] = token;
     
         // 配置路由,和模块相关的配置均在相应模块下的main.js
         $routeProvider
@@ -43,7 +44,7 @@ angular.module('ecgApp', ['ecgCommon', 'ecgTask', 'ecgMonitor', 'ecgEmployee', '
             }
         })
         .otherwise({
-            redirectTo: '/welcome'
+            redirectTo: '/todo'
         });
 }])
 .run(['$rootScope', '$http', 'ProfileService', function($rootScope, $http, ProfileService) {
@@ -53,7 +54,7 @@ angular.module('ecgApp', ['ecgCommon', 'ecgTask', 'ecgMonitor', 'ecgEmployee', '
     // 公用函数:退出系统
     function logout(msg) {
         if (msg) { alert(msg); }
-        $.cookie("AiniaOpAuthToken", '');
+        $.cookie("AiniaOpAuthToken", '', { path: '/' });
         window.location.href = "login.html";
     };
     window.logout = logout;

@@ -259,6 +259,64 @@
         }
       };
     }
+  ])
+  .directive("atServerPagination", [
+    "attributeExtractor", function(attributeExtractor) {
+      return {
+        replace: true,
+        restrict: "A",
+        template: "      <div class='pagination' style='margin: 0px;'>        <ul>          <li ng-class='{disabled: currentPage <= 0}'>            <a href='' ng-click='goToPage(currentPage - 1)'>&laquo;</a>          </li>          <li ng-class='{active: currentPage == page}' ng-repeat='page in pages'>            <a href='' ng-click='goToPage(page)'>{{page + 1}}</a>          </li>          <li ng-class='{disabled: currentPage >= numberOfPages - 1}'>            <a href='' ng-click='goToPage(currentPage + 1); normalize()'>&raquo;</a>          </li>        </ul>      </div>",
+        scope: {
+          itemsPerPage: "@",
+          instance: "=",
+          list: "=",
+          paging: "="
+        },
+        link: function($scope, $element, $attributes) {
+          $scope.instance = $scope;
+          $scope.currentPage = $scope.paging.curPage - 1;
+          $scope.numberOfPages = Math.ceil($scope.paging.total / $scope.itemsPerPage);
+          $scope.update = function() {
+            var x;
+
+            $scope.currentPage = $scope.paging.curPage - 1;
+            if ($scope.list) {
+              if ($scope.list.length > 0) {
+                $scope.numberOfPages = Math.ceil($scope.paging.total / $scope.itemsPerPage);
+                $scope.pages = (function() {
+                  var _i, _ref, _results;
+
+                  _results = [];
+                  for (x = _i = 0, _ref = $scope.numberOfPages - 1; 0 <= _ref ? _i <= _ref : _i >= _ref; x = 0 <= _ref ? ++_i : --_i) {
+                    _results.push(x);
+                  }
+                  return _results;
+                })();
+              } else {
+                $scope.numberOfPages = 0;
+                $scope.pages = [];
+              }
+              return $scope.list = $scope.list;
+            }
+          };
+          $scope.fromPage = function() {
+              return $scope.itemsPerPage;
+          };
+          $scope.getFillerArray = function() {
+            return $scope.list;
+          };
+          $scope.goToPage = function(page) {
+            page = Math.max(0, page);
+            page = Math.min($scope.numberOfPages - 1, page);
+            $scope.paging.goToPage(page + 1, $scope.itemsPerPage);
+          }
+          $scope.update();
+          return $scope.$watch("list", function() {
+            return $scope.update();
+          });
+        }
+      };
+    }
   ]);
 
 }).call(this);

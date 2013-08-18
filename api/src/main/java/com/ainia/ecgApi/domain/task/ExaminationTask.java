@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.PostRemove;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
@@ -12,8 +13,10 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Subselect;
 
+import com.ainia.ecgApi.core.utils.ServiceUtils;
 import com.ainia.ecgApi.domain.health.HealthExamination;
 import com.ainia.ecgApi.domain.health.HealthRule.Level;
+import com.ainia.ecgApi.service.health.HealthExaminationService;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
@@ -32,6 +35,7 @@ public class ExaminationTask extends Task {
 	private Long examinationId;
 	private HealthExamination examination;
 
+	
 	@NotNull
 	public Long getExaminationId() {
 		return examinationId;
@@ -39,14 +43,6 @@ public class ExaminationTask extends Task {
 
 	public void setExaminationId(Long examinationId) {
 		this.examinationId = examinationId;
-	}
-	@Transient
-	public Long getUserId() {
-		return examination.getUserId();
-	}
-	@Transient
-	public String getUserName() {
-		return examination.getUserName();
 	}
 	
 	@Transient
@@ -63,6 +59,5 @@ public class ExaminationTask extends Task {
 	public void setExamination(HealthExamination examination) {
 		this.examination = examination;
 	}
-	
 	
 }

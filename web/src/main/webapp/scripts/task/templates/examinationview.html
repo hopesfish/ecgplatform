@@ -2,45 +2,41 @@
 <table class="ecgprops" ng-show="examinationview && examinationview.examination">
 
 <tr>
-<td width="20%" nowrap><label>测试项目:</label></td>
-<td width="30%" nowrap><span class="prop">{{examinationview.examination.testItem}}</span></td>
-<td width="15%" nowrap><label>测试时间:</label></td>
-<td nowrap><span class="prop">{{examinationview.examination.createdDate}}</span></td>
-</tr>
-
-<tr>
 <td><label>健康状态:</label></td>
-<td>
+<td colspan="3">
 <span class="prop">
 	<span class="label label-{{examinationview.translateLevel(examinationview.examination.level)}}">
 		{{examinationview.getLevelLabel(examinationview.examination.level)}}
 	</span>
 </td>
-<td><label>状态:</label></td>
-<td><span class="prop">{{examinationview.getWorkStatusLabel(todo.current.status || task.selected.status)}}</span></td>
+</tr>
+
+<tr>
+<td width="20%" nowrap><label>测试时间:</label></td>
+<td width="30%" nowrap><span class="prop">{{examinationview.examination.createdDate || '-'}}</span></td>
+<td width="15%" nowrap><label>回复进展:</label></td>
+<td nowrap><span class="prop">{{examinationview.getWorkStatusLabel(todo.current.status || task.selected.status)}}</span></td>
+</tr>
+
+<tr>
+<td><label>心率:</label></td>
+<td><span class="prop">{{examinationview.examination.heartRhythm || '-'}} 次/分钟</span></td>
+<td><label>体温:</label></td>
+<td><span class="prop">{{examinationview.examination.bodyTemp || '-'}} ℃（腋下温度）</span></td>
 </tr>
 
 <tr>
 <td valign="top"><label>血压:</label></td>
-<td valign="top"><span class="prop">
-	低压-{{examinationview.examination.bloodPressureLow}} 毫米汞柱 <br/>
-	高压-{{examinationview.examination.bloodPressureHigh}} 毫米汞柱</span></td>
-<td valign="top"><label>心率:</label></td>
-<td valign="top"><span class="prop">{{examinationview.examination.heartRhythm}} 次/分钟</span></td>
-</tr>
-
-<tr>
+<td valign="top"><span class="prop">{{examinationview.examination.bloodPressureLow || '-'}} </span> - <span class="prop">{{examinationview.examination.bloodPressureHigh || '-'}} 毫米汞柱</span></td>
 <td><label>血氧:</label></td>
-<td><span class="prop">{{examinationview.examination.bloodOxygen}} 百分比</span></td>
-<td><label>呼吸:</label></td>
-<td><span class="prop">{{examinationview.examination.breath}} 次/分钟</span></td>
+<td><span class="prop">{{examinationview.examination.bloodOxygen || '-'}} 百分比</span></td>
 </tr>
 
 <tr>
-<td><label>体温:</label></td>
-<td><span class="prop">{{examinationview.examination.bodyTemp}} ℃（腋下温度）</span></td>
-<td><label>脉率:</label></td>
-<td><span class="prop">{{examinationview.examination.pulserate}} 次/分钟</span></td>
+<td><label>血糖:</label></td>
+<td><span class="prop">{{examinationview.examination.bloodSugar || '-'}}</span></td>
+<td><label>服用药物:</label></td>
+<td><span class="prop">{{examinationview.examination.medicine || '-'}} </span></td>
 </tr>
 
 </table>

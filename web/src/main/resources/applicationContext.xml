@@ -35,7 +35,7 @@
 
     <bean id="hibernateJpaVendorAdapter" class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
         <property name="databasePlatform" value="${database.dialect}"></property>
-        <property name="showSql" value="true" />
+        <property name="showSql" value="${hibernate.showSql}" />
     </bean>
     <!-- 
     import org.hibernate.dialect.H2Dialect;
@@ -113,7 +113,34 @@
     
     <!-- 非spring bean 下获得bean的工具类 -->
     <bean class="com.ainia.ecgApi.core.utils.ServiceUtils" lazy-init="false"/>
-    
+
+    <bean id="employeeCheckLiveJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean"> 
+      <property name="targetObject"> 
+          <ref bean="employeeService"/> 
+      </property> 
+      <property name="targetMethod">  <!-- 要执行的方法名称 --> 
+          <value>checkLive</value> 
+      </property> 
+    </bean>
+
+ 
+
+    <!-- ======================== 调度触发器 ======================== --> 
+    <bean id="employeeCheckLiveTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean"> 
+      <property name="jobDetail" ref="employeeCheckLiveJob"></property> 
+      <property name="cronExpression" value="0 0/30 * ? * *"></property>
+    </bean> 
+
+    <!-- ======================== 调度工厂 ======================== --> 
+    <bean id="SpringJobSchedulerFactoryBean" class="org.springframework.scheduling.quartz.SchedulerFactoryBean"> 
+      <property name="triggers"> 
+          <list>  
+              <ref bean="employeeCheckLiveTrigger"/>
+          </list> 
+      </property> 
+    </bean>
+
+   
     <!-- production环境 -->
     <beans profile="production">
         <context:property-placeholder ignore-unresolvable="true"
@@ -121,29 +148,25 @@
         
         <!-- 数据源配置, 使用DBCP数据库连接池 -->
         <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
-            <!-- Connection Info -->
             <property name="driverClassName" value="${jdbc.driver}" />
             <property name="url" value="${jdbc.url}" />
             <property name="username" value="${jdbc.username}" />
             <property name="password" value="${jdbc.password}" />
-        
-            <!-- Connection Pooling Info -->
-            <property name="maxActive" value="${dbcp.maxActive}" />
-            <property name="maxIdle" value="${dbcp.maxIdle}" />
             <property name="defaultAutoCommit" value="false" />
-            <!-- 连接Idle一个小时后超时 -->
-            <property name="timeBetweenEvictionRunsMillis" value="3600000" />
-            <property name="minEvictableIdleTimeMillis" value="3600000" />
         </bean>
-        
+
+        <!-- 初始化数据表结构 与默认数据-->
+        <jdbc:initialize-database data-source="dataSource" ignore-failures="NONE">
+            <jdbc:script location="classpath:sql/mysql/schema.sql" />
+            <jdbc:script location="classpath:sql/mysql/data.sql" encoding="UTF-8"/>
+        </jdbc:initialize-database>        
         <!-- 数据源配置,使用应用服务器的数据库连接池 -->
         <!--<jee:jndi-lookup id="dataSource" jndi-name="java:comp/env/jdbc/ExampleDB" />-->
     </beans>
     
     <beans profile="development">
-        <context:property-placeholder ignore-resource-not-found="true"
-            location="classpath*:/application.properties,
-                      classpath*:/application.development.properties" />    
+        <context:property-placeholder
+            location="classpath*:/application.development.properties" />    
 
         <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
             <property name="driverClassName" value="${jdbc.driver}" />
@@ -162,8 +185,7 @@
     
     <beans profile="test">
         <context:property-placeholder ignore-resource-not-found="true"
-            location="classpath*:/application.properties,
-                      classpath*:/application.test.properties" />   
+            location="classpath*:/application.test.properties" />   
         
         <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
             <property name="driverClassName" value="${jdbc.driver}" />

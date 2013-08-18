@@ -1,0 +1,55 @@
+<div class="row-fluid">
+	<div class="span12 buttons">
+		<table>
+			<tr>
+				<td valign="top">
+					<button class="btn btn-primary" type="button"
+							ng-click="card.refresh()">
+						<i class="icon-refresh"></i>刷新
+					</button>
+				</td>
+				<td valign="top"><span>已使用的卡号:</span></td>
+				<td valign="top"><input type="text" placeholder="请输入已使用的卡号" title="请输入已使用的卡号" ng-model="card.query.serial"></td>
+				<td valign="top"><span>充值月份:</span></td>
+				<td valign="top">
+					<div id="charged-month" class="input-append date">
+					    <input name="chargedMonth" ng-model="card.query.chargedMonth" type="text" readonly="readonly" placeholder="请选择充值月份"></input>
+					    <span class="add-on">
+					      <i data-time-icon="icon-time" data-date-icon="icon-calendar">
+					      </i>
+					    </span>
+				    </div>
+				</td>
+				<td valign="top">
+					<button class="btn btn-primary" type="button"
+							ng-click="card.reset()">
+						<i class="icon-repeat"></i>重置
+					</button>
+					<button class="btn btn-primary" type="button"
+							ng-click="card.queryChanged(card.query)">
+						<i class="icon-search"></i>查询
+					</button>
+				</td>
+			</tr>
+		</table>
+    </div>
+</div>
+<div class="row-fluid">
+    <div class="block block-without-border span12">
+		<table at-table class="table table-bordered" pagination="cardPagination">
+		  <thead></thead>
+		  <tbody>
+		    <tr>
+				<td at-implicit sortable title="卡号" attribute="serial"></td>
+				<td at-implicit sortable title="充值用户" attribute="userName"></td>
+				<td at-implicit sortable title="充值日期" attribute="chargedDate"></td>
+				<td at-implicit sortable title="激活日期" attribute="activedDate"></td>
+				<td at-implicit sortable title="服务天数" attribute="days"></td>
+				<td at-implicit sortable title="操作员工" attribute="employeeName"></td>
+		    </tr>
+		  </tbody>
+		</table>
+
+		<div at-server-pagination items-per-page="15" instance="cardPagination" list="card.data" paging="card.paging"></div>
+    </div>
+</div>

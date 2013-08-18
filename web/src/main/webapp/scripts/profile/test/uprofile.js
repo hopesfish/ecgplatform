@@ -49,7 +49,11 @@ define(function(require, exports) {
         it("the session user's profile should be updated.", function(done) {
             expect(ProfileService).not.to.be(undefined);
             expect(sessionuser).not.to.be(undefined);
+            sessionuser.birthday = '2013-7-24';
+            sessionuser.stature = 0.46;
             sessionuser.gender = 0;
+            sessionuser.password = null;
+            sessionuser.mobile = null;
             // updated
             ProfileService.updateUser(sessionuser).then(function() {
                 done();
@@ -62,7 +66,9 @@ define(function(require, exports) {
             expect(sessionuser).not.to.be(undefined);
             // updated
             ProfileService.updateUserPassword(sessionuser.id, user.password, user.password + 'updated')
-            .then(function() {
+            .then(function(token) {
+                expect(token).not.to.be(undefined);
+                httpProvider.defaults.headers.common['Authorization'] = token;
                 done();
             }, function() {
                 throw new Error('the session user\'s password can\'t be updated');
@@ -72,7 +78,7 @@ define(function(require, exports) {
         it("the session user's password should be useful", function(done) {
             expect(sessionuser).not.to.be(undefined);
             $.ajax({
-                url: '/api/user/auth',
+                url: PATH + '/api/user/auth',
                 data: {
                     'username': user.username,
                     'password': user.password + 'updated'

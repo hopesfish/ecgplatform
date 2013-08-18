@@ -10,24 +10,24 @@
 <div class="row-fluid">
     <div class="span12">
         <div ng-show="operator.experts && operator.experts.length == 0">
-            尚未配置绑定关系
+            尚未配置绑定关系，只能绑定一名专家
         </div>
         <div ng-show="operator.experts && operator.experts.length != 0">
-            <form class="form-inline">
+            <!--form class="form-inline">
                 <label class="checkbox"><input type="checkbox" ng-click="operator.checkAll()"></input>全部选择</label>
-            </form>
+            </form-->
         </div>
     </div>
 </div>
 <div class="row-fluid">
     <div class="span12">
-        <button class="btn btn-primary" type="button"
+        <button class="btn btn-primary" type="button" ng-show="operator.experts == null || operator.experts.length == 0"
                 ng-click="operator.addExperts()">
-            <i class="icon-plus"></i>新增
+            <i class="icon-plus"></i>选择专家
         </button>
-        <button class="btn btn-danger" type="button"
+        <button class="btn btn-danger" type="button" ng-show="operator.experts && operator.experts.length > 0"
                 ng-click="operator.removeExperts()">
-            <i class="icon-remove"></i>删除
+            <i class="icon-remove"></i>解除绑定
         </button>
         <a href="#/operator" class="btn"><i class="icon-list"></i>返回</a>
     </div>

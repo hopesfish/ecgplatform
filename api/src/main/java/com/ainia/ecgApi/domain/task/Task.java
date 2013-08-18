@@ -14,11 +14,17 @@ import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.PrePersist;
+import javax.persistence.PreRemove;
 import javax.persistence.Transient;
-import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 import com.ainia.ecgApi.core.bean.Domain;
+import com.ainia.ecgApi.core.utils.ServiceUtils;
+import com.ainia.ecgApi.domain.health.HealthExamination;
+import com.ainia.ecgApi.service.health.HealthExaminationService;
+import com.ainia.ecgApi.service.task.ExaminationTaskService;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
@@ -27,6 +33,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 @DiscriminatorValue("task")
 public class Task implements Domain {
 	
+	public static final String USER_ID   = "userId";
 	public static final String EXPERT_ID = "expertId";
 	public static final String OPERATOR_ID = "operatorId";
 	public static final String AUTO = "auto";
@@ -35,6 +42,9 @@ public class Task implements Domain {
 	
 	private Long id;
 	private Status status;
+	private String apkId;
+	private Long userId;
+	private String userName;
 	private Long expertId;
 	private Long operatorId;
 	private Boolean auto;
@@ -52,6 +62,7 @@ public class Task implements Domain {
 	}
 	
 	public enum Status {
+		draft,
 		pending,
 		proceeding,
 		completed
@@ -111,7 +122,12 @@ public class Task implements Domain {
 	public Date getCompletedDate() {
 		return completedDate;
 	}
-
+	public String getApkId() {
+		return apkId;
+	}
+	public void setApkId(String apkId) {
+		this.apkId = apkId;
+	}
 	public void setCompletedDate(Date completedDate) {
 		this.completedDate = completedDate;
 	}
@@ -122,5 +138,62 @@ public class Task implements Domain {
 	public void setVersion(Integer version) {
 		this.version = version;
 	}
+	public Long getUserId() {
+		return userId;
+	}
+	public void setUserId(Long userId) {
+		this.userId = userId;
+	}
+	public String getUserName() {
+		return userName;
+	}
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+	
+	@PreRemove
+	public void onDelete() {
+		ExaminationTaskService examinationTaskService = (ExaminationTaskService)ServiceUtils.getService(ExaminationTaskService.class);
+		ExaminationTask examinationTask = examinationTaskService.get(this.id);
+		
+		if (examinationTask != null) {
+			HealthExamination healthExamination = examinationTask.getExamination();
+			if (healthExamination != null) {
+				HealthExaminationService healthExaminationService = (HealthExaminationService)ServiceUtils.getService(HealthExaminationService.class);
+				healthExaminationService.delete(healthExamination);
+			}
+		}
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		return result;
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Task other = (Task) obj;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		return true;
+	}
+	
+	@Override
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this);
+	}
+	
+	
 	
 }

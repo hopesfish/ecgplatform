@@ -1,26 +1,40 @@
 <h5 class="ecgHd">心电图</h5>
-<div class="plot-c" ng-show="examinationplot.examinationId">
-<img ng-src="{{PATH}}/api/examination/{{examinationplot.examinationId}}/ecg1" class="plot"></img>
-</div>
-<div class="plot-c" ng-show="examinationplot.examinationId">
-<img ng-src="{{PATH}}/api/examination/{{examinationplot.examinationId}}/ecg2" class="plot"></img>
-</div>
-<div class="plot-c" ng-show="examinationplot.examinationId">
-<img ng-src="{{PATH}}/api/examination/{{examinationplot.examinationId}}/ecg3" class="plot"></img>
-</div>
-<div class="plot-c" ng-show="examinationplot.examinationId">
-<img ng-src="{{PATH}}/api/examination/{{examinationplot.examinationId}}/ecg4" class="plot"></img>
-</div>
-<div class="plot-c" ng-show="examinationplot.examinationId">
-<img ng-src="{{PATH}}/api/examination/{{examinationplot.examinationId}}/ecg5" class="plot"></img>
-</div>
-<div class="plot-c" ng-show="examinationplot.examinationId">
-<img ng-src="{{PATH}}/api/examination/{{examinationplot.examinationId}}/ecg6" class="plot"></img>
-</div>
-<div class="plot-c" ng-show="examinationplot.examinationId">
-<img ng-src="{{PATH}}/api/examination/{{examinationplot.examinationId}}/ecg7" class="plot"></img>
-</div>
+
 <p class="buttons" ng-show="examinationplot.examinationId">
-<a ng-href="{{PATH}}/api/examination/{{examinationplot.examinationId}}/raw" target="_blank" class="btn btn-small btn-inverse" type="button">下载数据</a>
-<button class="btn btn-small btn-inverse" type="button">打印数据</button>
+<button type="button" class="btn btn-small" ng-click="examinationplot.zoom='small'"  ng-class="{'btn-primary': examinationplot.zoom == 'small'}">小</button>
+<button type="button" class="btn btn-small" ng-click="examinationplot.zoom='medium'" ng-class="{'btn-primary': examinationplot.zoom == 'medium'}">中</button>
+<button type="button" class="btn btn-small" ng-click="examinationplot.zoom='large'" ng-class="{'btn-primary': examinationplot.zoom == 'large'}">大</button>
+</p>
+
+<div class="plot-c {{examinationplot.zoom}}" ng-show="examinationplot.examinationId">
+<img title="ECG I" ng-show="examinationplot.examinationId"
+	 ng-src="{{PATH}}/api/user/{{examinationplot.userId}}/examination/{{examinationplot.examinationId}}/ecg1" class="plot"></img>
+<img title="ECG II" ng-show="examinationplot.examinationId"
+     ng-src="{{PATH}}/api/user/{{examinationplot.userId}}/examination/{{examinationplot.examinationId}}/ecg2" class="plot"></img>
+<img title="ECG III" ng-show="examinationplot.examinationId"
+     ng-src="{{PATH}}/api/user/{{examinationplot.userId}}/examination/{{examinationplot.examinationId}}/ecg3" class="plot"></img>
+<img title="ECG aVR" ng-show="examinationplot.examinationId"
+     ng-src="{{PATH}}/api/user/{{examinationplot.userId}}/examination/{{examinationplot.examinationId}}/ecg4" class="plot"></img>
+<img title="ECG aVL" ng-show="examinationplot.examinationId"
+     ng-src="{{PATH}}/api/user/{{examinationplot.userId}}/examination/{{examinationplot.examinationId}}/ecg5" class="plot"></img>
+<img title="ECG aVF" ng-show="examinationplot.examinationId"
+     ng-src="{{PATH}}/api/user/{{examinationplot.userId}}/examination/{{examinationplot.examinationId}}/ecg6" class="plot"></img>
+<img title="ECG V" ng-show="examinationplot.examinationId"
+     ng-src="{{PATH}}/api/user/{{examinationplot.userId}}/examination/{{examinationplot.examinationId}}/ecg7" class="plot"></img>
+<img title="Oxygen" ng-show="examinationplot.examinationId"
+     ng-src="{{PATH}}/api/user/{{examinationplot.userId}}/examination/{{examinationplot.examinationId}}/ecg8" class="plot"></img>
+</div>
+
+<p class="buttons" ng-show="examinationplot.examinationId">
+<button type="button" class="btn btn-small" ng-click="examinationplot.zoom='small'"  ng-class="{'btn-primary': examinationplot.zoom == 'small'}">小</button>
+<button type="button" class="btn btn-small" ng-click="examinationplot.zoom='medium'" ng-class="{'btn-primary': examinationplot.zoom == 'medium'}">中</button>
+<button type="button" class="btn btn-small" ng-click="examinationplot.zoom='large'" ng-class="{'btn-primary': examinationplot.zoom == 'large'}">大</button>
+</p>
+
+<p class="buttons" ng-show="examinationplot.examinationId">
+<a ng-href="{{PATH}}/api/user/{{examinationplot.userId}}/examination/{{examinationplot.examinationId}}/pdf" target="_blank"
+   class="btn btn-small btn-inverse" type="button">下载体检报告</a>
+<a ng-href="{{PATH}}/api/user/{{examinationplot.userId}}/examination/{{examinationplot.examinationId}}/raw" target="_blank"
+   ng-show="session.user.isEmployee()"
+   class="btn btn-small btn-inverse" type="button">下载原始数据</a>
 </p>

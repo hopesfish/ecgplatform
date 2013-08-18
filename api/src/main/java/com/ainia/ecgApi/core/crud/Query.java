@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.ainia.ecgApi.core.bean.Domain;
-import com.ainia.ecgApi.core.crud.Condition.Type;
 
 /**
  * <p>CRUD Query Object</p>
@@ -110,6 +109,11 @@ public class Query<T extends Domain> {
 	
 	public Query<T> isNotNull(String field) {
 		this.addCondition(Condition.isNotNull(field));
+		return this;
+	}
+	
+	public Query<T> group(Condition...conditions) {
+		this.addCondition(new Condition(conditions));
 		return this;
 	}
 

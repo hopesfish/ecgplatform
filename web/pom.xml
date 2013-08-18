@@ -9,6 +9,8 @@
 	<url>http://maven.apache.org</url>
 
 	<properties>
+        <log.level>WARN</log.level>	
+	
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<jetty.version>7.6.7.v20120910</jetty.version>
 		<jdk.version>1.6</jdk.version>
@@ -31,9 +33,29 @@
 			<artifactId>closure-compiler</artifactId>
 			<version>v20130603</version>
 		</dependency>
+        <!-- servlet start -->
+        <dependency>
+          <groupId>javax.servlet</groupId>
+          <artifactId>jstl</artifactId>
+          <version>1.2</version>
+          <scope>compile</scope>
+        </dependency>
+        <dependency>
+          <groupId>javax.servlet</groupId>
+          <artifactId>servlet-api</artifactId>
+          <version>2.5</version>
+          <scope>provided</scope>
+        </dependency>        
+        <!-- servlet end-->
 	</dependencies>
 
 	<build>
+        <resources>
+	      <resource>
+	        <directory>src/main/resources</directory>
+	        <filtering>true</filtering>
+	      </resource>
+	    </resources>
 		<finalName>web</finalName>
 
 		<pluginManagement>
@@ -54,6 +76,29 @@
 					<artifactId>jetty-maven-plugin</artifactId>
 					<version>${jetty.version}</version>
 					<configuration>
+	                <connectors>
+	                    <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
+	                        <port>8080</port>
+	                        <maxIdleTime>60000</maxIdleTime>
+	                    </connector>
+	                    <connector implementation="org.eclipse.jetty.server.ssl.SslSocketConnector">
+	                        <port>8443</port>
+	                        <maxIdleTime>60000</maxIdleTime>
+	                        <keystore>server.jks</keystore>
+	                        <password>password</password>
+	                        <keyPassword>password</keyPassword>
+	                    </connector>
+	                  </connectors>
+			            <systemProperties>
+			              <systemProperty>
+			                <name>spring.profiles.active</name>
+			                <value>development</value>
+			              </systemProperty>       
+			              <systemProperty>
+			                 <name>log4j.debug.level</name>
+			                 <value>debug</value>
+			              </systemProperty>        
+			            </systemProperties>
 						<webAppConfig>
 							<contextPath>/</contextPath>
 							<defaultsDescriptor>
@@ -198,6 +243,13 @@
 					<configuration>
 						<warName>${project.artifactId}</warName>
 						<warSourceExcludes>/**/scripts/**/*.js</warSourceExcludes>
+					    <webResources>
+						    <resource>
+						        <directory>src/main/resources</directory>
+						        <filtering>true</filtering>  
+						        <targetPath>WEB-INF/classes</targetPath>
+						    </resource>
+					    </webResources>
 					</configuration>
 				</plugin>
 				

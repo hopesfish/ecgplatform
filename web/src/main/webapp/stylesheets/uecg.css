@@ -1,0 +1,19 @@
+.ecgContent,.ecgContent .container {
+  min-height: 400px;
+}
+.form-horizontal .control-label {
+  width: 150px;
+}
+.form-horizontal .controls {
+  margin-left: 160px;
+}
+.form-horizontal .form-actions {
+  padding-left: 160px;
+}
+.form-horizontal .controls input {
+  max-width: 300px;
+}
+.form-horizontal .controls input, .form-horizontal .controls span{
+  height: 30px;
+  line-height: 30px;
+}

@@ -10,7 +10,7 @@
 <div class="row-fluid">
 	<div class="span12">
   	    <div ng-show="expert.operators && expert.operators.length == 0">
-	    	尚未配置绑定关系
+	    	尚未配置绑定关系，每个接线员只能有一名专家绑定
 	    </div>
 	    <div ng-show="expert.operators && expert.operators.length != 0">
 	    	<form class="form-inline">
@@ -23,11 +23,11 @@
 	<div class="span12">
 		<button class="btn btn-primary" type="button"
 				ng-click="expert.addOperators()">
-			<i class="icon-plus"></i>新增
+			<i class="icon-plus"></i>选择接线员
 		</button>
-		<button class="btn btn-danger" type="button"
+		<button class="btn btn-danger" type="button" ng-show="expert.operators && expert.operators.length > 0"
 				ng-click="expert.removeOperators()">
-			<i class="icon-remove"></i>删除
+			<i class="icon-remove"></i>解除绑定
 		</button>
 		<a href="#/expert" class="btn"><i class="icon-list"></i>返回</a>
     </div>

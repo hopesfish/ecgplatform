@@ -1,5 +1,6 @@
 package com.ainia.ecgApi.domain.sys;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -22,6 +23,12 @@ import com.ainia.ecgApi.core.bean.Domain;
  */
 @Entity
 public class SystemConfig implements Domain {
+	
+	public static final String KEY = "key";
+	
+	public static final String EXAMINATION_REPLY_FREE = "examination.reply.isFree";
+	public static final String EXAMINATION_REPLY_AUTO = "examination.reply.isAuto";
+	public static final String EMPLOYEE_LIVE_TIMEOUT = "employee.live.timeout";
 
 	private Long  id;
 	private Type type;
@@ -41,7 +48,7 @@ public class SystemConfig implements Domain {
 	public void setType(Type type) {
 		this.type = type;
 	}
-
+	@Column(name = "config_key")
 	public String getKey() {
 		return key;
 	}

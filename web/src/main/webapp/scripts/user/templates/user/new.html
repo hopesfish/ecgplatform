@@ -7,7 +7,7 @@
 		<tr>
 		<td width="150px" valign="top"><label for="user-mobile">手机号码:</label></td>
 		<td>
-			<input ng-model="user.newobj.mobile" class="input-xlarge" id="user-mobile" ng-pattern="/^(86)*0*13\d{9}$/"
+			<input ng-model="user.newobj.mobile" class="input-xlarge" id="user-mobile" ng-pattern="/^(86)*0*1\d{10}$/"
 				   focus required placeholder="请输入登录名" ng-change="user.checkUnique()"></input>
 			<span class="required">*</span><span class="desc">初始登录密码与手机一致</span></td>
 		</tr>
@@ -15,9 +15,18 @@
 		<tr>
 		<td><label for="user-name">姓名:</label></td>
 		<td>
-			<input ng-model="user.newobj.name" class="input-xlarge" id="user-name" focus required placeholder="请输入姓名"></input>
+			<input ng-model="user.newobj.name" class="input-xlarge" id="user-name" required placeholder="请输入姓名"></input>
 			<span class="required">*</span>
 		</td>
+		</tr>
+
+		<tr>
+		<td width="150px" valign="top"><label for="user-email">邮箱地址:</label></td>
+		<td>
+			<input ng-model="user.newobj.email" class="input-xlarge" id="user-email"
+				   ng-pattern="/^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/"
+				   placeholder="请输入有效邮箱地址" ng-change="user.checkUnique()"></input>
+			<span class="desc">找回密码的方式之一</span></td>
 		</tr>
 
 		<tr>
@@ -104,9 +113,9 @@
 <div class="row-fluid">
 	<div class="span12">
 		<button class="btn" type="button"
-				ng-class="{'btn-primary': createChiefForm.$valid && user.isUnique}" 
+				ng-class="{'btn-primary': createChiefForm.$valid && user.isUnique && user.isEmailUnique}" 
 				ng-click="user.create()"
-				ng-disabled="!createChiefForm.$valid || !user.isUnique">
+				ng-disabled="!createChiefForm.$valid || !user.isUnique || !user.isEmailUnique">
 			<i class="icon-save"></i>保存
 		</button>
 		<a href="#/user" class="btn"><i class="icon-remove"></i>取消</a>

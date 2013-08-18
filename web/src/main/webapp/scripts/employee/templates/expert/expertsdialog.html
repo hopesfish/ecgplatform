@@ -9,14 +9,14 @@
         <table at-table class="table table-bordered" pagination="operatorsDialogPagination">
           <thead></thead>
           <tbody>
-            <tr ng-click="item.selected = !item.selected" ng-class="{'active': item.selected}">
+            <tr ng-click="expertdialog.select(item)" ng-class="{'active': item.selected}">
                 <td at-implicit sortable title="登录名" attribute="username"></td>
                 <td at-implicit sortable title="姓名" attribute="name"></td>
             </tr>
           </tbody>
         </table>
 
-        <at-pagination items-per-page="10" instance="operatorsDialogPagination" list="expertdialog.data"></at-pagination>
+        <at-pagination items-per-page="5" instance="operatorsDialogPagination" list="expertdialog.data"></at-pagination>
   </div>
   <div class="modal-footer">
     <button class="btn btn-primary" ng-click="expertdialog.execute()"><i class="icon-ok"></i>选择</button>

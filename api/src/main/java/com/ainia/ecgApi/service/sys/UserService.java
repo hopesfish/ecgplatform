@@ -1,9 +1,8 @@
 package com.ainia.ecgApi.service.sys;
 
 import com.ainia.ecgApi.core.crud.BaseService;
-import com.ainia.ecgApi.core.exception.ServiceException;
-import com.ainia.ecgApi.core.security.AuthUser;
 import com.ainia.ecgApi.domain.sys.User;
+import com.ainia.ecgApi.dto.common.Message.Type;
 
 /**
  * <p>User Service interface </p>
@@ -16,7 +15,7 @@ import com.ainia.ecgApi.domain.sys.User;
  */
 public interface UserService extends BaseService<User , Long> {
     
-
+	public static final int SALT_NUM = 6;
 	/**
 	 * <p>根据用户名获得用户</p>
 	 * @param username
@@ -25,6 +24,20 @@ public interface UserService extends BaseService<User , Long> {
 	 */
 	public User findByUsername(String username);
 	
+	/**
+	 * <p>根据电话获得用户</p>
+	 * @param username
+	 * @return
+	 * User
+	 */
+	public User findByMobile(String mobile);
+	/**
+	 * <p>根据邮箱获得用户</p>
+	 * @param username
+	 * @return
+	 * User
+	 */
+	public User findByEmail(String email);
 	/**
 	 * <p>修改密码</p>
 	 * @param id
@@ -41,4 +54,20 @@ public interface UserService extends BaseService<User , Long> {
 	 * void
 	 */
 	public void resetPassword(Long id);
+	
+	/**
+	 * <p>找回密码</p>
+	 * @param email
+	 * void
+	 */
+	public void retakePassword(User user , Type messageType);
+	
+	/**
+	 * <p>通过找回码修改密码</p>
+	 * @param userId
+	 * @param code
+	 * @param newPassword
+	 * void
+	 */
+	public void retakePassword(User user , String code , String newPassword);
 }

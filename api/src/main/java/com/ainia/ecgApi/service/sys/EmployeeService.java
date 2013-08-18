@@ -13,6 +13,8 @@ import com.ainia.ecgApi.domain.sys.Employee;
  * @version
  */
 public interface EmployeeService  extends BaseService<Employee , Long> {
+	
+	public static final int SALT_NUM = 6;
 
 	/**
 	 * <p>get unique employee by username</p>
@@ -35,5 +37,11 @@ public interface EmployeeService  extends BaseService<Employee , Long> {
 	 * void
 	 */
 	public void resetPassword(Long id);
+	
+	/**
+	 * <p>检查员工状态</p>
+	 * void
+	 */
+	public void checkLive();
 	
 }

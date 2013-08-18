@@ -2,6 +2,7 @@ package com.ainia.ecgApi.core.crud;
 
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -21,6 +22,7 @@ import javax.persistence.metamodel.Attribute.PersistentAttributeType;
 import javax.persistence.metamodel.EntityType;
 import javax.persistence.metamodel.Metamodel;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,7 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.util.ReflectionUtils;
 
 import com.ainia.ecgApi.core.bean.Domain;
+import com.ainia.ecgApi.core.crud.Condition.Type;
 import com.ainia.ecgApi.core.crud.Query.OrderType;
 import com.ainia.ecgApi.core.utils.JPAUtils;
 
@@ -76,6 +79,7 @@ public abstract class BaseDaoImpl<T extends Domain , ID extends Serializable> im
 		Root<T> root = criteria.from(query.getClazz());
 		
 	    Metamodel metamodel   = em.getMetamodel();
+	    
 	    EntityType entityType =  metamodel.entity(clazz);
 	    //对一对多关联使用 left join  减少生成的sql语句
 	    for (Iterator<Attribute> iter = entityType.getAttributes().iterator();iter.hasNext();) {
@@ -112,20 +116,47 @@ public abstract class BaseDaoImpl<T extends Domain , ID extends Serializable> im
 		int i =0;
 		for (Condition condition : query.getConds()) {
 			try {
-				if (condition.getValue() != null && !(condition.getValue() instanceof Collection)) {
+				if (!condition.isGroup() && condition.getValue() != null && !(condition.getValue() instanceof Collection)) {
 					Class targetClass = ReflectionUtils.findField(clazz , condition.getField()).getType();
 					Class sourceClass = condition.getValue().getClass();
-					if (targetClass != sourceClass && conversionService.canConvert(sourceClass, targetClass)) {
-						condition.setValue(conversionService.convert(condition.getValue(), targetClass));
+					Type ctype = condition.getType();
+					if (Type.in.equals(ctype) || Type.notIn.equals(ctype)) {
+						Object value = condition.getValue();
+						if (value instanceof String) {
+							//TODO 固定分隔符为:
+							String[] values = StringUtils.split((String)value , ",");
+							List converterValue = new ArrayList(values.length);
+							for (String v : values ) {
+								if (targetClass != sourceClass && conversionService.canConvert(sourceClass, targetClass)) {
+									converterValue.add(conversionService.convert(v, targetClass));
+								}
+								else {
+									converterValue.add(v);
+								}
+							}
+							condition.setValue(converterValue);
+						}
+					}
+					else {
+						if (targetClass != sourceClass && conversionService.canConvert(sourceClass, targetClass)) {
+							condition.setValue(conversionService.convert(condition.getValue(), targetClass));
+						}
 					}
 				}
-				predicates[i++] = JPAUtils.resolverCondition(root , builder, condition);
-			}catch(Throwable t){
+			}
+			catch(RuntimeException r){
+				r.printStackTrace();
+				if (log.isWarnEnabled()) {
+					log.warn("can not resolver field " + condition.getField() + " for " + query.getClazz());
+				}
+			}
+			catch(Exception t){
 				t.printStackTrace();
 				if (log.isWarnEnabled()) {
 					log.warn("can not resolver field " + condition.getField() + " for " + query.getClazz());
 				}
 			}
+			predicates[i++] = JPAUtils.resolverCondition(root , builder, condition);
 		}		
 		criteria.where(builder.and(predicates));
 	}

@@ -1,6 +1,10 @@
 <div class="row-fluid">
 	<div class="span12 buttons">
-		<a href="#/user/new" class="btn" ng-show="session.user.isChief() || session.user.isAdmin()"><i class="icon-plus" ></i>新增用户</a>
+		<button class="btn btn-primary" type="button"
+				ng-click="user.refresh()">
+			<i class="icon-refresh"></i>刷新
+		</button>
+		<a href="#/user/new" class="btn btn-primary" ng-show="session.user.isChief() || session.user.isAdmin()"><i class="icon-plus" ></i>新增用户</a>
 		<!--button class="btn" type="button"
 				ng-class="{'btn-danger': user.selectedItem != null}"
 				ng-click="user.confirmDisable()" ng-disabled="user.selectedItem == null">
@@ -12,7 +16,11 @@
 				ng-click="user.confirmDelete()" ng-disabled="user.selectedItem == null">
 			<i class="icon-remove"></i>删除用户
 		</button>
-		<input type="text" placeholder="请输入任意关键字" title="请输入任意关键字" ng-model="user.query" ng-change="user.queryChanged(user.query)">
+		<input type="text" placeholder="请输入手机号" title="请输入手机号" ng-model="user.query">
+		<button class="btn btn-primary" type="button"
+				ng-click="user.queryChanged(user.query)">
+			<i class="icon-search"></i>查询
+		</button>
     </div>
 </div>
 <div class="row-fluid">
@@ -23,11 +31,12 @@
 		    <tr ng-click="user.selectedItem = item" ng-class="{'active': user.selectedItem == item}">
 				<td at-implicit sortable title="手机" attribute="mobile" class="ecgGridLik" ng-click="user.showPage(item)"></td>
 				<td at-implicit sortable title="姓名" attribute="name"></td>
-				<td at-implicit sortable title="既往病史" attribute="anamnesis"></td>
+				<td at-implicit sortable title="邮箱" attribute="email"></td>
+				<td at-implicit sortable title="最后登录时间" attribute="lastLoginDate"></td>
 		    </tr>
 		  </tbody>
 		</table>
 
-		<at-pagination items-per-page="10" instance="userPagination" list="user.filteredData"></at-pagination>
+		<div at-server-pagination items-per-page="15" instance="userPagination" list="user.data" paging="user.paging"></div>
     </div>
 </div>

@@ -16,9 +16,9 @@ angular.module('ecgCommon', ["angular-table", "ecgNav", "ecgHeader", "ecgMessage
         'outside': '数据异常'
     };
     var workstatus = {
-        'pending': '等待接线员处理',
-        'proceeding': '等待专家处理',
-        'completed': '已处理'
+        'pending': '等待接线员回复',
+        'proceeding': '等待专家回复',
+        'completed': '已回复'
     };
 
     /*
@@ -44,8 +44,8 @@ angular.module('ecgCommon', ["angular-table", "ecgNav", "ecgHeader", "ecgMessage
         '3': {col: "heartRhythm", label: "心率"},
         '4': {col: "bloodOxygen", label: "血氧饱和度"},
         '5': {col: "breath", label: "呼吸"},
-        '6': {col: "bodyTemp", label: "体温"},
-        '7': {col: "pulserate", label: "脉率"}
+        '6': {col: "bodyTemp", label: "体温"}
+        //'7': {col: "pulserate", label: "脉率"}
     };
     var employeestatus = [
         {key: 'ONLINE', label: "正在上班"},
@@ -90,6 +90,23 @@ angular.module('ecgCommon', ["angular-table", "ecgNav", "ecgHeader", "ecgMessage
         },
         getCodes: function() {
             return codes;
+        },
+        getCodesList: function() {
+            var list = [];
+            for (var prop in codes) {
+                list.push({value: prop, label: codes[prop].label});
+            }
+            return list;
+        },
+        getCodeLabel: function(_prop) {
+            var label = '未知';
+            for (var prop in codes) {
+                if (_prop == prop) {
+                    label = codes[prop].label;
+                    break;
+                }
+            }
+            return label;
         },
         getEmployeeStatus: function() {
             return employeestatus;

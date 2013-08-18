@@ -93,7 +93,6 @@ public class HealthReply implements Domain {
 		this.content = content;
 	}
 
-	@NotNull
 	public Long getEmployeeId() {
 		return employeeId;
 	}

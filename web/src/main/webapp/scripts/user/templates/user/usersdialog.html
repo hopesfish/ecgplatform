@@ -1,10 +1,18 @@
 <div id="ecgUsersDialog" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="ecgModalLabel" aria-hidden="true">
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-    <h3>选择接线员</h3>
+    <h3>选择用户</h3>
   </div>
   <div class="modal-body">
     
+        <div class="buttons">
+            <input type="text" placeholder="请输入手机号" title="请输入手机号" ng-model="userdialog.query">
+            <button class="btn btn-primary" type="button"
+                ng-click="userdialog.queryChanged(userdialog.query)">
+              <i class="icon-search"></i>查询
+            </button>
+        </div>
+
         <table at-table class="table table-bordered" pagination="usersDialogPagination">
           <thead></thead>
           <tbody>
@@ -15,10 +23,10 @@
           </tbody>
         </table>
 
-        <at-pagination items-per-page="10" instance="usersDialogPagination" list="userdialog.data"></at-pagination>
+        <div at-server-pagination items-per-page="5" instance="usersDialogPagination" list="userdialog.data" paging="userdialog.paging"></div>
   </div>
   <div class="modal-footer">
-    <button class="btn" ng-click="userdialog.execute()">选择</button>
+    <button class="btn btn-primary" ng-click="userdialog.execute()">选择</button>
     <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
   </div>
 </div>

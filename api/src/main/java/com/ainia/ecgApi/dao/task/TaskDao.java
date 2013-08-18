@@ -1,6 +1,9 @@
 package com.ainia.ecgApi.dao.task;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+
 import com.ainia.ecgApi.core.crud.BaseDao;
 import com.ainia.ecgApi.domain.task.Task;
 
@@ -16,5 +19,7 @@ import com.ainia.ecgApi.domain.task.Task;
  */
 public interface TaskDao extends JpaRepository<Task , Long>, BaseDao<Task , Long> { 
     
-    
+	@Query("delete from Task where userId = ?")
+	@Modifying
+    public void deleteAllByUserId(Long userId);
 }

@@ -1,8 +1,15 @@
 package com.ainia.ecgApi.controller.sys;
 
+import java.io.IOException;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -13,18 +20,43 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.ainia.ecgApi.core.crud.BaseController;
 import com.ainia.ecgApi.core.crud.BaseService;
 import com.ainia.ecgApi.core.crud.Page;
 import com.ainia.ecgApi.core.crud.Query;
 import com.ainia.ecgApi.core.crud.Query.OrderType;
+import com.ainia.ecgApi.core.exception.ServiceException;
+import com.ainia.ecgApi.core.security.AuthUser;
+import com.ainia.ecgApi.core.security.AuthenticateService;
+import com.ainia.ecgApi.core.utils.EncodeUtils;
+import com.ainia.ecgApi.core.web.AjaxResult;
+import com.ainia.ecgApi.domain.charge.Card;
+import com.ainia.ecgApi.domain.health.HealthExamination;
 import com.ainia.ecgApi.domain.health.HealthRule;
 import com.ainia.ecgApi.domain.sys.User;
 import com.ainia.ecgApi.domain.task.Task;
+import com.ainia.ecgApi.dto.common.Message;
+import com.ainia.ecgApi.service.charge.CardService;
+import com.ainia.ecgApi.service.common.UploadService;
+import com.ainia.ecgApi.service.common.UploadService.Type;
+import com.ainia.ecgApi.service.health.HealthExaminationService;
 import com.ainia.ecgApi.service.health.HealthRuleService;
 import com.ainia.ecgApi.service.sys.UserService;
 import com.ainia.ecgApi.service.task.TaskService;
+import com.lowagie.text.Chapter;
+import com.lowagie.text.Document;
+import com.lowagie.text.DocumentException;
+import com.lowagie.text.Font;
+import com.lowagie.text.Image;
+import com.lowagie.text.PageSize;
+import com.lowagie.text.Paragraph;
+import com.lowagie.text.Section;
+import com.lowagie.text.pdf.BaseFont;
+import com.lowagie.text.pdf.PdfPCell;
+import com.lowagie.text.pdf.PdfPTable;
+import com.lowagie.text.pdf.PdfWriter;
 
 /**
  * <p>User controller</p>
@@ -45,6 +77,14 @@ public class UserController extends BaseController<User , Long> {
     private HealthRuleService healthRuleService;
     @Autowired
     private TaskService taskService;
+    @Autowired
+    private AuthenticateService authenticateService;
+    @Autowired
+    private HealthExaminationService healthExaminationService;
+    @Autowired
+    private UploadService uploadService;
+    @Autowired
+    private CardService cardService;
     
     @Override
     public BaseService<User , Long> getBaseService() {
@@ -59,7 +99,7 @@ public class UserController extends BaseController<User , Long> {
      */
     @RequestMapping(value = "{id}/rule" , method = RequestMethod.GET , produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<Set<HealthRule>> getRules(@PathVariable("id") Long id) {
+    public ResponseEntity<Set<HealthRule>> findRules(@PathVariable("id") Long id) {
     	User user = userService.get(id);
     	if (user == null) {
     		return new ResponseEntity(HttpStatus.NOT_FOUND);
@@ -87,22 +127,61 @@ public class UserController extends BaseController<User , Long> {
     
 	/**
 	 * <p>获取用户相关任务</p>
-	 * @param expertId
+	 * @param idzvdzcx
 	 * @param query
 	 * @return
 	 * ResponseEntity<Page<Task>>
 	 */
 	@RequestMapping(value = "{id}/task" , method = RequestMethod.GET ,produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public ResponseEntity<Page<Task>> findTask(@PathVariable("id") Long operatorId , Query<Task> query) {
-		query.eq(Task.OPERATOR_ID  , operatorId)
-			 .isNull(Task.EXPERT_ID);
+	public ResponseEntity<Page<Task>> findTask(@PathVariable("id") Long id , Query<Task> query) {
+		AuthUser currentUser = authenticateService.getCurrentUser();
+		if (currentUser!= null && currentUser.isUser() && !currentUser.getId().equals(id)) {
+			return new ResponseEntity(HttpStatus.FORBIDDEN);
+		}
+		query.eq(Task.USER_ID  , id);
 		query.addOrder(Task.CREATED_DATE , OrderType.desc);
 		long total = taskService.count(query);
 		query.getPage().setTotal(total);
 		query.getPage().setDatas(taskService.findAll(query));
 		return new ResponseEntity(query.getPage() ,HttpStatus.OK);
-	}    
+	}  
+	
+	/**
+	 * <p>删除用户相关任务</p>
+	 * @param idzvdzcx
+	 * @param query
+	 * @return
+	 * ResponseEntity<Page<Task>>
+	 */
+	@RequestMapping(value = "{id}/task" , method = RequestMethod.DELETE ,produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public ResponseEntity deleteAllTask(@PathVariable("id") Long id) {
+		User user = userService.get(id);
+		if (user == null) {
+			return new ResponseEntity(HttpStatus.NOT_FOUND);
+		}
+		taskService.deleteAllByUser(id);
+		return new ResponseEntity(HttpStatus.OK);
+	}  
+	
+	/**
+	 * <p>删除用户单个任务</p>
+	 * @param idzvdzcx
+	 * @param query
+	 * @return
+	 * ResponseEntity<Page<Task>>
+	 */
+	@RequestMapping(value = "{id}/task/{taskId}" , method = RequestMethod.DELETE ,produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public ResponseEntity deleteTask(@PathVariable("taskId") Long taskId) {
+		Task task = taskService.get(taskId);
+		if (task == null) {
+			return new ResponseEntity(HttpStatus.NOT_FOUND);
+		}
+		taskService.delete(taskId);
+		return new ResponseEntity(HttpStatus.OK);
+	}  
     
     /**
      * <p>将规则与用户解除</p>
@@ -122,6 +201,8 @@ public class UserController extends BaseController<User , Long> {
     	return new ResponseEntity(HttpStatus.CREATED);
     }
     
+    
+    
 	/**
 	 * <p>修改密码</p>
 	 * @param oldPassword
@@ -131,15 +212,324 @@ public class UserController extends BaseController<User , Long> {
 	 */
 	@RequestMapping(value = "{id}/password" ,method = RequestMethod.PUT)
 	@ResponseBody
-	public ResponseEntity changePassword(@PathVariable("id") Long id , 
+	public ResponseEntity<?> changePassword(@PathVariable("id") Long id , 
 										 @RequestParam(value = "oldPassword" , required = false) String oldPassword ,
 										 @RequestParam(value = "newPassword" , required = false) String newPassword) {
+		User user = userService.get(id);
+		if (user == null) {
+			return new ResponseEntity(HttpStatus.NOT_FOUND);
+		}
+		
 		if (StringUtils.isBlank(oldPassword) || StringUtils.isBlank(newPassword)) {
 			userService.resetPassword(id);
 		}
 		else {
 			userService.changePassword(id, oldPassword, newPassword);
 		}
-		return new ResponseEntity(HttpStatus.OK);
+		user.setSalt(EncodeUtils.encodeHex(EncodeUtils.asciiSum(user.getPassword()).getBytes()));
+		userService.update(user);
+		
+		Map result = new HashMap(1);
+		result.put(AjaxResult.AUTH_TOKEN , authenticateService.generateToken(user.getUsername() , User.class.getSimpleName(),
+											user.getTokenDate() ,
+											user.getSalt()));
+		return new ResponseEntity(result , HttpStatus.OK);
+	}
+	
+    /**
+     * <p>获取用户相关健康测试</p>
+     * @param id
+     * @return
+     * ResponseEntity<List<HealthExamination>>
+     */
+    @RequestMapping(value = "{id}/examination" , method = RequestMethod.GET , produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity findExaminations(@PathVariable("id") Long id , Query<HealthExamination> query) {
+    	User user = userService.get(id);
+    	if (user == null) {
+    		return new ResponseEntity(HttpStatus.NOT_FOUND);
+    	}
+    	query.eq(HealthExamination.USER_ID , id);
+    	query.addOrder(HealthExamination.CREATED_DATE , OrderType.desc);
+    	long total = healthExaminationService.count(query);
+		query.getPage().setTotal(total);
+		query.getPage().setDatas(healthExaminationService.findAll(query));
+    	return new ResponseEntity(query.getPage() , HttpStatus.OK);
+    }
+	
+    /**
+     * <p>健康测试数据上传接口</p>
+     * @param file
+     * @return
+     * ResponseEntity
+     * @throws IOException 
+     */
+	@RequestMapping(value = "{uploadUserId}/examination" , method = RequestMethod.POST , produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+    public ResponseEntity upload(@PathVariable("uploadUserId") Long uploadUserId , @RequestParam(value = "file" , required = false) MultipartFile file , HealthExamination examination ,
+    								@RequestParam(value = "md5" , required = false) String md5) throws IOException {
+		
+		ResponseEntity entity = new ResponseEntity(HttpStatus.OK);
+    	// 必须登录, 必须是用户类型, 必须是本人提交
+		AuthUser authUser = authenticateService.getCurrentUser();	
+		if (authUser == null) {
+			entity = new ResponseEntity(HttpStatus.FORBIDDEN);
+			return entity;
+		} else if (!User.class.getSimpleName().equals(authUser.getType()) || !authUser.getId().equals(uploadUserId)) {
+			log.error("the api should only invoked by the user him/herself.");
+			entity = new ResponseEntity(HttpStatus.FORBIDDEN);
+			return entity;
+		}
+
+		// 非测试情况文件不能为空
+		if (file == null || file.getBytes().length == 0) {
+			if (examination.getIsTest() == null || !examination.getIsTest()) {
+				log.error("the file should not be null.");
+				entity = new ResponseEntity(HttpStatus.BAD_REQUEST);
+				return entity;
+			}
+		}
+
+		// apkId不能为空
+		if (examination.getApkId() == null) {
+			log.error("the apkId should not be null.");
+			entity = new ResponseEntity(HttpStatus.BAD_REQUEST);
+			return entity;
+		}
+		
+		healthExaminationService.upload(examination , file.getBytes() , md5);
+
+    	return entity;
+    }
+	
+	/**
+	 * <p>获取心电图1</p>
+	 * @return
+	 * byte[]
+	 * @throws IOException 
+	 */
+	@RequestMapping(value = "{id}/examination/{examinationId}/ecg{index}" , method = RequestMethod.GET)
+	public void loadEcg(@PathVariable("id") Long id , @PathVariable("examinationId") Long examinationId , 
+										@PathVariable("index") int index, HttpServletResponse response)  {
+		//TODO 文件后缀名固定
+		String ecgPath = String.valueOf(User.class.getSimpleName().toLowerCase() + "/" +id) + "/examination/" + examinationId + "/ecg" + index + ".jpg";
+		try {
+			response.setContentType("image/jpeg");
+			response.getOutputStream().write(uploadService.load(Type.heart_img , ecgPath));
+			response.getOutputStream().flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+			throw new ServiceException("examination.ecgPath.notFound");
+		}
+	}
+	
+	@RequestMapping(value = "{id}/examination/{examinationId}/pdf" , method = RequestMethod.GET) 
+	public void loadExaminationByPdf(@PathVariable("examinationId") Long examinationId
+										, HttpServletResponse response) throws DocumentException, IOException {
+		HealthExamination examination = healthExaminationService.get(examinationId);
+		if (examination == null) {
+			response.setStatus(HttpStatus.NOT_FOUND.value());
+			return;
+		}
+		User user = userService.get(examination.getUserId());
+		response.setContentType("application/pdf");
+		//TODO 使用固定方式生成pdf
+		Document doc = new Document(PageSize.A4, 50, 50, 50, 50);
+		
+//		String pdfPath = "user/"
+//				+ String.valueOf(authUser.getId())
+//				+ "/examination/" + examination.getId()
+//				+ "/examination.pdf";
+		
+		PdfWriter writer = PdfWriter.getInstance(doc, 
+								response.getOutputStream());
+		doc.open();
+		BaseFont bfChinese = BaseFont.createFont("STSongStd-Light", "UniGB-UCS2-H", true);
+	    Font fontChinese = new Font(bfChinese, 12, Font.NORMAL);  
+		Paragraph title = new Paragraph("测试信息" , fontChinese);
+		
+		Chapter chapter = new Chapter(title , 1);
+		chapter.setNumberDepth(0);
+		
+		Section section1 = chapter.addSection(new Paragraph("用户信息" , fontChinese));
+		
+		PdfPTable userInfo = new PdfPTable(4);
+		userInfo.setSpacingBefore(25);
+		userInfo.setSpacingAfter(25);
+		
+		
+		userInfo.addCell(new PdfPCell(new Paragraph("姓名：" , fontChinese)));
+		userInfo.addCell(new PdfPCell(new Paragraph(user.getName() , fontChinese)));
+		
+		userInfo.addCell(new PdfPCell(new Paragraph("电话：" , fontChinese)));
+		userInfo.addCell(new PdfPCell(new Paragraph(user.getMobile() , fontChinese)));
+		
+		userInfo.addCell(new PdfPCell(new Paragraph("不良爱好：" , fontChinese)));
+		userInfo.addCell(user.getBadHabits());
+		
+		userInfo.addCell(new PdfPCell(new Paragraph("既往病史：" , fontChinese)));
+		userInfo.addCell(user.getAnamnesis());
+		
+		userInfo.addCell(new PdfPCell(new Paragraph("紧急联系人：" , fontChinese)));
+		userInfo.addCell(user.getEmContact1());
+		
+		section1.add(userInfo);
+		
+		Paragraph examTitle = new Paragraph("测试信息" , fontChinese);
+		
+		Section section2 = chapter.addSection(examTitle);
+		
+		PdfPTable exam = new PdfPTable(4);
+		userInfo.setSpacingBefore(25);
+		userInfo.setSpacingAfter(25);
+		
+		exam.addCell(new PdfPCell(new Paragraph("健康状态:" , fontChinese)));
+		exam.addCell(examination.getLevel().name());
+		
+		exam.addCell(new PdfPCell(new Paragraph("测试时间:" , fontChinese)));
+		exam.addCell(new DateTime(examination.getCreatedDate()).toString("yyyy-MM-dd HH:mm:ss"));
+	
+		exam.addCell(new PdfPCell(new Paragraph("心律:" , fontChinese)));
+		exam.addCell(String.valueOf(examination.getHeartRhythm()));
+		
+		exam.addCell(new PdfPCell(new Paragraph("体温:" , fontChinese)));
+		exam.addCell(String.valueOf(examination.getBodyTemp()));
+		
+		exam.addCell(new PdfPCell(new Paragraph("血压:" , fontChinese)));
+		exam.addCell(new PdfPCell(new Paragraph(String.format("%s-%s 毫米汞柱", String.valueOf(examination.getBloodPressureLow()) ,
+				String.valueOf(examination.getBloodPressureHigh())) , fontChinese)));
+		
+		exam.addCell(new PdfPCell(new Paragraph("血氧:" , fontChinese)));
+		exam.addCell(String.valueOf(examination.getBloodOxygen()));
+		
+		section2.add(exam);
+		
+		Paragraph heartTitle = new Paragraph("心电图" , fontChinese);
+		
+		Section section3 = chapter.addSection(heartTitle);
+		
+		for (int i = 1; i < 8; i++) {
+			String ecgPath = String.valueOf(User.class.getSimpleName().toLowerCase() + "/" + user.getId()) + "/examination/" + examinationId + "/ecg" + i + ".jpg";
+			Image image = Image.getInstance(uploadService.load(Type.heart_img , ecgPath));
+			image.scalePercent(40, 38);
+			
+			section3.add(image);
+		}
+		
+		doc.add(chapter);
+		
+		doc.close();
+		
+	}
+	
+	/**
+	 * <p>用户充值</p>
+	 * @param id
+	 * @param serial
+	 * @param password
+	 * @param activedDate
+	 * @return
+	 * ResponseEntity
+	 */
+	@RequestMapping(value = "{id}/charge" , method = RequestMethod.POST ,produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public ResponseEntity charge(@PathVariable("id") Long id ,@RequestParam("serial") String serial ,  @RequestParam String password , 
+				@RequestParam("activedDate") Date activedDate) {
+    	AuthUser authUser = authenticateService.getCurrentUser();
+    	if (!authUser.isUser()) {
+    		return new ResponseEntity(HttpStatus.FORBIDDEN);
+    	}
+    	cardService.charge(serial, password ,  activedDate , null , userService.get(authUser.getId()));
+    	
+    	return new ResponseEntity(HttpStatus.OK);
+	}
+	/**
+	 * <p>获得用户的卡</p>
+	 * @param id
+	 * @param query
+	 * @return
+	 * ResponseEntity
+	 */
+	@RequestMapping(value = "{id}/card" , method = RequestMethod.GET ,produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public ResponseEntity findCards(@PathVariable("id") Long id , Query query) {
+    	AuthUser authUser = authenticateService.getCurrentUser();
+    	query.isNotNull(Card.ACTIVED_DATE);
+    	query.isNotNull(Card.USER_ID);
+    	query.eq(Card.USER_ID , authUser.getId());
+    	query.addOrder(Card.ACTIVED_DATE , OrderType.desc);
+		long total = cardService.count(query);
+		query.getPage().setTotal(total);
+		query.getPage().setDatas(cardService.findAll(query));
+		
+		return new ResponseEntity(query.getPage() , HttpStatus.OK);
+	}
+	
+	/**
+	 * <p>重置密码请求</p>
+	 * @return
+	 * ResponseEntity
+	 */
+	@RequestMapping(value = "password/retake" , method = RequestMethod.GET , produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public ResponseEntity retakePasswordRequest(@RequestParam(value = "mobile" , required = false) String mobile , 
+								@RequestParam(value = "email" , required = false) String email) {
+		ResponseEntity response = new ResponseEntity(HttpStatus.OK);
+		if (StringUtils.isBlank(mobile) && StringUtils.isBlank(email)) {
+			response = new ResponseEntity(HttpStatus.BAD_REQUEST);
+		}
+		if (StringUtils.isNotBlank(email)) {
+			User user = userService.findByEmail(email);
+			if (user == null) {
+				return new ResponseEntity(HttpStatus.NOT_FOUND);
+			}
+			userService.retakePassword(user, Message.Type.email);
+			response = new ResponseEntity(HttpStatus.OK);
+		}
+		if (StringUtils.isNotBlank(mobile)){
+			User user = userService.findByMobile(mobile);
+			if (user == null) {
+				return new ResponseEntity(HttpStatus.NOT_FOUND);
+			}
+			userService.retakePassword(user, Message.Type.sms);
+		}
+		return response;
+	}
+	/**
+	 * <p>通过随机码重置密码</p>
+	 * @return
+	 * ResponseEntity
+	 */
+	@RequestMapping(value = "password/retake" , method = RequestMethod.POST , produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public ResponseEntity retakePasswordByCode(@RequestParam(value = "mobile" , required = false) String mobile , 
+						@RequestParam(value = "email" , required = false) String email , 
+						@RequestParam("code") String code, @RequestParam("newPassword") String newPassword) {
+		ResponseEntity response;
+		if (StringUtils.isBlank(mobile) && StringUtils.isBlank(email)) {
+			response = new ResponseEntity(HttpStatus.BAD_REQUEST);
+		}
+		if (StringUtils.isBlank(newPassword) || StringUtils.isBlank(code)) {
+			response = new ResponseEntity(HttpStatus.BAD_REQUEST);
+		}
+
+		if (StringUtils.isNotBlank(email)) {
+			User user = userService.findByEmail(email);
+			if (user == null) {
+				return new ResponseEntity(HttpStatus.NOT_FOUND);
+			}
+			userService.retakePassword(user, code , newPassword);
+			response = new ResponseEntity(HttpStatus.OK);
+		}
+		else {
+			User user = userService.findByMobile(mobile);
+			if (user == null) {
+				return new ResponseEntity(HttpStatus.NOT_FOUND);
+			}
+			userService.retakePassword(user, code , newPassword);
+			response = new ResponseEntity(HttpStatus.OK);
+		}
+		return response;
+		
 	}
 }

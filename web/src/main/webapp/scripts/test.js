@@ -6,39 +6,37 @@ require("./monitor/main");
 require("./employee/main");
 require("./user/main");
 require("./profile/main");
-require("./rule/main");
+require("./sys/main");
 require("./task/main");
+require("./card/main");
 
 var testCommon = require("./common/test").testCommon;
 var testEmployee = require("./employee/test").testEmployee;
 var testUser = require("./user/test").testUser;
 var testProfile = require("./profile/test").testProfile;
-var testRule = require("./rule/test").testRule;
+var testRule = require("./sys/test").testRule;
 var testTask = require("./task/test").testTask;
+var testTaskReport = require("./task/test").testReport;
+var testCard = require("./card/test").testCard;
 
 // GOABAL VAL
 window.PATH = window.location.pathname.slice(0, window.location.pathname.lastIndexOf("/"));
 
 var httpProvider;
 // 定义模块
-angular.module('ecgTestApp', ['ecgCommon', 'ecgTask', 'ecgMonitor', 'ecgEmployee', 'ecgUser', 'ecgRule', 'ecgTask', "ecgProfile"])
+angular.module('ecgTestApp', ['ecgCommon', 'ecgTask', 'ecgMonitor', 'ecgEmployee', 'ecgUser', 'ecgSys', 'ecgTask', "ecgProfile", "ecgCard"])
 .config(['$httpProvider', '$routeProvider', function ($httpProvider, $routeProvider) {
-    var token = $.cookie('AiniaOpAuthToken');
-        // header头带认证参数
-     $httpProvider.defaults.headers.common['Authorization'] = token;
      httpProvider = $httpProvider;
 }])
 .run([        '$rootScope', '$http', 'EnumService',
               'ChiefService', 'ExpertService', 'OperatorService', 'ProfileService',
-              'UserService', 'RuleService', 'ReplyConfigService',
+              'UserService', 'RuleService', 'ReplyConfigService', 'CardService',
               'TaskService',
       function($rootScope,   $http, EnumService,
                ChiefService,   ExpertService,   OperatorService ,  ProfileService,
-               UserService, RuleService, ReplyConfigService,
+               UserService, RuleService, ReplyConfigService, CardService,
                TaskService) {
 
-    // 判断是否登录成功
-    var token = $.cookie("AiniaOpAuthToken");
     describe("App REST Test", function() {
         // 验证基础模块
         testCommon(it, EnumService);
@@ -66,12 +64,24 @@ angular.module('ecgTestApp', ['ecgCommon', 'ecgTask', 'ecgMonitor', 'ecgEmployee
           {httpProvider: httpProvider}, 
           {RuleService: RuleService, ReplyConfigService: ReplyConfigService, UserService: UserService}
         );
+        // 充值模块
+        testCard(
+          {it: it}, 
+          {httpProvider: httpProvider},
+          {ProfileService: ProfileService, CardService: CardService, UserService: UserService}
+        );
         // 验证任务模块
         testTask(
           {it: it}, 
           {httpProvider: httpProvider},
-          {ProfileService: ProfileService, TaskService: TaskService, OperatorService: OperatorService}
+          {ProfileService: ProfileService, TaskService: TaskService, OperatorService: OperatorService, UserService: UserService}
         );
+        // 验证任务统计模块
+        testTaskReport(
+          {it: it}, 
+          {httpProvider: httpProvider},
+          {ProfileService: ProfileService, TaskService: TaskService, OperatorService: OperatorService, UserService: UserService}
+        )
     });
     mocha.run();
 }]);

@@ -1,0 +1,92 @@
+<div class="row-fluid" ng-show="!card.viewobj.createdDate">
+	<div class="span12">
+		<br/>
+		<form name="queryForm">
+		<table class="ecgprops">
+		<tr>
+		<td width="100px" valign="top"><label for="card-serial">卡号:</label></td>
+		<td>
+			<input ng-model="card.viewobj.serial" class="input-xlarge" id="card-serial"
+				   focus required
+				   placeholder="请输入卡号"></input>
+			<span class="required">*</span><span class="desc">请输入卡号</span></td>
+		</tr>
+
+		</table>
+		</form>
+    </div>
+</div>
+<div class="row-fluid" ng-show="!card.viewobj.createdDate">
+	<div class="span12">
+		<button class="btn" type="button"
+				ng-class="{'btn-primary': queryForm.$valid}" 
+				ng-click="card.query()"
+				ng-disabled="!queryForm.$valid">
+			<i class="icon-search"></i>查询
+		</button>
+    </div>
+</div>
+
+<div class="row-fluid"  ng-show="card.viewobj.createdDate">
+	<div class="span12">
+		<br/>
+		<table class="ecgprops">
+		
+		<tr>
+		<td width="100px" valign="top"><label for="card-serial">卡号:</label></td>
+		<td>
+			{{card.viewobj.serial}}
+		</tr>
+
+		<tr>
+		<td valign="top"><label for="card-serial">可用天数:</label></td>
+		<td>
+			{{card.viewobj.days}}
+		</tr>
+
+		<tr>
+		<td valign="top"><label for="card-serial">导入时间:</label></td>
+		<td>
+			{{card.viewobj.createdDate}}
+		</tr>
+
+		<tr>
+		<td valign="top"><label for="card-serial">充值时间:</label></td>
+		<td>
+			{{card.viewobj.chargedDate || '未使用'}}
+		</tr>
+
+		<tr>
+		<td valign="top"><label for="card-serial">激活时间:</label></td>
+		<td>
+			{{card.viewobj.activedDate || '未使用'}}
+		</tr>
+
+		<tr>
+		<td valign="top"><label for="card-serial">充值用户:</label></td>
+		<td>
+			{{card.viewobj.userName || '未使用'}}
+		</tr>
+
+		<tr>
+		<td valign="top"><label for="card-serial">充值方式:</label></td>
+		<td>
+			{{card.viewobj.chargeType || '未使用'}}
+		</tr>
+
+		<tr>
+		<td valign="top"><label for="card-serial">充值员工:</label></td>
+		<td>
+			{{card.viewobj.employeeName || '未使用'}}
+		</tr>
+
+		</table>
+    </div>
+</div>
+<div class="row-fluid" ng-show="card.viewobj.createdDate">
+	<div class="span12">
+		<button class="btn btn-primary" type="button" ng-click="card.reset()">
+			<i class="icon-arrow-left"></i>重新查询
+		</button>
+    </div>
+</div>

@@ -8,10 +8,14 @@ define(function(require, exports) {
   	$scope.dialog.OKLabel = '确定';
     $scope.dialog.shown = false;
     $scope.dialog.loading = "数据加载中，请耐心等待......";
+    $scope.dialog.isLoading = false;
 
 	  $scope.dialog.showHeader = function() {
   		return true;
   	};
+    $scope.dialog.showClose = function() {
+      return !$scope.dialog.isLoading;
+    };
   	$scope.dialog.showFooter = function() {
   		if ($scope.dialog.state === 'standby') {
   			return false;
@@ -72,9 +76,11 @@ define(function(require, exports) {
   		$scope.dialog.dialogTitle = opts.title || '提示';
   		$scope.dialog.dialogText = opts.text || '操作进行中,请耐心等待.';
       showtime = (new Date()).getTime();
+      $scope.dialog.isLoading = true;
       show();
   	};
     $scope.dialog.showLoading = function() {
+      $scope.dialog.isLoading = true;
       $scope.dialog.showStandby({text: $scope.dialog.loading});
     };
   	$scope.dialog.hideStandby = function() {
@@ -82,6 +88,7 @@ define(function(require, exports) {
     		$scope.dialog.state = 'standby';
     		$scope.dialog.state = '';
     		$scope.dialog.dialogText = '';
+        $scope.dialog.isLoading = false;
         $('#ecgDialog').modal('hide');
       }
       var current = (new Date()).getTime();

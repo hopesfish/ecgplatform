@@ -7,6 +7,8 @@ import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -32,13 +34,14 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class Employee implements Domain {
 	
 	public static final String PASSWORD = "password";
+	public static final String STATUS = "status";
 	
 	private Long id;
 	private String name;
 	private String username;
 	@JsonIgnore
 	private String password;
-	private String status;
+	private Status status;
 	private boolean enabled;
 	private boolean dismissed;
 	private int gender;
@@ -46,12 +49,24 @@ public class Employee implements Domain {
 	private Date    birthday;
 	private String  idCard;
 	private String  mobile;
+	private Date lastLiveDate;
 	private Date    createdDate;
 	private Date    lastUpdated;
+	private Date tokenDate;
 	private String  roles;
 	private String company;
 	private String title;
 	private Integer version;
+	
+	private String salt;
+	private Date   lastLoginDate;
+	
+	public enum Status {
+		ONLINE,
+		AWAY,
+		OFFLINEING,
+		OFFLINE
+	}
 
 	@PrePersist
 	public void onCreate() {
@@ -68,9 +83,11 @@ public class Employee implements Domain {
 		return new Long(1).equals(this.getId());
 	}
 	
-	public void setId(Long id) {
-		this.id = id;
+	public void live() {
+		this.lastLiveDate = new Date();
+		this.status = Status.ONLINE;
 	}
+
 	@Transient
 	@JsonIgnore
 	public String[] getRolesArray() {
@@ -109,14 +126,6 @@ public class Employee implements Domain {
 
 	public void setPassword(String password) {
 		this.password = password;
-	}
-
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
 	}
 
 	public boolean isEnabled() {
@@ -219,6 +228,53 @@ public class Employee implements Domain {
 
 	public void setVersion(Integer version) {
 		this.version = version;
+	}
+	@Enumerated(EnumType.STRING)
+	public Status getStatus() {
+		return status;
+	}
+
+	public void setStatus(Status status) {
+		this.status = status;
+	}
+
+	
+	public void setId(Long id) {
+		this.id = id;
+	}
+	
+	public Date getLastLiveDate() {
+		return lastLiveDate;
+	}
+
+	public void setLastLiveDate(Date lastLiveDate) {
+		this.lastLiveDate = lastLiveDate;
+	}
+	
+	@JsonIgnore
+	public String getSalt() {
+		return salt;
+	}
+
+	public void setSalt(String salt) {
+		this.salt = salt;
+	}
+	
+	@JsonFormat(pattern = "yyyy-MM-dd" , timezone = "GMT+08:00")
+	public Date getLastLoginDate() {
+		return lastLoginDate;
+	}
+
+	public void setLastLoginDate(Date lastLoginDate) {
+		this.lastLoginDate = lastLoginDate;
+	}
+	@JsonIgnore
+	public Date getTokenDate() {
+		return tokenDate;
+	}
+
+	public void setTokenDate(Date tokenDate) {
+		this.tokenDate = tokenDate;
 	}
 
 	@Override

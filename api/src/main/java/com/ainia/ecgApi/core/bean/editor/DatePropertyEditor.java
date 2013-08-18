@@ -20,7 +20,6 @@ public class DatePropertyEditor extends PropertyEditorSupport {
 	
 	@Override
 	public void setAsText(String text) throws IllegalArgumentException {
-		System.out.println("-----------------------");
 		if (text == null || "".equals(text)) {
 			super.setValue(null);
 		}
