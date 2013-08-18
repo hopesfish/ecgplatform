@@ -591,7 +591,7 @@ public class HealthExaminationServiceImpl extends BaseServiceImpl<HealthExaminat
 			for (int i = 1; i < 8; i++) {
 				String ecgPath = String.valueOf(User.class.getSimpleName().toLowerCase() + "/" + user.getId()) + "/examination/" + examination.getId() + "/ecg" + i + ".jpg";
 				Image image = Image.getInstance(uploadService.load(Type.heart_img , ecgPath));
-				image.scalePercent(28, 38);
+				image.scalePercent(23, 38);
 				
 				chapter4.add(image);
 			}
