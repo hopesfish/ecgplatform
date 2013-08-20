@@ -324,6 +324,25 @@ public class UserController extends BaseController<User , Long> {
 		}
 	}
 	
+	/**
+	 * <p>获取原始数据</p>
+	 * @return
+	 * byte[]
+	 * @throws IOException 
+	 */
+	@RequestMapping(value = "{id}/examination/{examinationId}/raw" , method = RequestMethod.GET)
+	public void loadRaw(@PathVariable("id") Long id , @PathVariable("examinationId") Long examinationId, HttpServletResponse response)  {
+		//TODO 文件后缀名固定
+		String ecgPath = String.valueOf(User.class.getSimpleName().toLowerCase() + "/" +id) + "/examination/" + examinationId + "/raw";
+		try {
+			response.getOutputStream().write(uploadService.load(Type.heart_img , ecgPath));
+			response.getOutputStream().flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+			throw new ServiceException("examination.ecgPath.notFound");
+		}
+	}
+	
 	@RequestMapping(value = "{id}/examination/{examinationId}/pdf" , method = RequestMethod.GET) 
 	public void loadExaminationByPdf(@PathVariable("examinationId") Long examinationId
 										, HttpServletResponse response) throws DocumentException, IOException {
