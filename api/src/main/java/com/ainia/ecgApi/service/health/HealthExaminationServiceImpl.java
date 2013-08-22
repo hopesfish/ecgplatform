@@ -1,6 +1,7 @@
 package com.ainia.ecgApi.service.health;
 
-import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -639,41 +640,74 @@ public class HealthExaminationServiceImpl extends BaseServiceImpl<HealthExaminat
 			Chapter chapter4 = new Chapter(new Paragraph("心电图 ",  titleFont) , 1);
 			chapter4.setNumberDepth(0);
 			
+			int w = 0;
+			int h = 0;
+
+			List<BufferedImage> sources = new ArrayList<BufferedImage>();
 			for (int i = 1; i < 9; i++) {
-				chapter4.add(new Paragraph("心电图 " + i,  new Font(bfChinese, 12 , Font.BOLD)) );
+//			//	chapter4.add(new Paragraph("心电图 " + i,  new Font(bfChinese, 12 , Font.BOLD)) );
 				String ecgPath = String.valueOf(User.class.getSimpleName().toLowerCase() + "/" + user.getId()) + "/examination/" + examination.getId() + "/ecg" + i + ".jpg";
 				BufferedImage source = ImageIO.read(new ByteArrayInputStream(uploadService.load(Type.heart_img , ecgPath)));
-				int w = source.getWidth();
-				int h = source.getHeight();
-				int step = 420;
-				int j = 1;
-				do {
-					int x = step * j;
-					if (x > w) {
-						x = w;
-					}
+				if (i != 8 && source.getWidth() > w) {
+					w = source.getWidth();
+				}
+				if (i != 8 && source.getHeight() > h) {
+					h = source.getHeight();
+				}
+				sources.add(source);
+			}
+			
+			int step = 500;
+			int j = 1;
+			do {
+				int x = step * j;
+				if (x > w) {
+					x = w;
+				}
+				for (int i = 1; i < 8; i++) {
+					BufferedImage source = sources.get(i - 1);
 					BufferedImage dest = new BufferedImage(step , h , BufferedImage.TYPE_INT_RGB);
-					Graphics graphics = dest.getGraphics();
-					graphics.drawImage(source , 0 , 0 , step , h , step*(j - 1) , 0 , x , h, null);
+					Graphics2D graphics = dest.createGraphics();
+//				    AffineTransform trans = new AffineTransform();
+//				    trans.rotate(Math.PI/2, h/2 , h/2);
+//				    graphics.setTransform(trans);
+				    graphics.drawImage(source , 0 , 0 , step , h , step*(j - 1) , 0 , x , h, null);
+//				    graphics.dispose();
 					ByteArrayOutputStream out = new ByteArrayOutputStream();
 					ImageIO.write(dest , "jpg", out);
 					Image image = Image.getInstance(out.toByteArray());
-					image.scalePercent(120 , 50);
+					image.scalePercent(100 , 26);
 					chapter4.add(image);
-					j++;
 				}
-				while ((step * (j-1)) < w);
-//				
-//				
-//				
-//				if (i != 8) {
-//					image.scalePercent(6, 10);
-//				} else {
-//					image.scalePercent(3, 6);
-//				}
-				
-				
+				j++;
 			}
+			while ((step * (j-1)) < w);
+			/**
+			 * 单独输出第8张图
+			 */
+			j = 1;
+			do {
+				int x = step * j;
+				if (x > w) {
+					x = w;
+				}
+				BufferedImage source = sources.get(7);
+				BufferedImage dest = new BufferedImage(step , h , BufferedImage.TYPE_INT_RGB);
+				Graphics2D graphics = dest.createGraphics();
+//			    AffineTransform trans = new AffineTransform();
+//			    trans.rotate(Math.PI/2, h/2 , h/2);
+//			    graphics.setTransform(trans);
+			    graphics.drawImage(source , 0 , 0 , step , h , step*(j - 1) , 0 , x , h, null);
+//			    graphics.dispose();
+				ByteArrayOutputStream out = new ByteArrayOutputStream();
+				ImageIO.write(dest , "jpg", out);
+				Image image = Image.getInstance(out.toByteArray());
+				image.scalePercent(100 , 26);
+				chapter4.add(image);
+				j++;
+			}
+			while ((step * (j-1)) < w);
+			
 			doc.add(chapter4);
 			//-------------------  page4  -----------------------------------
 			
