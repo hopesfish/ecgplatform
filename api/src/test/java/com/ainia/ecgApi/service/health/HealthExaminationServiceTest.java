@@ -3,8 +3,10 @@ package com.ainia.ecgApi.service.health;
 import static org.mockito.Mockito.when;
 
 import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -29,12 +31,10 @@ import com.ainia.ecgApi.core.security.AuthenticateService;
 import com.ainia.ecgApi.domain.health.HealthExamination;
 import com.ainia.ecgApi.domain.health.HealthReply;
 import com.ainia.ecgApi.domain.health.HealthRule.Level;
-import com.ainia.ecgApi.service.health.HealthReplyService;
-import com.ainia.ecgApi.domain.sys.User;
 import com.ainia.ecgApi.domain.sys.SystemConfig;
-import com.ainia.ecgApi.utils.DataException;
-import com.ainia.ecgApi.service.health.HealthReplyService;
+import com.ainia.ecgApi.domain.sys.User;
 import com.ainia.ecgApi.service.sys.SystemConfigService;
+import com.ainia.ecgApi.utils.DataException;
 
 /**
  * <p>HealthExamination Service test</p>
@@ -182,6 +182,33 @@ public class HealthExaminationServiceTest {
     	query1.eq(HealthReply.EXAMINATION_ID , examination.getId());
     	Assert.assertTrue(healthReplyService.findAll(query1).size() == 0);
     }
+    
+    @Test
+    public void testExportUpload() throws IOException, InterruptedException {
+    	Long userId = 2L;
+    	when(authenticateService.getCurrentUser()).thenReturn(new AuthUserImpl(userId , "test" , "13700230001" , User.class.getSimpleName()));
+    	Resource resource = new ClassPathResource("health/sample3");
+    	ByteArrayOutputStream out = new ByteArrayOutputStream();
+    	int b = -1;
+    	InputStream input = resource.getInputStream();
+    	while ((b = input.read()) != -1) {
+    		out.write(b);
+    	}
+    	byte[] bytes = out.toByteArray();
+    	((HealthExaminationServiceImpl)healthExaminationService).setAuthenticateService(authenticateService);
+    	HealthExamination examination = new HealthExamination();
+    	examination.setIsGziped(true);
+    	healthExaminationService.upload(examination , bytes , null);
+    	Thread.sleep(5000);
+    	input.close();
+    	out.close();
+    	String exportPath = "c:/upload/user/" + userId + "/examination/" + examination.getId() + "/export.pdf";
+    	OutputStream output = new FileOutputStream(exportPath);
+    	System.out.println("export pdf file " + exportPath);
+    	healthExaminationService.exportPDF(examination,  output);
+    }
+    
+
 
     @Test
     public void testUploadAndAutoReply() throws IOException, DataException, InterruptedException {
