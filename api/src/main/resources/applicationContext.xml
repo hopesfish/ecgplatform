@@ -185,8 +185,7 @@
     
     <beans profile="test">
         <context:property-placeholder ignore-resource-not-found="true"
-            location="classpath*:/application.properties,
-                      classpath*:/application.test.properties" />   
+            location="classpath*:/application.test.properties" />   
         
         <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
             <property name="driverClassName" value="${jdbc.driver}" />

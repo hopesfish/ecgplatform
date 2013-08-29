@@ -259,7 +259,6 @@ public class HealthExaminationServiceImpl extends BaseServiceImpl<HealthExaminat
 		if (!canFreeReply(examination)) {
 			throw new ServiceException("examination.reply.is.not.free");
 		}
-
 		// 校验gzip是否正确
 		if (examination.getIsGziped()) {
 			try {

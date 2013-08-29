@@ -7,9 +7,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.GZIPOutputStream;
 
+import org.apache.http.client.ClientProtocolException;
 import org.joda.time.DateTime;
 import org.junit.Assert;
 import org.junit.Before;
@@ -157,6 +161,7 @@ public class HealthExaminationServiceTest {
     	query1.eq(HealthReply.EXAMINATION_ID , examination.getId());
     	Assert.assertTrue(healthReplyService.findAll(query1).size() == 0);
     }
+    
 
     @Test
     public void testUpload() throws IOException, DataException, InterruptedException {
@@ -251,7 +256,7 @@ public class HealthExaminationServiceTest {
     		Assert.assertTrue(healthReplyService.findAll(query2).size() > 0);
     	}
     }
-
+    
     @Test
     public void testMockUpload() throws IOException, DataException, InterruptedException {
     	when(authenticateService.getCurrentUser()).thenReturn(new AuthUserImpl(2L , "test" , "13700230001" , User.class.getSimpleName()));
@@ -436,4 +441,28 @@ public class HealthExaminationServiceTest {
     	Assert.assertTrue(examination.getLevel() == null);
     	
     }
+    
+	@Test
+	public void testGizpUpload() throws NoSuchAlgorithmException, KeyManagementException, ClientProtocolException, IOException {
+    	Resource resource = new ClassPathResource("health/sample3");
+    	ByteArrayOutputStream out = new ByteArrayOutputStream();
+    	GZIPOutputStream gzip = new GZIPOutputStream(out);
+    	InputStream input = resource.getInputStream();
+    	int b = -1;
+    	while ((b = input.read()) != -1) {
+    		gzip.write(b);
+    	}
+	    gzip.finish();
+	    out.flush();
+	    byte[] bytes = out.toByteArray();
+	    gzip.close();
+	    out.close();
+        
+    	when(authenticateService.getCurrentUser()).thenReturn(new AuthUserImpl(2L , "test" , "13700230001" , User.class.getSimpleName()));
+    	((HealthExaminationServiceImpl)healthExaminationService).setAuthenticateService(authenticateService);
+    	
+    	HealthExamination examination = new HealthExamination();
+    	examination.setIsGziped(true);
+        healthExaminationService.upload(examination , bytes , null);
+	}
 }
