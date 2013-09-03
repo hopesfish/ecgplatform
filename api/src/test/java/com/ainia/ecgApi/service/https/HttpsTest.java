@@ -97,7 +97,6 @@ public class HttpsTest {
         	}
         }
 	}
-	@Test
 	public void testHttpsGizpUpload() throws NoSuchAlgorithmException, KeyManagementException, ClientProtocolException, IOException {
         //登录
 		HttpPost loginPost = new HttpPost("https://115.28.52.3:8443/web/api/user/auth");

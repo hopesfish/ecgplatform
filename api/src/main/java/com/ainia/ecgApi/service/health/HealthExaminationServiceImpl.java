@@ -485,8 +485,7 @@ public class HealthExaminationServiceImpl extends BaseServiceImpl<HealthExaminat
  			}
 		}
 		catch(Exception e) {
-			e.printStackTrace();
-			throw new ServiceException("exception.examination.statisticsError");
+			throw new ServiceException(e , "exception.examination.statisticsError");
 		}
 		return results;
 	}
