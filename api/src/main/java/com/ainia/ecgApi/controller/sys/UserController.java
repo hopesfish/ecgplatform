@@ -28,6 +28,7 @@ import com.ainia.ecgApi.core.crud.BaseService;
 import com.ainia.ecgApi.core.crud.Page;
 import com.ainia.ecgApi.core.crud.Query;
 import com.ainia.ecgApi.core.crud.Query.OrderType;
+import com.ainia.ecgApi.core.exception.InfoException;
 import com.ainia.ecgApi.core.exception.ServiceException;
 import com.ainia.ecgApi.core.security.AuthUser;
 import com.ainia.ecgApi.core.security.AuthenticateService;
@@ -456,12 +457,13 @@ public class UserController extends BaseController<User , Long> {
 	 * <p>通过随机码重置密码</p>
 	 * @return
 	 * ResponseEntity
+	 * @throws InfoException 
 	 */
 	@RequestMapping(value = "password/retake" , method = RequestMethod.POST , produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public ResponseEntity retakePasswordByCode(@RequestParam(value = "mobile" , required = false) String mobile , 
 						@RequestParam(value = "email" , required = false) String email , 
-						@RequestParam("code") String code, @RequestParam("newPassword") String newPassword) {
+						@RequestParam("code") String code, @RequestParam("newPassword") String newPassword) throws InfoException {
 
 		if (StringUtils.isBlank(mobile) && StringUtils.isBlank(email)) {
 			return new ResponseEntity(HttpStatus.BAD_REQUEST);

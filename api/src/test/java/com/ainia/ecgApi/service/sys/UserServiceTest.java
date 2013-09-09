@@ -26,7 +26,7 @@ import com.ainia.ecgApi.dto.common.Message.Type;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:applicationContext.xml"})
 @ActiveProfiles("test")
-@TransactionConfiguration(defaultRollback = true)
+@TransactionConfiguration(defaultRollback = false)
 public class UserServiceTest {
 
 	@Autowired
@@ -45,7 +45,6 @@ public class UserServiceTest {
 		try {
 			userService.retakePassword(user, "000000", "passw0rd");
 		} catch(Exception e) {
-			
 		}
 		
 		user = userService.findByEmail("16259903@qq.com");
@@ -55,7 +54,6 @@ public class UserServiceTest {
 		try {
 			userService.retakePassword(user, "000000", "passw0rd");
 		} catch(Exception e) {
-			
 		}
 		
 		try {
@@ -63,7 +61,7 @@ public class UserServiceTest {
 		} catch(Exception e) {
 			
 		}
-		
+		user = userService.findByEmail("16259903@qq.com");
 		Assert.assertEquals(user.getRetakeCount(), null);
 	} 
 	

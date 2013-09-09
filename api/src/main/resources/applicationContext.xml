@@ -69,7 +69,8 @@
             <tx:method name="delete*" read-only="false"/>
             <tx:method name="add*" read-only="false"/>
             <tx:method name="remove*" read-only="false"/>
-            <tx:method name="*" rollback-for="Exception"/>  
+            <tx:method name="*"  no-rollback-for="com.ainia.ecgApi.core.exception.InfoException"/>
+            <tx:method name="*"  rollback-for="RuntimeException"/>  
         </tx:attributes>  
     </tx:advice>     
     
