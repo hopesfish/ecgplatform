@@ -120,7 +120,7 @@ public class HealthExaminationController extends BaseController<HealthExaminatio
 	 * ResponseEntity
 	 */
 	@RequestMapping(value = "/avg" , method = RequestMethod.GET)
-	public ResponseEntity testStatisticsByUserAndDay(
+	public ResponseEntity statisticsByUserAndDay(
 		@RequestParam(value = "userId" , required = true) Long userId ,
 		@RequestParam(value = "start" , required = false) Date start ,
 		@RequestParam(value = "end" , required = false) Date end

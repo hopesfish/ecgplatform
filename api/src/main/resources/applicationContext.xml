@@ -69,7 +69,8 @@
             <tx:method name="delete*" read-only="false"/>
             <tx:method name="add*" read-only="false"/>
             <tx:method name="remove*" read-only="false"/>
-            <tx:method name="*" rollback-for="Exception"/>  
+            <tx:method name="*"  no-rollback-for="com.ainia.ecgApi.core.exception.InfoException"/>
+            <tx:method name="*"  rollback-for="RuntimeException"/>  
         </tx:attributes>  
     </tx:advice>     
     
@@ -185,8 +186,7 @@
     
     <beans profile="test">
         <context:property-placeholder ignore-resource-not-found="true"
-            location="classpath*:/application.properties,
-                      classpath*:/application.test.properties" />   
+            location="classpath*:/application.test.properties" />   
         
         <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
             <property name="driverClassName" value="${jdbc.driver}" />

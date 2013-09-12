@@ -5,6 +5,7 @@ require("./common/main");
 require("./task/main");
 require("./user/main");
 require("./profile/main");
+require("./card/main");
 
 var welcomeTemp = require("./user/templates/welcome.html");
 var helpTemp = require("./user/templates/help.html");
@@ -13,7 +14,7 @@ var faqTemp = require("./user/templates/faq.html");
 // GOABAL VAL
 window.PATH = window.location.pathname.slice(0, window.location.pathname.lastIndexOf("/"));
     
-angular.module('ecgApp', ['ecgCommon', 'ecgTask', 'ecgUser', 'ecgProfile'])
+angular.module('ecgApp', ['ecgCommon', 'ecgTask', 'ecgUser', 'ecgProfile', 'ecgCard'])
 .config(['$httpProvider', '$routeProvider', function ($httpProvider, $routeProvider) {
         var token = $.cookie('AiniaSelfAuthToken');
         // header头带认证参数

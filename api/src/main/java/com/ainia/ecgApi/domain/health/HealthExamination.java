@@ -38,6 +38,7 @@ public class HealthExamination implements Domain {
 	public static final String BLOOD_PRESSURE_HIGH = "bloodPressureHigh";
 	public static final String HEART_RHYTHM = "heartRhythm";
 	public static final String BLOOD_OXYGEN = "bloodOxygen";
+	public static final String BLOOD_SUGAR = "bloodSugar";
 	public static final String BREATH = "breath";
 	public static final String BODY_TEMP = "bodyTemp";
 	public static final String PULSERATE = "pulserate";
@@ -429,6 +430,8 @@ public class HealthExamination implements Domain {
 			prop =  HealthExamination.BODY_TEMP;
 		} else if ("7".equals(code)) {
 			prop =  HealthExamination.PULSERATE;
+		} else if ("8".equals(code)) {
+			prop =  HealthExamination.BLOOD_SUGAR;
 		}
 		return prop;
 	}

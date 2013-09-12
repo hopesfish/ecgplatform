@@ -11,12 +11,11 @@ import org.springframework.stereotype.Service;
 
 import com.ainia.ecgApi.core.crud.BaseDao;
 import com.ainia.ecgApi.core.crud.BaseServiceImpl;
+import com.ainia.ecgApi.core.exception.InfoException;
 import com.ainia.ecgApi.core.exception.PermissionException;
 import com.ainia.ecgApi.core.exception.ServiceException;
 import com.ainia.ecgApi.core.security.AuthUser;
 import com.ainia.ecgApi.core.security.AuthenticateService;
-import com.ainia.ecgApi.core.utils.DigestUtils;
-import com.ainia.ecgApi.core.utils.EncodeUtils;
 import com.ainia.ecgApi.core.utils.PropertyUtil;
 import com.ainia.ecgApi.dao.sys.UserDao;
 import com.ainia.ecgApi.domain.sys.Employee;
@@ -38,7 +37,7 @@ import com.ainia.ecgApi.service.common.MessageService;
 public class UserServiceImpl extends BaseServiceImpl<User , Long> implements UserService {
 	
 	public static final int RETAKE_CODE_NUM = 3;
-	public static final int RETAKE_MAX_NUM = 3;
+	public static final int RETAKE_MAX_NUM = 2;
     
     @Autowired
     private UserDao userDao;
@@ -180,30 +179,37 @@ public class UserServiceImpl extends BaseServiceImpl<User , Long> implements Use
 
 
 	@Override
-	public void retakePassword(User user, String code, String newPassword) {
+	public void retakePassword(User user, String code, String newPassword) throws InfoException {
+		user = this.get(user.getId());
 		String retakeCode = user.getRetakeCode();
 		Date   retakeDate = user.getRetakeDate();
-		Integer retakeCount= user.getRetakeCount() == null ? 1 : user.getRetakeCount();
+		int retakeCount= user.getRetakeCount() == null ? 0 : user.getRetakeCount().intValue();
 
+		if (retakeCode == null) {
+			throw new InfoException("exception.user.retakeCode.is.null");
+		}
 		if (new DateTime(retakeDate).plusHours(24).isBefore(new Date().getTime())) {
-			throw new ServiceException("exception.user.retakePassword.expried");
+			throw new InfoException("exception.user.retakePassword.expried");
 		}
 		if (!retakeCode.equals(code)) {
-			ServiceException exception;
+			InfoException exception;
 			if (retakeCount >= RETAKE_MAX_NUM) {
 				user.setRetakeCode(null);
 				user.setRetakeCount(null);
 				user.setRetakeDate(null);
-				exception = new ServiceException("exception.user.retakePassword.code.max.try");
+				exception = new InfoException("exception.user.retakePassword.code.max.try");
 			}
 			else {
-				user.setRetakeCount(retakeCount + 1);
-				exception = new ServiceException("exception.user.retakePassword.code.not.equal");
+				user.setRetakeCount(new Integer(retakeCount + 1));
+				exception = new InfoException("exception.user.retakePassword.code.not.equal");
 			}
-			userDao.save(user);
+			userDao.saveAndFlush(user);
 			throw exception;
 		}
-		//reset the password
+		//reset the password, and clear the reteak's info
+		user.setRetakeCode(null);
+		user.setRetakeCount(null);
+		user.setRetakeDate(null);
 		user.setPassword(authenticateService.encodePassword(newPassword , null));
 		userDao.save(user);
 	}

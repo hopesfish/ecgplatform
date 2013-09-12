@@ -42,7 +42,7 @@ angular.module('ecgTaskService', [])
                     method: 'GET',
                     url: PATH + url + params + '&' + $.param(paging)
                 }).then(function(res) {
-                    if (res.data.datas) {
+                    if (res.data) {
                         return res.data;
                     } else {
                         return null;    
@@ -66,7 +66,7 @@ angular.module('ecgTaskService', [])
                     method: 'GET',
                     url: PATH + url + params + '&' + $.param(paging)
                 }).then(function(res) {
-                    if (res.data.datas) {
+                    if (res.data) {
                         return res.data;
                     } else {
                         return null;    

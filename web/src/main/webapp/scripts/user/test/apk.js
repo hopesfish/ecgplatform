@@ -23,7 +23,9 @@ define(function(require, exports) {
                     'mobile': user.mobile,
                     'name': user.name,
                     'password': user.password,
-                    'email': user.mobile + '@test.com'
+                    'email': user.mobile + '@test.com',
+                    'gender': 1, // 男性
+                    'married': 1 // 已婚
                 },
                 type: 'POST'
             }).then(function() {
@@ -161,7 +163,7 @@ define(function(require, exports) {
             }).then(function(res) {
                 throw new Error('should not retrieved without token.');
             }, function() {
-                done()
+                done();
             });
         });
 
@@ -174,7 +176,7 @@ define(function(require, exports) {
             }).then(function(res) {
                 throw new Error('should not retrieved with invalid token.');
             }, function() {
-                done()
+                done();
             });
         });
 
@@ -205,7 +207,7 @@ define(function(require, exports) {
             }).then(function(res) {
                 throw new Error('should not retrieved without token.');
             }, function() {
-                done()
+                done();
             });
         });
 
@@ -218,7 +220,7 @@ define(function(require, exports) {
             }).then(function(res) {
                 throw new Error('should not retrieved with invalid token.');
             }, function() {
-                done()
+                done();
             });
         });
 
@@ -229,7 +231,9 @@ define(function(require, exports) {
                 dataType: 'json',
                 headers: {Authorization: token}
             }).then(function(res) {
-                done()
+                expect(res.gender).to.be(1);
+                expect(res.married).to.be(1);
+                done();
             }, function() {
                 throw new Error('should not retrieved with invalid token.');
             });
@@ -244,7 +248,7 @@ define(function(require, exports) {
             }).then(function(res) {
                 throw new Error('should not updated without token.');
             }, function() {
-                done()
+                done();
             });
         });
 
@@ -258,7 +262,7 @@ define(function(require, exports) {
             }).then(function(res) {
                 throw new Error('should not updated with invalid token.');
             }, function() {
-                done()
+                done();
             });
         });
 
@@ -272,19 +276,36 @@ define(function(require, exports) {
             }).then(function(res) {
                 throw new Error('should not updated with hacker\'s token.');
             }, function() {
-                done()
+                done();
             });
         });
 
-        // 修改个人资料
+        // 修改个人资料 如果不传递gender和married,数据将不会被修改
         it("the user's info should updated with valid token.", function(done) {
+            delete user.gender;
+            delete user.married;
             $.ajax({
                 url: PATH + '/api/user/' + userId,
                 type: 'PUT',
                 data: user,
                 headers: {Authorization: token}
             }).then(function(res) {
-                done()
+                done();
+            }, function() {
+                throw new Error('failed to update.');
+            });
+        });
+
+        it("the user's info should retrieve again.", function(done) {
+            $.ajax({
+                url: PATH + '/api/user/' + userId,
+                type: 'GET',
+                headers: {Authorization: token}
+            }).then(function(res) {
+                console.info(res);
+                expect(res.gender).to.be(1);
+                expect(res.married).to.be(1);
+                done();
             }, function() {
                 throw new Error('failed to update.');
             });
@@ -299,7 +320,7 @@ define(function(require, exports) {
             }).then(function(res) {
                 throw new Error('should not updated without token.');
             }, function() {
-                done()
+                done();
             });
         });
 

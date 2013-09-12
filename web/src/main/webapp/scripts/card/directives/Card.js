@@ -78,8 +78,8 @@ angular.module('ecgCardDirectives', [])
         $scope.card.viewobj = {};
     };
 }])
-.controller('CardHistoryController', ['$scope', '$filter', '$routeParams', '$timeout', '$location', 'EnumService', 'CardService',
-    function ($scope, $filter, $routeParams, $timeout, $location, EnumService, CardService) {
+.controller('CardHistoryController', ['$scope', '$filter', '$routeParams', '$timeout', '$location', 'EnumService', 'CardService', 'UserService',
+    function ($scope, $filter, $routeParams, $timeout, $location, EnumService, CardService, UserService) {
     $scope.subheader.title = "充值历史";
 
     // 命名空间
@@ -98,9 +98,17 @@ angular.module('ecgCardDirectives', [])
     // 刷新功能
     var globalParams = {};
     function refreshGrid(params) {
+        var promise;
         globalParams = $.extend(globalParams, params);
         $scope.dialog.showLoading();
-        CardService.queryAll(globalParams).then(function(paging) {
+
+        if ($scope.session.user.isEmployee) {
+            promise = CardService.queryAll(globalParams);
+        } else {
+            promise = UserService.queryAllCharge($scope.session.user, globalParams);
+        }
+
+        promise.then(function(paging) {
             $scope.dialog.hideStandby();
             if (paging) {
                 $scope.card.paging.total = paging.total;
@@ -114,7 +122,12 @@ angular.module('ecgCardDirectives', [])
             $scope.message.error("无法加载充值历史!");
         });
     }
-    refreshGrid();
+    
+
+    $scope.$watch("session.user", function() {
+        if (!$scope.session.user.id) { return; }
+        refreshGrid();
+    });
 
     // 过滤功能
     $scope.card.query = {};
@@ -160,14 +173,16 @@ angular.module('ecgCardDirectives', [])
         $scope.$apply();
     });
 }])
-.controller('CardChargeController', ['$scope', '$routeParams', '$timeout', '$location', 'EnumService', 'CardService',
-    function ($scope, $routeParams, $timeout, $location, EnumService, CardService) {
+.controller('CardChargeController', ['$scope', '$routeParams', '$timeout', '$location', 'EnumService', 'CardService', 'UserService',
+    function ($scope, $routeParams, $timeout, $location, EnumService, CardService, UserService) {
     $scope.subheader.title = "在线充值";
 
     // 命名空间
     $scope.card = {};
 
     $scope.card.chargeinfo = {};
+
+    $scope.card.readonly = false;
 
     $('#card-startdate').datetimepicker({
         format: "yyyy-MM-dd",
@@ -178,23 +193,27 @@ angular.module('ecgCardDirectives', [])
         $scope.$apply();
     });
 
-    /*
-    $('#card-enddate').datetimepicker({
-        format: "yyyy-MM-dd",
-        language: "zh-CN",
-        pickTime: false,
-    }).on('changeDate', function(e) {
-        $scope.card.chargeinfo.enddate = $('#card-enddate input').val();
-        $scope.$apply();
-    });*/
+    $scope.$watch("session.user", function() {
+        if (!$scope.session.user.id) { return; }
+        if ($scope.session.user.isEmployee) { return; }
+        $scope.card.chargeinfo.mobile = $scope.session.user.username;
+        $scope.card.readonly = true;
+    });
 
     $scope.card.charge = function() {
         $scope.dialog.confirm({
             text: "您将向手机号为 " + $scope.card.chargeinfo.mobile + " 的用户充值，确定继续?",
             handler: function() {
+                var promise;
+                $scope.card.chargeinfo.activedDate = $('#card-startdate input').val();
                 $scope.dialog.showStandby();
-                CardService.charge($scope.session.user, {mobile: $scope.card.chargeinfo.mobile}, $scope.card.chargeinfo)
-                .then(function() {
+                if ($scope.session.user.isEmployee) {
+                    promise = CardService.charge($scope.session.user, {mobile: $scope.card.chargeinfo.mobile}, $scope.card.chargeinfo);
+                } else {
+                    promise = UserService.charge($scope.session.user, $scope.card.chargeinfo);
+                }
+                
+                promise.then(function() {
                     $scope.dialog.hideStandby();
                     $scope.message.success("充值成功!");
                 }, function() {

@@ -88,13 +88,18 @@ i {
 .navbar.user .task,
 .navbar.user #users-menu,
 .navbar.user #employees-menu,
-.navbar.user #rules-menu {
+.navbar.user #rules-menu,
+.navbar.user #cards-menu .upload,
+.navbar.user #cards-menu .query {
 	display: none
 }
 .navbar.admin .sysconfig,
 .navbar.admin #cards-menu,
 .navbar.admin .apk,
-.navbar.user .examination {
+.navbar.user .examination,
+.navbar.user #cards-menu,
+.navbar.user #cards-menu .history,
+.navbar.user #cards-menu .charge {
 	display: block;
 }
 

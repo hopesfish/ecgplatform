@@ -16,6 +16,7 @@ create table user (
     last_login_date datetime,
     token_date datetime,
     gender int,
+    married int,
     type varchar(10),
     birthday datetime,
     address varchar(255),

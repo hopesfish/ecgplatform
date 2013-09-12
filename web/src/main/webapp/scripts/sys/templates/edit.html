@@ -24,7 +24,7 @@
 		<td ><label for="rule-min">范围设定:</label></td>
 		<td>
 			{{rule.updateobj.min}} - {{rule.updateobj.max}}
-			<a ng-href="#{{PATH}}/rule/{{rule.updateobj.id}}/config">设置</a>
+			<a href="javascript:void(0)" ng-click="rule.config()">设置</a>
 		</td>
 		</tr>
 

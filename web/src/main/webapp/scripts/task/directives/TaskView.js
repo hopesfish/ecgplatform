@@ -157,12 +157,14 @@ define(function(require, exports) {
         $scope.examinationplot = {};
         $scope.examinationplot.examinationId = null;
         $scope.examinationplot.zoom = 'small';
+        $scope.examinationplot.pdf = false;
         // 监听未完成
         $scope.$watch('todo.current',function() {
             if (!$scope.todo) { return; }
             if(!$scope.todo.current) { return; }
             $scope.examinationplot.userId = $scope.todo.current.userId;
             $scope.examinationplot.examinationId = $scope.todo.current.examinationId;
+            $scope.examinationplot.pdf = false;
         });
 
         // 监听已完成
@@ -171,6 +173,11 @@ define(function(require, exports) {
             if(!$scope.task.selected) { return; }
             $scope.examinationplot.userId = $scope.task.selected.userId;
             $scope.examinationplot.examinationId = $scope.task.selected.examinationId;
+            if ($scope.task.selected.status === 'completed') {
+              $scope.examinationplot.pdf = true;
+            }  else {
+              $scope.examinationplot.pdf = false;
+            }
         });
     }])
    .directive("ecgPlot", [ '$location', function($location) {

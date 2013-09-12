@@ -53,7 +53,8 @@ public class User implements Domain {
 	private Float  weight;
 	private String email;
 	private String idCard;
-	private int gender;
+	private Integer gender;
+	private Integer married;
 	private String city;
 	private String emContact1;
 	private String emContact1Tel;
@@ -146,11 +147,11 @@ public class User implements Domain {
 		this.password = password;
 	}
 
-	public int getGender() {
+	public Integer getGender() {
 		return gender;
 	}
 
-	public void setGender(int gender) {
+	public void setGender(Integer gender) {
 		this.gender = gender;
 	}
 
@@ -380,6 +381,7 @@ public class User implements Domain {
 		return result;
 	}
 
+	
 
 	@Override
 	public boolean equals(Object obj) {
@@ -402,5 +404,12 @@ public class User implements Domain {
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this);
 	}
+	public Integer getMarried() {
+		return married;
+	}
+	public void setMarried(Integer married) {
+		this.married = married;
+	}
+
 
 }

@@ -209,7 +209,7 @@ angular.module('ecgRuleDirectives', [])
     };
 
 }])
-.controller('RuleEditController', ['$scope', '$routeParams', 'RuleService', function ($scope, $routeParams, RuleService) {
+.controller('RuleEditController', ['$scope', '$routeParams', '$location', 'RuleService', function ($scope, $routeParams, $location, RuleService) {
     // 表格头
     $scope.subheader.title = "编辑规则";
 
@@ -248,6 +248,11 @@ angular.module('ecgRuleDirectives', [])
             $scope.dialog.hideStandby();
             $scope.message.error("服务器异常,编辑规则失败!");
         });
+    };
+
+    // 设置
+    $scope.rule.config = function() {
+        $location.path("rule/" + $routeParams.id + "/config");
     };
 
 }]);

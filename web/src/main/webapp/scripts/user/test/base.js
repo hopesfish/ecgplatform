@@ -6,18 +6,18 @@ define(function(require, exports) {
             return;
         }
         var it = mocha.it,
-            user = mocha.user,
+            employee = mocha.user,
             httpProvider = angluarjs.httpProvider,
             UserService = services.UserService;
 
         // 登录
         var token;
-        it("the user should authenciated in rule test module.", function(done) {
+        it("the user should authenciated in user test module.", function(done) {
             $.ajax({
                 url: PATH + '/api/auth',
                 data: {
-                    'username': user.username,
-                    'password': user.password
+                    'username': employee.username,
+                    'password': employee.password
                 },
                 type: 'POST',
                 dataType: 'json'
@@ -56,7 +56,7 @@ define(function(require, exports) {
 
         it("the user should not be created without password", function(done) {
             var invalid = UserService.getPlainObject();
-            invalid.mobile = '13800000000';
+            invalid.mobile = mobile;
             invalid.name = 'user' + (new Date()).getTime();
             invalid.password = '';
  
@@ -71,7 +71,7 @@ define(function(require, exports) {
 
         it("the user should not be created with invalid email", function(done) {
             var invalid = UserService.getPlainObject();
-            invalid.mobile = '13800000000';
+            invalid.mobile = mobile;
             invalid.name = 'user' + (new Date()).getTime();
             invalid.password = 'passw0rd';
             invalid.email = 'notaemailaddress';
@@ -85,11 +85,12 @@ define(function(require, exports) {
             });
         });
 
-        var user;
+        var user, mobile = 19 + (new Date()).getTime().toString().substring(0, 9);
 
         it("the user should be created when username, name and password are set", function(done) {
             user = UserService.getPlainObject();
-            user.mobile = '13800000000';
+            user.mobile = mobile;
+            user.username = mobile;
             user.name = 'user' + (new Date()).getTime();
             user.password = user.mobile;
  
@@ -103,9 +104,7 @@ define(function(require, exports) {
         });
 
         it("the user should be retrieved when moblie is given", function(done) {
-            user.mobile = '13800000000';
-            user.name = 'user' + (new Date()).getTime();
-            user.password = user.mobile;
+            user.mobile = mobile;
  
             UserService.findAllByMobile(user.mobile).then(function(users) {
                 if (users.length == 1) {
@@ -133,6 +132,8 @@ define(function(require, exports) {
                 user.badHabits = "不良嗜好",
                 user.anamnesis = "心脏病",
                 user.isFree = false;
+                user.gender = 1;
+                user.married = 1;
                 delete user.version;
                 UserService.update(user).then(function() {
                     UserService.get(user.id).then(function(pesistedUser) {
@@ -148,6 +149,8 @@ define(function(require, exports) {
                             expect(pesistedUser.enabled).to.be(user.enabled);
                             expect(pesistedUser.dismissed).to.be(user.dismissed);
                             expect(pesistedUser.roles).to.be(user.roles);
+                            expect(pesistedUser.gender).to.be(user.gender);
+                            expect(pesistedUser.married).to.be(user.married);
                             done();
                         } else {
                             throw new Error('the user can\'t be retieved again');

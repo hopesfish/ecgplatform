@@ -1,6 +1,7 @@
 package com.ainia.ecgApi.service.sys;
 
 import com.ainia.ecgApi.core.crud.BaseService;
+import com.ainia.ecgApi.core.exception.InfoException;
 import com.ainia.ecgApi.domain.sys.User;
 import com.ainia.ecgApi.dto.common.Message.Type;
 
@@ -69,5 +70,5 @@ public interface UserService extends BaseService<User , Long> {
 	 * @param newPassword
 	 * void
 	 */
-	public void retakePassword(User user , String code , String newPassword);
+	public void retakePassword(User user , String code , String newPassword)throws InfoException;
 }

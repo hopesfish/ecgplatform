@@ -134,6 +134,7 @@ angular.module('ecgUserModules', [])
     $scope.user = {};
     $scope.user.newobj = UserService.getPlainObject();
     $scope.user.genders = EnumService.getGenders();
+    $scope.user.marrieds = EnumService.getMarrieds();
 
     $('#user-birthday').datetimepicker({
         format: "yyyy-MM-dd",
@@ -222,6 +223,7 @@ angular.module('ecgUserModules', [])
     refresh();
 
     $scope.user.genders = EnumService.getGenders();
+    $scope.user.marrieds = EnumService.getMarrieds();
 
     $scope.user.isEmailUnique = true;
     $scope.user.checkUnique = function() {

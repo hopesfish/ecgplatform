@@ -23,6 +23,7 @@ import com.ainia.ecgApi.core.utils.DigestUtils;
 import com.ainia.ecgApi.core.utils.EncodeUtils;
 import com.ainia.ecgApi.core.utils.PropertyUtil;
 import com.ainia.ecgApi.domain.charge.Card;
+import com.ainia.ecgApi.service.sys.UserService;
 
 /**
  * <p>
@@ -42,6 +43,8 @@ public class CardServiceTest {
 
 	@Autowired
 	private CardService cardService;
+	@Autowired
+	private UserService userService;
 
 	private static Card card;
 
@@ -135,5 +138,10 @@ public class CardServiceTest {
 			
 		}
 		Assert.assertTrue(count == cardService.count(new Query()));
+	}
+
+	@Test
+	public void testChargeOnToday() throws Exception {
+		cardService.charge("1000", "1000", new java.util.Date(), null, userService.findByMobile("13811749917"));
 	}
 }

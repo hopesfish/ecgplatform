@@ -31,6 +31,11 @@
 		</tr>
 
 		<tr>
+		<td><label for="user-gender">婚姻状况:</label></td>
+		<td><select ng-model="user.updateobj.married" ng-options="g.value as g.label for g in user.marrieds"></select></td>
+		</tr>
+
+		<tr>
 		<td ><label for="user-birthday">出生日期:</label></td>
 		<td>
 			

@@ -44,6 +44,8 @@ angular.module('ecgUserService', [])
                     "badHabits": "", // 可空
                     "anamnesis": "", // 可空
                     "remark": "", // 可空
+                    "gender": 1, // 男
+                    "married": 1, // 已婚
                     "isFree": true
                 };
             },
@@ -123,6 +125,36 @@ angular.module('ecgUserService', [])
                 return $http({
                     method: 'DELETE',
                     url: uri + '/' + id
+                });
+            },
+            charge: function(user, card) {
+                return $http({
+                    method: 'POST',
+                    headers:{'Content-Type':'application/x-www-form-urlencoded'},
+                    data: $.param({
+                        serial: card.serial,
+                        activedDate: card.activedDate,
+                        password: card.password
+                    }),
+                    url: uri + '/' + user.id + '/charge'
+                });
+            },
+            queryAllCharge: function(user, params) {
+                var params = params || {};
+                if (typeof params["page.max"] == 'undefined') {
+                    params["page.max"] = 15; // user.html的每页行数也需要一起修改
+                }
+                return $http({
+                    method: 'GET',
+                    url: uri + '/' + user.id + '/card?' + $.param(params)
+                }).then(function(res) {
+                    if (res.data.datas) {
+                        return res.data;
+                    } else {
+                        return null;    
+                    }
+                }, function() {
+                    return null;
                 });
             },
         };

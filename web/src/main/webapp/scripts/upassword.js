@@ -1,5 +1,5 @@
 $(function() {
-	var PATH = window.location.pathname.slice(0, window.location.pathname.lastIndexOf("/"));
+    var PATH = window.location.pathname.slice(0, window.location.pathname.lastIndexOf("/"));
 
     function toggle(flag) {
         if (flag) {
@@ -24,7 +24,7 @@ $(function() {
         window.location.hash = tab;
     });
 
-	$(".sendEmailBtn").click(function() {
+    $(".sendEmailBtn").click(function() {
         var email = $("#email").val();
         if (!/^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/.test(email)) {
             alert("请输入正确邮件格式. 例如: user@ainia.com");
@@ -39,9 +39,9 @@ $(function() {
             toggle(false);
             alert('无法发送验证码！您提供的邮件格式不对或者没有这个邮箱对应的账号。');
         });
-	});
+    });
 
-	$(".sendMobileBtn").click(function() {
+    $(".sendMobileBtn").click(function() {
         var mobile = $("#mobile").val();
         if (!/^1\d{10}$/.test(mobile)) {
             alert("请输入正确邮件格式. 例如: 13812345678");
@@ -53,16 +53,16 @@ $(function() {
             toggle(true);
             $("#to").text(mobile);
         }, function() {
-            toggle(true);
+            toggle(false);
             alert('无法发送验证码！您提供的手机号码不对或者没有这个账号。');
         });
-	});
+    });
 
     $(".preBtn").click(function() {
         toggle(false);
     });
 
-	$(".retakeBtn").click(function() {
+    $(".retakeBtn").click(function() {
         var password = $("#password").val();
         var confirmPassword = $("#confirmPassword").val();
         var code = $("#code").val();
@@ -86,10 +86,10 @@ $(function() {
             url: PATH + '/api/user/password/retake',
             type: 'POST',
             data: {
-            	email: $("#email").val(),
-            	mobile: $("#mobile").val(),
-            	code: code,
-            	newPassword: password,
+                email: $("#email").val(),
+                mobile: $("#mobile").val(),
+                code: code,
+                newPassword: password,
             }
         }).then(function(res) {
             alert('重置成功');
@@ -97,5 +97,5 @@ $(function() {
         }, function() {
             alert('重置失败!');
         });
-	});
+    });
 });

@@ -1,8 +1,13 @@
 package com.ainia.ecgApi.service.health;
 
+import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -13,6 +18,8 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.zip.GZIPInputStream;
+
+import javax.imageio.ImageIO;
 
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -119,12 +126,12 @@ public class HealthExaminationServiceImpl extends BaseServiceImpl<HealthExaminat
 		boolean isFree = config == null ? false : Boolean.valueOf(config);
 		if (isFree) { return true; }
 
+		AuthUser authUser = authenticateService.getCurrentUser();	
 		// 判断用户是否充值以及在服务时间
-		AuthUser authUser = authenticateService.getCurrentUser();
 		Query<Card> query = new Query<Card>();
 		query.isNotNull(Card.ACTIVED_DATE);
 		query.isNotNull(Card.USER_ID);
-		query.eq(Card.USER_ID, examination.getUserId());
+		query.eq(Card.USER_ID, authUser.getId());
 		query.addOrder(Card.ACTIVED_DATE, OrderType.desc);
 		List<Card> cards = cardService.findAll(query);
 
@@ -252,6 +259,14 @@ public class HealthExaminationServiceImpl extends BaseServiceImpl<HealthExaminat
 		if (!canFreeReply(examination)) {
 			throw new ServiceException("examination.reply.is.not.free");
 		}
+		// 校验gzip是否正确
+		if (examination.getIsGziped()) {
+			try {
+				new GZIPInputStream(new ByteArrayInputStream(gzipedUploadData));
+			} catch(Exception e) {
+				throw new ServiceException("examination.data.not.in.ziped.format");
+			}
+		}
 		/*
 		//校验MD5值
 		if (StringUtils.isNotBlank(md5)) {
@@ -270,6 +285,15 @@ public class HealthExaminationServiceImpl extends BaseServiceImpl<HealthExaminat
 		examination.setUserName(authUser.getUsername());
 		examination.setUserType(authUser.getType());
 		examination.setTestItem("mobile");
+		if (examination.getMedicine() != null) {
+			try {
+				examination.setMedicine(URLDecoder.decode(examination.getMedicine(), "UTF-8"));
+			}
+			catch(UnsupportedEncodingException e) {
+				throw new ServiceException("examination.medicine.decode.error");
+			}
+			
+		}
 		this.create(examination);
 		
 		final ExaminationTask task = new ExaminationTask();
@@ -286,30 +310,44 @@ public class HealthExaminationServiceImpl extends BaseServiceImpl<HealthExaminat
 
 				public void run() {
 					try {
-						final byte[] uploadData;
+						byte[] uploadData = new byte[0];
+
 						
-						if (examination.getIsGziped()) {
-							// decompress the file
-							ByteArrayOutputStream baos = new ByteArrayOutputStream();
+						try {
+							if (examination.getIsGziped()) {
+								//存储数据包
+								String zipPath = "user/" +  String.valueOf(authUser.getId()) + "/examination/" + examination.getId() + "/zip";
+								uploadService.save(Type.heart_img , zipPath , gzipedUploadData);
 
-							GZIPInputStream gis = new GZIPInputStream(new ByteArrayInputStream(gzipedUploadData));
+								// decompress the file
+								GZIPInputStream gis = new GZIPInputStream(new ByteArrayInputStream(gzipedUploadData));
 
-							int count;
-							byte data[] = new byte[255];
-							while ((count = gis.read(data, 0, 255)) != -1) {
-								baos.write(data, 0, count);
+								ByteArrayOutputStream baos = new ByteArrayOutputStream();
+								int count;
+								byte data[] = new byte[200];
+								while ((count = gis.read(data, 0, 200)) != -1) {
+									baos.write(data, 0, count);
+								}
+								uploadData = baos.toByteArray();
+							} else {
+								uploadData = gzipedUploadData;
 							}
-							uploadData = baos.toByteArray();
-						} else {
-							uploadData = gzipedUploadData;
+						} catch(Exception e) {
+							e.printStackTrace();
 						}
 
-						//save the file
+						//存储原始数据
+						String rawPath = "user/" +  String.valueOf(authUser.getId()) + "/examination/" + examination.getId() + "/raw";
+						String rawUri = uploadService.save(Type.heart_img , rawPath , uploadData);
+						
+						examination.setHeartData(rawUri);
+						
+						// 解析数据
 				    	DataProcessor processor = new DataProcessor();
 				    	processor.process(uploadData , uploadData.length);
 						float[] daolian = processor.getDaolian_i();
 						
-						//生成文件相对路径
+						// 生成文件相对路径
 						daolian = processor.getDaolian_i();
 						String ecg1Path = "user/"
 								+ String.valueOf(authUser.getId())
@@ -397,19 +435,15 @@ public class HealthExaminationServiceImpl extends BaseServiceImpl<HealthExaminat
 						byte[] oxyChart = OxygenChart.createChart(oxygenData, 0, oxyLen, oxyLen*10, (int)37.8*8);
 						uploadService.save(Type.heart_img, oxyPath, oxyChart);
 						
-						//存储原始文件
-						String rawPath = "user/" +  String.valueOf(authUser.getId()) + "/examination/" + examination.getId() + "/raw";
-						String rawUri = uploadService.save(Type.heart_img , rawPath , uploadData);
-						
-						examination.setHeartData(rawUri);
-						
 						// 获得医疗数据
+						
 						HealthInfo hi = processor.getHealthInfo();
 						examination.setHeartRhythm(hi.heartrate);
 						examination.setBloodPressureLow(hi.dbp);
 						examination.setBloodPressureHigh(hi.sbp);
 						examination.setPulserate(hi.pulserate);
 						examination.setBloodOxygen(hi.oxygen);
+						
 						
 						// 根据医疗数据做后续处理,如自动回复
 						updateTaskAndExamination(task, examination);
@@ -419,6 +453,7 @@ public class HealthExaminationServiceImpl extends BaseServiceImpl<HealthExaminat
 						}
 					}
 					catch(Exception e) {
+						e.printStackTrace();
 						examination.setHasDataError(true);
 						updateTaskAndExamination(task, examination);
 					}
@@ -453,8 +488,7 @@ public class HealthExaminationServiceImpl extends BaseServiceImpl<HealthExaminat
  			}
 		}
 		catch(Exception e) {
-			e.printStackTrace();
-			throw new ServiceException("exception.examination.statisticsError");
+			throw new ServiceException(e , "exception.examination.statisticsError");
 		}
 		return results;
 	}
@@ -471,16 +505,17 @@ public class HealthExaminationServiceImpl extends BaseServiceImpl<HealthExaminat
 			
 			BaseFont bfChinese = BaseFont.createFont("STSongStd-Light", "UniGB-UCS2-H", true);
 		    Font titleFont = new Font(bfChinese, 30, Font.BOLD);  
-		    Font textFont = new Font(bfChinese, 18, Font.NORMAL); 
+		    Font textFont = new Font(bfChinese, 18, Font.BOLD); 
 		    Font valueFont = new Font(bfChinese , 12 , Font.NORMAL);
 		    //-------------------  page1  -----------------------------------
-			Paragraph title = new Paragraph("体检病例报告",  titleFont);
+			Paragraph title = new Paragraph("体检病例报告",  new Font(bfChinese, 50, Font.BOLD));
 			title.setAlignment(1);
-			Chapter chapter = new Chapter(title , 1);
-			chapter.setNumberDepth(0);
+			Chapter chapter = new Chapter(new Paragraph("") , 1);
 			
+			chapter.setNumberDepth(0);
+			chapter.add(title);
 			PdfPTable firstTable = new PdfPTable(2);
-			firstTable.setTotalWidth(180);
+			firstTable.setTotalWidth(280);
 			firstTable.setSpacingBefore(80);
 			firstTable.setHorizontalAlignment(1);
 			
@@ -495,37 +530,80 @@ public class HealthExaminationServiceImpl extends BaseServiceImpl<HealthExaminat
 			
 			firstTable.addCell(createCell("检测日期 " , textFont , 0));
 			firstTable.addCell(createCell(new DateTime(user.getCreatedDate()).toString("yyyy-MM-dd") , 
-					valueFont , 1));
+									valueFont, 1 , 0));
 			
 			doc.add(chapter);
 			firstTable.completeRow();
 		    // write the table to an absolute position
-			firstTable.writeSelectedRows(0, -1, 360, firstTable.getTotalHeight() + 60, canvas);
+			firstTable.writeSelectedRows(0, -1, 260, firstTable.getTotalHeight() + 80, canvas);
 		    //-------------------  page1  -----------------------------------
 			//-------------------  page2  -----------------------------------
 			Paragraph userInfo = new Paragraph("个人信息",  titleFont);
 			Chapter chapter2 = new Chapter(userInfo , 1);
 			chapter2.setNumberDepth(0);
 			
-			PdfPTable infoTable = new PdfPTable(4);
+			PdfPTable infoTable = new PdfPTable(2);
+			infoTable.setWidthPercentage(90);
 			infoTable.setSpacingBefore(20);
 			infoTable.setSpacingAfter(20);
 			
 			infoTable.addCell(createCell("姓名 " , textFont , 0));
 			infoTable.addCell(createCell(user.getName() , valueFont , 1));
 			
+			infoTable.addCell(createCell("性别 " , textFont , 0));
+			infoTable.addCell(createCell(user.isMan()?"男":"女" , valueFont , 1));
+
+			infoTable.addCell(createCell("婚姻状况 " , textFont , 0));
+			String married = "未婚";
+			if (user.getMarried() == 1) {
+				married = "已婚";
+			} else if (user.getMarried() == 2) {
+				married = "离异";
+			}
+			infoTable.addCell(createCell(married , valueFont , 1));
+			
+			infoTable.addCell(createCell("身高 " , textFont , 0));
+			infoTable.addCell(createCell(StringUtils.valueOf(user.getStature()) + "CM" , valueFont , 1));
+			
+			infoTable.addCell(createCell("体重 " , textFont , 0));
+			infoTable.addCell(createCell(StringUtils.valueOf(user.getWeight()) + "KG" , valueFont , 1));
+			
+			infoTable.addCell(createCell("生日 " , textFont , 0));
+			infoTable.addCell(createCell(user.getBirthday()==null?"":new DateTime(user.getBirthday()
+											).toString("yyyy-MM-dd"), valueFont , 1));
+		
+			infoTable.addCell(createCell("邮箱 " , textFont , 0 ));
+			infoTable.addCell(createCell(user.getEmail(), valueFont , 1, 0));
+			
+			infoTable.addCell(createCell("身份证 " , textFont , 0));
+			infoTable.addCell(createCell(user.getIdCard(), valueFont , 1 , 0));
+			
 			infoTable.addCell(createCell("电话 " , textFont , 0));
 			infoTable.addCell(createCell(user.getMobile() , valueFont , 1));
 			
+			infoTable.addCell(createCell("现住址 " , textFont , 0));
+			infoTable.addCell(createCell(user.getAddress() , valueFont , 1));
+			
+			infoTable.addCell(createCell("联系人1 " , textFont , 0));
+			infoTable.addCell(createCell(StringUtils.valueOf(user.getEmContact1()), valueFont , 1));
+			
+			infoTable.addCell(createCell("联系人1 电话" , textFont , 0));
+			infoTable.addCell(createCell(StringUtils.valueOf(user.getEmContact1Tel()), valueFont , 1));
+			
+			infoTable.addCell(createCell("联系人2 " , textFont , 0));
+			infoTable.addCell(createCell(StringUtils.valueOf(user.getEmContact2()), valueFont , 1));
+			
+			infoTable.addCell(createCell("联系人2 电话" , textFont , 0));
+			infoTable.addCell(createCell(StringUtils.valueOf(user.getEmContact2Tel()), valueFont , 1));
+			
+			infoTable.addCell(createCell("常住城市 " , textFont , 0));
+			infoTable.addCell(createCell(StringUtils.valueOf(user.getCity()), valueFont , 1));
+			
 			infoTable.addCell(createCell("不良嗜好 " , textFont , 0));
-			PdfPCell badHabits = createCell(user.getBadHabits() , valueFont , 1);
-			badHabits.setColspan(3);
-			infoTable.addCell(badHabits);
+			infoTable.addCell(createCell(user.getBadHabits() , valueFont , 1));
 			
 			infoTable.addCell(createCell("既往病史 " , textFont , 0));
-			PdfPCell anamnesis = createCell(user.getAnamnesis() , valueFont , 1);
-			anamnesis.setColspan(3);
-			infoTable.addCell(anamnesis);
+			infoTable.addCell(createCell(user.getAnamnesis() , valueFont , 1));
 
 			chapter2.add(infoTable);
 			
@@ -552,15 +630,15 @@ public class HealthExaminationServiceImpl extends BaseServiceImpl<HealthExaminat
 			resultTable1.setHorizontalAlignment(1);
 			
 			resultTable1.addCell(createCell("项目名称" , textFont , 1));
-			resultTable1.addCell(createCell("项目结果" , valueFont , 1));
+			resultTable1.addCell(createCell("项目结果" , textFont , 1));
 			
-			resultTable1.addCell(createCell("收缩压" , textFont , 0));
+			resultTable1.addCell(createCell("收缩压" , valueFont , 0));
 			resultTable1.addCell(createCell(StringUtils.valueOf(examination.getBloodPressureLow()) , valueFont , 0));
 			
-			resultTable1.addCell(createCell("舒张压" , textFont , 0));
+			resultTable1.addCell(createCell("舒张压" , valueFont , 0));
 			resultTable1.addCell(createCell(StringUtils.valueOf(examination.getBloodPressureHigh()) , valueFont , 0));
 			
-			resultTable1.addCell(createCell("体温" , textFont , 0));
+			resultTable1.addCell(createCell("体温" , valueFont , 0));
 			resultTable1.addCell(createCell(StringUtils.valueOf(examination.getBodyTemp()) , valueFont , 0));
 			
 			chapter3.add(resultTable1);
@@ -574,10 +652,10 @@ public class HealthExaminationServiceImpl extends BaseServiceImpl<HealthExaminat
 			resultTable2.addCell(createCell("项目名称" , textFont , 1));
 			resultTable2.addCell(createCell("项目结果" , textFont , 1));
 			
-			resultTable2.addCell(createCell("心率" , textFont , 0));
+			resultTable2.addCell(createCell("心率" , valueFont , 0));
 			resultTable2.addCell(createCell(StringUtils.valueOf(examination.getHeartRhythm()) , valueFont , 0));
 
-			resultTable2.addCell(createCell("血氧" , textFont , 0));
+			resultTable2.addCell(createCell("血氧" , valueFont , 0));
 			resultTable2.addCell(createCell(StringUtils.valueOf(examination.getBloodOxygen()) , valueFont , 0));
 
 			chapter3.add(resultTable2);
@@ -585,17 +663,95 @@ public class HealthExaminationServiceImpl extends BaseServiceImpl<HealthExaminat
 			doc.add(chapter3);
 			//-------------------  page3  -----------------------------------
 			//-------------------  page4  -----------------------------------
-			Chapter chapter4 = new Chapter(new Paragraph("心电图 ",  titleFont) , 1);
-			chapter4.setNumberDepth(0);
+
 			
+			int w = 0;
+			int h = 0;
+
+			List<BufferedImage> sources = new ArrayList<BufferedImage>();
 			for (int i = 1; i < 8; i++) {
+//			//	bloodChapter.add(new Paragraph("心电图 " + i,  new Font(bfChinese, 12 , Font.BOLD)) );
 				String ecgPath = String.valueOf(User.class.getSimpleName().toLowerCase() + "/" + user.getId()) + "/examination/" + examination.getId() + "/ecg" + i + ".jpg";
-				Image image = Image.getInstance(uploadService.load(Type.heart_img , ecgPath));
-				image.scalePercent(28, 38);
-				
-				chapter4.add(image);
+				BufferedImage source = ImageIO.read(new ByteArrayInputStream(uploadService.load(Type.heart_img , ecgPath)));
+				if (source.getWidth() > w) {
+					w = source.getWidth();
+				}
+				if (source.getHeight() > h) {
+					h = source.getHeight();
+				}
+				sources.add(source);
 			}
-			doc.add(chapter4);
+
+			Chapter ecgChapter;
+			//int step = (int)(w / 7);
+			int step = 1400;
+			int j = 1;
+			do {
+				int x = step * j;
+				if (x > w) {
+					x = w;
+				}
+				if (j == 7) {
+					break;
+				}
+				ecgChapter = new Chapter(new Paragraph("心电图 第" + j + "部分",  titleFont) , 1);
+				ecgChapter.setNumberDepth(0);
+				for (int i = 1; i < 8; i++) {
+					BufferedImage source = sources.get(i - 1);
+					BufferedImage dest = new BufferedImage(step , h , BufferedImage.TYPE_INT_RGB);
+					Graphics2D graphics = dest.createGraphics();
+//				    AffineTransform trans = new AffineTransform();
+//				    trans.rotate(Math.PI/2, h/2 , h/2);
+//				    graphics.setTransform(trans);
+				    graphics.drawImage(source , 0 , 0 , step , h , step*(j - 1) , 0 , x , h, null);
+//				    graphics.dispose();
+					ByteArrayOutputStream out = new ByteArrayOutputStream();
+					ImageIO.write(dest , "jpg", out);
+					Image image = Image.getInstance(out.toByteArray());
+					image.scalePercent(38, 19);
+					ecgChapter.add(image);
+				}
+				doc.add(ecgChapter);
+				j++;
+			}
+			while ((step * (j-1)) < w);
+
+			/**
+			 * 单独输出第8张图
+			 */
+			Chapter bloodChapter = new Chapter(new Paragraph("血氧图",  titleFont) , 1);
+			String ecgPath = String.valueOf(User.class.getSimpleName().toLowerCase() + "/" + user.getId()) + "/examination/" + examination.getId() + "/ecg8.jpg";
+			BufferedImage bSource = ImageIO.read(new ByteArrayInputStream(uploadService.load(Type.heart_img , ecgPath)));
+			w = bSource.getWidth();
+			j = 1;
+
+			step = 1300;
+			do {
+				int x = step * j;
+				if (x > w) {
+					x = w;
+				}
+				if (j == 17) {
+					break;
+				}
+				BufferedImage source = bSource;
+				BufferedImage dest = new BufferedImage(step , h , BufferedImage.TYPE_INT_RGB);
+				Graphics2D graphics = dest.createGraphics();
+//			    AffineTransform trans = new AffineTransform();
+//			    trans.rotate(Math.PI/2, h/2 , h/2);
+//			    graphics.setTransform(trans);
+			    graphics.drawImage(source , 0 , 0 , step , h , step*(j - 1) , 0 , x , h, null);
+//			    graphics.dispose();
+				ByteArrayOutputStream out = new ByteArrayOutputStream();
+				ImageIO.write(dest , "jpg", out);
+				Image image = Image.getInstance(out.toByteArray());
+				image.scalePercent(34 , 17);
+				bloodChapter.add(image);
+				j++;
+			}
+			while ((step * (j-1)) < w);
+			
+			doc.add(bloodChapter);
 			//-------------------  page4  -----------------------------------
 			
 			doc.close();
@@ -609,6 +765,14 @@ public class HealthExaminationServiceImpl extends BaseServiceImpl<HealthExaminat
 		PdfPCell cell = new PdfPCell(new Phrase(name , font));
 		cell.setBorderWidth(0);
 		cell.setHorizontalAlignment(1);
+		cell.setBorderWidthBottom(borderBottom);
+		return cell;
+	}
+	
+	private PdfPCell createCell(String name , Font font , float borderBottom , int align) {
+		PdfPCell cell = new PdfPCell(new Phrase(name , font));
+		cell.setBorderWidth(0);
+		cell.setHorizontalAlignment(align);
 		cell.setBorderWidthBottom(borderBottom);
 		return cell;
 	}

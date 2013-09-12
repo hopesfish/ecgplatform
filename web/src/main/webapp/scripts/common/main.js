@@ -30,6 +30,7 @@ angular.module('ecgCommon', ["angular-table", "ecgNav", "ecgHeader", "ecgMessage
     11  5 呼吸  16  20  次/分钟
     11  6 体温  36  37  ℃（腋下温度）
     11  7 脉率  60  100 次/分钟
+    11  8 血糖  毫摩
 
     10-手机（内置检测硬件的手机）
     设备类型  指标编号  指标名称  正常下限  正常上限  指标说明
@@ -44,8 +45,9 @@ angular.module('ecgCommon', ["angular-table", "ecgNav", "ecgHeader", "ecgMessage
         '3': {col: "heartRhythm", label: "心率"},
         '4': {col: "bloodOxygen", label: "血氧饱和度"},
         '5': {col: "breath", label: "呼吸"},
-        '6': {col: "bodyTemp", label: "体温"}
+        '6': {col: "bodyTemp", label: "体温"},
         //'7': {col: "pulserate", label: "脉率"}
+        '8': {col: "bloodSugar", label: "血糖"}
     };
     var employeestatus = [
         {key: 'ONLINE', label: "正在上班"},
@@ -59,6 +61,15 @@ angular.module('ecgCommon', ["angular-table", "ecgNav", "ecgHeader", "ecgMessage
         },
         getGenderLabel: function(gender) {
             return gender ?  '男': '女';
+        },
+        getBools: function() {
+            return [{label: '是', value: true}, {label: '否', value: false}];
+        },
+        getBoolLabel: function(value) {
+            return value ?  '是': '否';
+        },
+        getMarrieds: function() {
+            return [{label: '未婚', value: 0}, {label: '已婚', value: 1}, {label: '离异', value: 2}];
         },
         getDismissedStates: function() {
             return [{label: '离职', value: true}, {label: '在职', value: false}];

@@ -101,7 +101,10 @@ public class CardServiceImpl extends BaseServiceImpl<Card , Long> implements Car
 			throw new ServiceException("exception.card.expired");
 		}
 		// 激活时间是否正确
-		if (activedDate == null || activedDate.before(new Date())) {
+		GregorianCalendar gc = new GregorianCalendar();
+		gc.setTime(new Date());
+		gc.add(GregorianCalendar.DATE, -1);
+		if (activedDate == null || activedDate.before(gc.getTime())) {
 			throw new ServiceException("exception.card.invalidActiveDate");
 		}
 		//卡号密码判断

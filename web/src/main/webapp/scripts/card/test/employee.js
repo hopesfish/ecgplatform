@@ -147,7 +147,7 @@ define(function(require, exports) {
         it("the unused card can be used.", function(done) {
             expect(unused).not.to.be(undefined);
             unused.password = '888888';
-            unused.activedDate = '2013-08-15';
+            unused.activedDate = '2024-08-15';
             CardService.charge(sessionemployee, user, unused).then(function() {
                 done();
             }, function() {
@@ -159,7 +159,7 @@ define(function(require, exports) {
         it("the unused card can not be used again.", function(done) {
             expect(unused).not.to.be(undefined);
             unused.password = '888888';
-            unused.activedDate = '2013-08-15';
+            unused.activedDate = '2024-08-15';
             CardService.charge(sessionemployee, user, unused).then(function() {
                 throw new Error('the unused card can\'t be charged');
             }, function() {
