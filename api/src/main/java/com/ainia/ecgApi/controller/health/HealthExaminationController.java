@@ -133,6 +133,10 @@ public class HealthExaminationController extends BaseController<HealthExaminatio
 		if (end == null) {
 			end = new DateTime().plusDays(1).toDate();
 		}
+		//将查询天加1 以查询最后一天数据
+		else {
+			end = new DateTime(end.getTime()).plusDays(1).toDate();
+		}
 		return new ResponseEntity( healthExaminationService.statisticsByUserAndDay(userId , start, end) , HttpStatus.OK);
 	}
 }
