@@ -26,7 +26,7 @@ public interface HealthExaminationDao extends JpaRepository<HealthExamination , 
     		"	group by YEAR(createdDate)||'-'||MONTH(createdDate)||'-'||DAY(createdDate) order by  createdDate asc")
 	public List<Object[]> statisticsByUserAndDay(Long userId , Date start , Date end);*/
    @Query("select avg(bloodPressureLow) , avg(bloodPressureHigh) , avg(heartRhythm) , avg(bloodOxygen), " +
-    		" avg(breath) , avg(bodyTemp) , avg(pulserate), to_char(createdDate , 'yyyy-MM-dd') as fmtCreatedDate from HealthExamination where bloodPressureLow > 0 and bloodPressureHigh > 0 and heartRhythm > 0 and userId = ? and createdDate >= ? and createdDate < ?" +
-    		"	group by to_char(createdDate , 'yyyy-MM-dd') order by createdDate asc")
+    	 " avg(breath) , avg(bodyTemp) , avg(pulserate), day from (select * , to_char(createdDate , 'yyyy-MM-dd') day from  HealthExamination) where bloodPressureLow > 0 and bloodPressureHigh > 0 and heartRhythm > 0 and userId = ? and createdDate >= ? and createdDate < ?" +
+    	 "	group by day order by  createdDate asc")
    public List<Object[]> statisticsByUserAndDay(Long userId , Date start , Date end);
 }
