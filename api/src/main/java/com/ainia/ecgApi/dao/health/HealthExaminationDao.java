@@ -20,13 +20,9 @@ import com.ainia.ecgApi.domain.health.HealthExamination;
  * @version 0.1
  */
 public interface HealthExaminationDao extends JpaRepository<HealthExamination , Long>, BaseDao<HealthExamination , Long> { 
-    /*
+  
     @Query("select avg(bloodPressureLow) , avg(bloodPressureHigh) , avg(heartRhythm) , avg(bloodOxygen), " +
     		" avg(breath) , avg(bodyTemp) , avg(pulserate), YEAR(createdDate)||'-'||MONTH(createdDate)||'-'||DAY(createdDate) from HealthExamination where bloodPressureLow > 0 and bloodPressureHigh > 0 and heartRhythm > 0 and userId = ? and createdDate >= ? and createdDate < ?" +
-    		"	group by YEAR(createdDate)||'-'||MONTH(createdDate)||'-'||DAY(createdDate) order by  createdDate asc")
-	public List<Object[]> statisticsByUserAndDay(Long userId , Date start , Date end);*/
-   @Query("select avg(bloodPressureLow) , avg(bloodPressureHigh) , avg(heartRhythm) , avg(bloodOxygen), " +
-    	 " avg(breath), avg(bodyTemp) , avg(pulserate), day from (select *, to_char(createdDate, 'yyyy-MM-dd') day from HealthExamination) where bloodPressureLow > 0 and bloodPressureHigh > 0 and heartRhythm > 0 and userId = ? and createdDate >= ? and createdDate < ?" +
-    	 " group by day order by  createdDate asc")
+    		" group by YEAR(createdDate)||'-'||MONTH(createdDate)||'-'||DAY(createdDate) order by  createdDate asc")
    public List<Object[]> statisticsByUserAndDay(Long userId , Date start , Date end);
 }
