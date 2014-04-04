@@ -23,6 +23,6 @@ public interface HealthExaminationDao extends JpaRepository<HealthExamination , 
   
    @Query(nativeQuery = true , value = "select avg(d.blood_Pressure_Low) , avg(d.blood_Pressure_High) , avg(d.heart_Rhythm) , avg(d.blood_Oxygen), " +
     		" avg(d.breath) , avg(d.body_Temp) , avg(d.pulserate) , d.day from (select h.* , to_char(h.created_date , 'yyyy-MM-dd') day from Health_Examination h where h.blood_Pressure_Low > 0 and h.blood_Pressure_High > 0 and h.heart_Rhythm > 0 and h.user_Id = ? and h.created_Date >= ? and h.created_Date < ? order by  h.created_Date asc) d " +
-    		"	 group by d.day ")
+    		"	 group by d.day order by d.day asc")
    public List<Object[]> statisticsByUserAndDay(Long userId , Date start , Date end);
 }
