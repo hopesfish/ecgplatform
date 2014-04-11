@@ -261,14 +261,17 @@ public class HealthExaminationServiceImpl extends BaseServiceImpl<HealthExaminat
 		if (!canFreeReply(examination)) {
 			throw new ServiceException("examination.reply.is.not.free");
 		}
+
 		// 校验gzip是否正确
 		if (examination.getIsGziped()) {
 			try {
-				new GZIPInputStream(new ByteArrayInputStream(gzipedUploadData));
+				GZIPInputStream gis = new GZIPInputStream(new ByteArrayInputStream(gzipedUploadData));
+				gis.skip(1); // 如果没有数据 也需要抛异常
 			} catch(Exception e) {
 				throw new ServiceException("examination.data.not.in.ziped.format");
 			}
 		}
+
 		/*
 		//校验MD5值
 		if (StringUtils.isNotBlank(md5)) {
@@ -315,35 +318,47 @@ public class HealthExaminationServiceImpl extends BaseServiceImpl<HealthExaminat
 						byte[] uploadData = new byte[0];
 						int imgcount = 0;
 						
+						//存储图片
+						try {
+							if (img1 != null) {
+								String img1Path = "user/" +  String.valueOf(authUser.getId()) + "/examination/" + examination.getId() + "/ecga.png";
+								uploadService.save(Type.heart_img , img1Path , img1.getBytes());
+								imgcount++;
+							}
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+						try {
+							if (img2 != null) {
+								String img2Path = "user/" +  String.valueOf(authUser.getId()) + "/examination/" + examination.getId() + "/ecgb.png";
+								uploadService.save(Type.heart_img , img2Path , img2.getBytes());
+								imgcount++;
+							}
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+						try {
+							if (img3 != null) {
+								String img3Path = "user/" +  String.valueOf(authUser.getId()) + "/examination/" + examination.getId() + "/ecgc.png";
+								uploadService.save(Type.heart_img , img3Path , img3.getBytes());
+								imgcount++;
+							}
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+						
+						//存储压缩数据
 						try {
 							if (examination.getIsGziped()) {
-								//存储数据包
 								String zipPath = "user/" +  String.valueOf(authUser.getId()) + "/examination/" + examination.getId() + "/zip";
 								uploadService.save(Type.heart_img , zipPath , gzipedUploadData);
-
-								//存储图片
-								if (img1 != null) {
-									String img1Path = "user/" +  String.valueOf(authUser.getId()) + "/examination/" + examination.getId() + "/ecga.png";
-									uploadService.save(Type.heart_img , img1Path , img1.getBytes());
-									imgcount++;
-								}
-								if (img2 != null) {
-									String img2Path = "user/" +  String.valueOf(authUser.getId()) + "/examination/" + examination.getId() + "/ecgb.png";
-									uploadService.save(Type.heart_img , img2Path , img2.getBytes());
-									imgcount++;
-								}
-								if (img3 != null) {
-									String img3Path = "user/" +  String.valueOf(authUser.getId()) + "/examination/" + examination.getId() + "/ecgc.png";
-									uploadService.save(Type.heart_img , img3Path , img3.getBytes());
-									imgcount++;
-								}
 
 								// decompress the file
 								GZIPInputStream gis = new GZIPInputStream(new ByteArrayInputStream(gzipedUploadData));
 
 								ByteArrayOutputStream baos = new ByteArrayOutputStream();
 								int count;
-								byte data[] = new byte[200];
+								byte data[] = new byte[100];
 								while ((count = gis.read(data, 0, 200)) != -1) {
 									baos.write(data, 0, count);
 								}
@@ -354,13 +369,16 @@ public class HealthExaminationServiceImpl extends BaseServiceImpl<HealthExaminat
 						} catch(Exception e) {
 							e.printStackTrace();
 						}
-
+						
 						//存储原始数据
-						String rawPath = "user/" +  String.valueOf(authUser.getId()) + "/examination/" + examination.getId() + "/raw";
-						String rawUri = uploadService.save(Type.heart_img , rawPath , uploadData);
-						
-						examination.setHeartData(rawUri);
-						
+						try {
+							String rawPath = "user/" +  String.valueOf(authUser.getId()) + "/examination/" + examination.getId() + "/raw";
+							String rawUri = uploadService.save(Type.heart_img , rawPath , uploadData);
+							examination.setHeartData(rawUri);
+						} catch(Exception e) {
+							e.printStackTrace();
+						}
+
 						// 解析数据
 				    	DataProcessor processor = new DataProcessor();
 				    	processor.process(uploadData , uploadData.length);
