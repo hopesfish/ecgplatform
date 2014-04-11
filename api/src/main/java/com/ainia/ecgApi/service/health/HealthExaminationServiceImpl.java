@@ -379,6 +379,10 @@ public class HealthExaminationServiceImpl extends BaseServiceImpl<HealthExaminat
 							e.printStackTrace();
 						}
 
+						if (uploadData.length == 0) {
+							log.error("failed to gennerate a upload data to render");
+						}
+
 						// 解析数据
 				    	DataProcessor processor = new DataProcessor();
 				    	processor.process(uploadData , uploadData.length);
