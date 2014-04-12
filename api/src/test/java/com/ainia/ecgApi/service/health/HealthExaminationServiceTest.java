@@ -494,21 +494,5 @@ public class HealthExaminationServiceTest {
     	examination.setIsTest(true);
     	healthExaminationService.upload(examination , null, null, null, null, null);
     }
-   
-    @Test
-	public void testUnzip() throws NoSuchAlgorithmException, KeyManagementException, ClientProtocolException, IOException {
-    	Resource resource = new ClassPathResource("health/errorzip");
-    	ByteArrayOutputStream out = new ByteArrayOutputStream();
-    	GZIPOutputStream gzip = new GZIPOutputStream(out);
-    	InputStream input = resource.getInputStream();
-    	int b = -1;
-    	while ((b = input.read()) != -1) {
-    		gzip.write(b);
-    	}
-	    gzip.finish();
-	    out.flush();
-	    byte[] bytes = out.toByteArray();
-	    
-	    System.out.println(bytes.length);
-	}
+
 }

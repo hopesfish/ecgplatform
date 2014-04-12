@@ -358,7 +358,7 @@ public class HealthExaminationServiceImpl extends BaseServiceImpl<HealthExaminat
 
 								ByteArrayOutputStream baos = new ByteArrayOutputStream();
 								int count;
-								byte data[] = new byte[100];
+								byte data[] = new byte[200];
 								while ((count = gis.read(data, 0, 200)) != -1) {
 									baos.write(data, 0, count);
 								}
