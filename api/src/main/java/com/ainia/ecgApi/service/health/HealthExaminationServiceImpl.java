@@ -234,7 +234,9 @@ public class HealthExaminationServiceImpl extends BaseServiceImpl<HealthExaminat
 	}
 
 	public void upload(final HealthExamination examination , final byte[] gzipedUploadData, final MultipartFile img1, final MultipartFile img2, final MultipartFile img3, String md5) {
-
+		if (log.isDebugEnabled()) {
+			log.debug("ready to upload healthExamination in time " + System.currentTimeMillis());
+		}
 		// 判断是否有效登录
 		final AuthUser authUser = authenticateService.getCurrentUser();	
 		if (authUser == null) {
@@ -526,6 +528,9 @@ public class HealthExaminationServiceImpl extends BaseServiceImpl<HealthExaminat
 			});		
 		} else {
 			updateTaskAndExamination(task, examination);
+		}
+		if (log.isDebugEnabled()) {
+			log.debug("complete to upload healthExamination in time " + System.currentTimeMillis());
 		}
 	}
 

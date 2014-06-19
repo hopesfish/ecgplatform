@@ -2,7 +2,7 @@
 <html lang="zh-cn" xmlns:ng="http://angularjs.org" id="ng-app">
   <head>
     <meta charset="utf-8">
-    <title>AINIA运营中心</title>
+    <title>AINIA个人中心</title>
     <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -10,7 +10,7 @@
     <meta name="author" content="">
 
     <link rel="stylesheet" type="text/css" href="lib/bootstrap/css/bootstrap.css">
-    <!--link rel="stylesheet" type="text/css" href="lib/bootstrap/css/bootstrap-responsive.css"-->
+    <link rel="stylesheet" type="text/css" href="lib/bootstrap/css/bootstrap-responsive.css">
     <link rel="stylesheet" type="text/css" href="lib/datepicker/bootstrap-datetimepicker.min.css" media="screen">
 
     <link rel="stylesheet" type="text/css" href="lib/font-awesome/css/font-awesome.css">
@@ -18,11 +18,12 @@
     <link rel="stylesheet" type="text/css" href="lib/font-awesome/css/font-awesome-ie7.css">
     <![endif]-->
 
-    <link rel="stylesheet" type="text/css" href="stylesheets/style.css">
-        
     <link rel="stylesheet" type="text/css" href="stylesheets/lblue.css">
 
+    <link rel="stylesheet" type="text/css" href="stylesheets/style.css">
+
     <link rel="stylesheet" type="text/css" href="stylesheets/ecg.css">
+
     <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
@@ -84,15 +85,17 @@
     
     <script>
     // 判断是否登录
-    var token = $.cookie("AiniaOpAuthToken");
+    var token = $.cookie("AiniaSelfAuthToken");
     if (!token) {
-        window.location.href = "login.html";
+        window.location.href = "ulogin.html";
         return;
     }
     </script>
 
     <script src="lib/seajs/sea.js"
         data-config="./scripts/config.js"
-        data-main="./scripts/main.js"></script>
+        data-main="./scripts/umain.js"></script>
   </body>
 </html>
+
+

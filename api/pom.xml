@@ -40,12 +40,12 @@
 
    <dependencies>
     <!-- jdbc driver -->
-    <dependency>
+    <!--dependency>
         <groupId>${jdbc.driver.groupId}</groupId>
         <artifactId>${jdbc.driver.artifactId}</artifactId>
         <version>${jdbc.driver.version}</version>
         <scope>runtime</scope>
-    </dependency>
+    </dependency-->
     <!-- spring start -->
     <dependency>
         <groupId>org.springframework</groupId>
